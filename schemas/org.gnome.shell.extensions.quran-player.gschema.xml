@@ -36,5 +36,12 @@
       <summary>Show notifications</summary>
       <description>Show notifications when playback starts/stops</description>
     </key>
+
+    <key name="repeat-current" type="b">
+    <default>false</default>
+    <summary>Repeat current item</summary>
+    <description>Whether to repeatedly play the current surah/juz until stopped</description>
+    </key>
+
   </schema>
 </schemalist>

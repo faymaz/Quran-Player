@@ -241,6 +241,19 @@ class QuranPlayerPrefsPage extends Adw.PreferencesPage {
         
         generalGroup.add(notifyRow);
 
+
+        const repeatRow = new Adw.SwitchRow({
+            title: _('Repeat current item'),
+            subtitle: _('Repeatedly play the current surah/juz until stopped'),
+        });
+        
+        repeatRow.set_active(this._settings.get_boolean('repeat-current'));
+        repeatRow.connect('notify::active', (row) => {
+            this._settings.set_boolean('repeat-current', row.get_active());
+        });
+        
+        generalGroup.add(repeatRow);
+
         // Advanced Settings Group
         const advancedGroup = new Adw.PreferencesGroup({
             title: _('Advanced Settings'),

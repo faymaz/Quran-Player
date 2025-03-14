@@ -1326,8 +1326,18 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             this._player = null;
             this._isPlaying = false;
             
-            // Auto-play next if enabled
-            if (this._settings.get_boolean('autoplay-next') && this._currentItem) {
+            // Tekrarlama ayarını kontrol et
+            if (this._settings.get_boolean('repeat-current') && this._currentItem) {
+                this._log("Tekrarlama modu aktif, mevcut öğeyi tekrar oynat");
+                // Mevcut öğeyi tekrar oynat
+                if (this._currentItem.type === 'surah') {
+                    this._playSurah(this._currentItem);
+                } else if (this._currentItem.type === 'juz') {
+                    this._playJuz(this._currentItem);
+                }
+            }
+            // Tekrarlama aktif değilse, otomatik olarak sonraki öğeye geç
+            else if (this._settings.get_boolean('autoplay-next') && this._currentItem) {
                 this._playNext();
             } else {
                 this._updatePlayerUI();
