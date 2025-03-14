@@ -560,10 +560,11 @@ class QuranPlayerIndicator extends PanelMenu.Button {
         // Connect button event handlers
         this._connectSignals();
     }
+
     _loadSettings() {
-        // Make sure reciters array is not empty
+        // Reciter array'in boş olmadığından emin ol
         if (this._reciters.length === 0) {
-            // Add fallback reciter if array is empty
+            // Eğer array boşsa yedek bir reciter ekle
             this._reciters.push({
                 "name": "Mustafa Ismail",
                 "baseUrl": "https://download.quranicaudio.com/quran/mostafa_ismaeel/",
@@ -575,61 +576,66 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             return;
         }
         
-        // Try to load reciter from settings
+        // Ayarlardan reciter yükle
         const reciterId = this._settings.get_string('selected-reciter');
         if (reciterId) {
-            // Find reciter by name (using name as ID)
+            // İsme göre reciter bul (ismi ID olarak kullanıyoruz)
             const foundReciter = this._reciters.find(r => r.name === reciterId);
             if (foundReciter) {
                 this._selectedReciter = foundReciter;
-                // Set juz mode based on reciter type
+                // Reciter tipine göre juz modunu ayarla
                 this._isJuzMode = isJuzBasedReciter(foundReciter);
+                this._log(`Reciter seçildi: ${foundReciter.name}, Juz modu: ${this._isJuzMode}`);
             } else {
-                // Default to first reciter if saved one not found
+                // Eğer kaydedilen bulunamazsa ilk reciter'a geç
                 this._selectedReciter = this._reciters[0];
                 this._isJuzMode = isJuzBasedReciter(this._selectedReciter);
+                this._log(`Kaydedilen reciter bulunamadı, ilk reciter kullanılıyor: ${this._selectedReciter.name}`);
             }
         } else {
-            // Default to first reciter if none saved
+            // Eğer hiç ayar kaydedilmemişse ilk reciter'ı kullan
             this._selectedReciter = this._reciters[0];
             this._isJuzMode = isJuzBasedReciter(this._selectedReciter);
+            this._log(`Ayar bulunamadı, ilk reciter kullanılıyor: ${this._selectedReciter.name}`);
         }
     }
     
     _rebuildContentMenu() {
-        // Remove existing surah or juz groups
+        // Önce tüm mevcut menü öğelerini temizle (kontroller ve ayarlar haricinde)
         let items = this.menu._getMenuItems();
-        
-        // Find where our content starts and ends (after player controls and before settings)
         let contentStartIndex = -1;
         let contentEndIndex = -1;
         
+        // İçerik bölümünü bul
         for (let i = 0; i < items.length; i++) {
-            const item = items[i];
-            if (item instanceof PopupMenu.PopupSeparatorMenuItem) {
+            if (items[i] instanceof PopupMenu.PopupSeparatorMenuItem) {
                 if (contentStartIndex === -1) {
                     contentStartIndex = i + 1;
-                } else if (contentEndIndex === -1) {
+                } else {
                     contentEndIndex = i;
                     break;
                 }
             }
         }
         
-        // If we found our section, remove those items
+        // Eğer bulunduysa, içerik öğelerini sil
         if (contentStartIndex !== -1 && contentEndIndex !== -1) {
+            // Sondan başlayarak sil (dizin değişimini önlemek için)
             for (let i = contentEndIndex - 1; i >= contentStartIndex; i--) {
-                let item = this.menu._getMenuItems()[i];
-                if (item) {
-                    item.destroy();
+                try {
+                    items[i].destroy();
+                } catch(e) {
+                    this._log(`Menü öğesini silerken hata: ${e.message}`);
                 }
             }
         }
         
-        // Add new content based on current mode
+        // Modu kontrol et ve sadece o moda ait grupları ekle
         if (this._isJuzMode) {
+            this._log("Cüz modu aktif, sûreleri gizle, cüzleri göster");
             this._addJuzGroups();
         } else {
+            this._log("Sûre modu aktif, cüzleri gizle, sûreleri göster");
             this._addSurahGroups();
         }
     }
@@ -886,13 +892,21 @@ class QuranPlayerIndicator extends PanelMenu.Button {
         
         // Settings button
         let settingsItem = new PopupMenu.PopupMenuItem(_('Settings'));
-        
-        // Use a simple approach to open settings
         settingsItem.connect('activate', () => {
+            // Direkt olarak komut çalıştır
+            this._log("Settings düğmesine tıklandı, ayarları açma girişimi");
             try {
-                imports.misc.util.spawn(['gnome-extensions', 'prefs', this._extension.uuid]);
+                let cmd = `gnome-extensions prefs ${this._extension.uuid}`;
+                this._log(`Çalıştırılacak komut: ${cmd}`);
+                GLib.spawn_command_line_async(cmd);
             } catch (e) {
-                this._log('Error opening preferences');
+                this._log(`Ayarları açarken hata: ${e.message}`);
+                // Yedek yöntem
+                try {
+                    imports.misc.util.spawn(['gnome-extensions', 'prefs', this._extension.uuid]);
+                } catch (e2) {
+                    this._log(`İkinci yöntemle ayarları açarken hata: ${e2.message}`);
+                }
             }
         });
         
