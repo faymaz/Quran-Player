@@ -886,13 +886,16 @@ class QuranPlayerIndicator extends PanelMenu.Button {
         
         // Settings button
         let settingsItem = new PopupMenu.PopupMenuItem(_('Settings'));
+        
+        // Use a simple approach to open settings
         settingsItem.connect('activate', () => {
             try {
-                ExtensionUtils.openPrefs();
+                imports.misc.util.spawn(['gnome-extensions', 'prefs', this._extension.uuid]);
             } catch (e) {
-                this._log(`Error opening preferences: ${e.message}`);
+                this._log('Error opening preferences');
             }
         });
+        
         this.menu.addMenuItem(settingsItem);
     }
 
@@ -1199,6 +1202,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             if (this._currentItem) {
                 if (this._currentItem.type === 'surah') {
                     this._playSurah(this._currentItem);
+                    this._log("Toggle play/pause");
                 } else if (this._currentItem.type === 'juz') {
                     this._playJuz(this._currentItem);
                 }
@@ -1223,7 +1227,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
     
     _playPrevious() {
         if (!this._currentItem) return;
-        
+        this._log("Play previous");
         if (this._currentItem.type === 'surah') {
             const currentIndex = this._surahs.findIndex(s => s.id === this._currentItem.id);
             if (currentIndex > 0) {
@@ -1246,6 +1250,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
                 this._player = null;
                 this._isPlaying = false;
                 this._updatePlayerUI();
+                this._log("Stop playback");
             } catch (e) {
                 this._log(`Error stopping playback: ${e.message}`);
             }
@@ -1254,7 +1259,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
     
     _playNext() {
         if (!this._currentItem) return;
-        
+        this._log("Play next");
         if (this._currentItem.type === 'surah') {
             const currentIndex = this._surahs.findIndex(s => s.id === this._currentItem.id);
             if (currentIndex < this._surahs.length - 1) {
@@ -1278,7 +1283,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             } else if (this._currentItem.type === 'juz') {
                 this._nowPlayingLabel.text = this._currentItem.name;
             }
-            
+            this._log("Update player UI");
             // Update top panel label to show playing item and reciter
             const reciterName = this._selectedReciter ? this._selectedReciter.name : "";
             this._panelLabel.text = ` ${this._currentItem.name} - ${reciterName}`;
