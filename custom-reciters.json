@@ -6,8 +6,8 @@
     },
     {
       "name": "Abdullah Matrood",
-      "baseUrl": "https://podcasts.qurancentral.com/abdullah-matrood/abdullah-matrood-",
-      "audioFormat": "%id%.mp3"
+      "baseUrl": "https://podcasts.qurancentral.com/abdullah-al-matrood/abdullah-al-matrood-",
+      "audioFormat": "%id%-muslimcentral.com.mp3"
     },
     {
       "name": "Abdul Rahman Al-Sudais",
@@ -85,7 +85,7 @@
       "audioFormat": "%id%.mp3"
     },
     {
-      "name": "Yusuf Ziya Özkan-Elmalı Meali",
+      "name": "Yusuf Ziya Özkan-Elmalı Meali-Cüz",
       "baseUrl": "https://archive.org/download/Yusuf-Ziya-Ozkan-Meal/",
       "audioFormat": "%id%_cuz.mp3"
     },

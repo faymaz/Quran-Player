@@ -27,8 +27,8 @@ try {
       },
       {
         "name": "Abdullah Matrood",
-        "baseUrl": "https://podcasts.qurancentral.com/abdullah-matrood/abdullah-matrood-",
-        "audioFormat": "%id%.mp3"
+        "baseUrl": "https://podcasts.qurancentral.com/abdullah-al-matrood/abdullah-al-matrood-",
+        "audioFormat": "%id%-muslimcentral.com.mp3"
       },
       {
         "name": "Abdul Rahman Al-Sudais",
