@@ -1024,7 +1024,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             this._selectedReciter = {
                 "name": "Hayri Küçükdeniz-Suat Yıldırım Meali",
                 "baseUrl": "https://archive.org/download/Kurani.Kerim.Meali.30.cuz.Prof.Dr.SuatYildirim/",
-                "audioFormat": "%id%cuz.mp3",
+                "audioFormat": "%id%Cuz.mp3",
                 "type": "juz"
             };
         }
@@ -1039,12 +1039,31 @@ class QuranPlayerIndicator extends PanelMenu.Button {
         const audioId = juz.audioId || paddedId;
         
         try {
-            // Build URL using reciter's format
-            audioUrl = `${this._selectedReciter.baseUrl}${this._selectedReciter.audioFormat}`
-                .replace(/%id%/g, paddedId)
-                .replace(/%audioId%/g, audioId)
-                .replace(/%name%/g, juz.name);
-                
+            // Check if this reciter has special format handling
+            if (this._selectedReciter.hasSpecialFormat && this._selectedReciter.formatMap) {
+                // Use special format map for this reciter
+                if (this._selectedReciter.formatMap[audioId]) {
+                    const specialFormat = this._selectedReciter.formatMap[audioId];
+                    audioUrl = `${this._selectedReciter.baseUrl}${specialFormat}`;
+                    this._log(`Using special format for juz ${juz.id}: ${audioUrl}`);
+                } else {
+                    // Fallback to regular format if specific mapping not found
+                    audioUrl = `${this._selectedReciter.baseUrl}${this._selectedReciter.audioFormat}`
+                        .replace(/%id%/g, paddedId)
+                        .replace(/%audioId%/g, audioId)
+                        .replace(/%name%/g, juz.name)
+                        .replace(/%specialFormat%/g, `${paddedId}Cuz.mp3`); // Default fallback
+                    this._log(`Using fallback format for juz ${juz.id}: ${audioUrl}`);
+                }
+            } else {
+                // Build URL using reciter's standard format
+                audioUrl = `${this._selectedReciter.baseUrl}${this._selectedReciter.audioFormat}`
+                    .replace(/%id%/g, paddedId)
+                    .replace(/%audioId%/g, audioId)
+                    .replace(/%name%/g, juz.name);
+                this._log(`Using standard format for juz ${juz.id}: ${audioUrl}`);
+            }
+            
             this._log(`Playing juz: ${juz.name}, URL: ${audioUrl}`);
         } catch (urlError) {
             this._log(`Error creating audio URL: ${urlError.message}`);
