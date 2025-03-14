@@ -836,7 +836,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
                 const isJuzReciter = isJuzBasedReciter(reciter);
                 let displayName = reciter.name;
                 if (isJuzReciter) {
-                    displayName = `${displayName} [Cüz]`;
+                    displayName = `${displayName} [Juz]`;
                 }
                 
                 let item = new PopupMenu.PopupMenuItem(displayName);
@@ -933,9 +933,9 @@ class QuranPlayerIndicator extends PanelMenu.Button {
                 // Update ornaments
                 reciterMenuItem.menu._getMenuItems().forEach(item => {
                     if (item instanceof PopupMenu.PopupMenuItem) {
-                        // Extract reciter name by removing the [Cüz] badge if present
+                        // Extract reciter name by removing the [Juz] badge if present
                         const displayName = item.label.text;
-                        const reciterName = displayName.replace(' [Cüz]', '');
+                        const reciterName = displayName.replace(' [Juz]', '');
                         
                         const isSelected = this._selectedReciter && 
                                         reciterName === this._selectedReciter.name;

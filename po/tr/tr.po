@@ -20,7 +20,7 @@ msgid "Settings"
 msgstr "Ayarlar"
 
 msgid "Reciter"
-msgstr "Okuyucu"
+msgstr "Hafız"
 
 msgid "Now playing"
 msgstr "Şimdi oynatılıyor"
@@ -418,3 +418,6 @@ msgstr "Felak"
 
 msgid "An-Nas"
 msgstr "Nas"
+
+msgid "Juz"
+msgstr "Cüz"

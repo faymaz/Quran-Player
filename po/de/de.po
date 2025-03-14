@@ -418,3 +418,6 @@ msgstr "Al-Falaq"
 
 msgid "An-Nas"
 msgstr "An-Nas"
+
+msgid "Juz"
+msgstr "Juz"

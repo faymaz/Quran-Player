@@ -418,3 +418,6 @@ msgstr "الفلق"
 
 msgid "An-Nas"
 msgstr "الناس"
+
+msgid "Juz"
+msgstr "الجزء"
