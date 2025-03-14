@@ -57,7 +57,7 @@ const DEFAULT_RECITERS = [
         "audioFormat": "%id%.mp3"
       },
       {
-        "name": "Hayri Küçükdeniz-Suat Yıldırım Meali",
+        "name": "Hayri Küçükdeniz-Suat Yıldırım Meali-Cüz",
         "baseUrl": "https://archive.org/download/Kurani.Kerim.Meali.30.cuz.Prof.Dr.SuatYildirim/",
         "audioFormat": "%id%cuz.mp3"
       },
