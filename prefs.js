@@ -5,8 +5,8 @@ import Gio from 'gi://Gio';
 import Gtk from 'gi://Gtk';
 import GLib from 'gi://GLib';
 import GObject from 'gi://GObject';
-
 import {ExtensionPreferences, gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
+
 
 // Helper function to detect juz-based reciters
 function isJuzBasedReciter(reciter) {
@@ -253,6 +253,46 @@ class QuranPlayerPrefsPage extends Adw.PreferencesPage {
         });
         
         generalGroup.add(repeatRow);
+
+        const languageGroup = new Adw.PreferencesGroup({
+            title: _('Language Settings'),
+        });
+        this.add(languageGroup);
+        
+        // Dil Seçimi
+        const languageRow = new Adw.ComboRow({
+            title: _('Interface Language'),
+            subtitle: _('Select language for the interface (changes take effect after restart)'),
+        });
+        
+        // Dil listesi modeli
+        const languageModel = Gtk.StringList.new([
+            _('System Default'),
+            'Türkçe',
+            'Deutsch',
+            'English',
+            'العربية'
+        ]);
+        languageRow.model = languageModel;
+        
+        // Mevcut dili seç
+        const currentLanguage = this._settings.get_string('interface-language');
+        let langIndex = 0; // Default to system
+        const langCodes = ['', 'tr', 'de', 'en', 'ar'];
+        const foundIndex = langCodes.indexOf(currentLanguage);
+        if (foundIndex >= 0) {
+            langIndex = foundIndex;
+        }
+        languageRow.selected = langIndex;
+        
+        // Değiştiğinde ayarları güncelle
+        languageRow.connect('notify::selected', (row) => {
+            if (row.selected >= 0 && row.selected < langCodes.length) {
+                this._settings.set_string('interface-language', langCodes[row.selected]);
+            }
+        });
+        
+        languageGroup.add(languageRow);
 
         // Advanced Settings Group
         const advancedGroup = new Adw.PreferencesGroup({

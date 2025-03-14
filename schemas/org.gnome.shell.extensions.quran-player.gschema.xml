@@ -43,5 +43,11 @@
     <description>Whether to repeatedly play the current surah/juz until stopped</description>
     </key>
 
+    <key name="interface-language" type="s">
+    <default>''</default>
+    <summary>Interface language</summary>
+    <description>Language for the user interface (empty for system default)</description>
+    </key>
+
   </schema>
 </schemalist>

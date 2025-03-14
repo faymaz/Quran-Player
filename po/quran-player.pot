@@ -1,0 +1,122 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-03-14 20:50+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: extension.js:500 extension.js:654 extension.js:1316
+msgid "Quran Player"
+msgstr ""
+
+#: extension.js:780
+msgid "No Juz data available"
+msgstr ""
+
+#: extension.js:824 extension.js:925
+msgid "Reciter"
+msgstr ""
+
+#: extension.js:888
+msgid "No reciters available"
+msgstr ""
+
+#: extension.js:896
+msgid "Settings"
+msgstr ""
+
+#: prefs.js:170
+msgid "Quran Player Settings"
+msgstr ""
+
+#: prefs.js:179
+msgid "General Settings"
+msgstr ""
+
+#: prefs.js:196
+msgid "Quran Reciter"
+msgstr ""
+
+#: prefs.js:197
+msgid "Select a reciter for audio playback"
+msgstr ""
+
+#: prefs.js:220
+msgid "Autoplay next item"
+msgstr ""
+
+#: prefs.js:221
+msgid "Automatically play the next surah/juz when current one finishes"
+msgstr ""
+
+#: prefs.js:233
+msgid "Show notifications"
+msgstr ""
+
+#: prefs.js:234
+msgid "Display notifications when playback starts/stops"
+msgstr ""
+
+#: prefs.js:246
+msgid "Repeat current item"
+msgstr ""
+
+#: prefs.js:247
+msgid "Repeatedly play the current surah/juz until stopped"
+msgstr ""
+
+#: prefs.js:259
+msgid "Advanced Settings"
+msgstr ""
+
+#: prefs.js:265
+msgid "Custom juz list file path"
+msgstr ""
+
+#: prefs.js:277
+msgid "Select Juz File"
+msgstr ""
+
+#: prefs.js:284
+msgid "Select custom juz list JSON file"
+msgstr ""
+
+#: prefs.js:290 prefs.js:340
+msgid "Cancel"
+msgstr ""
+
+#: prefs.js:291 prefs.js:341
+msgid "Select"
+msgstr ""
+
+#: prefs.js:315
+msgid "Custom surah list file path"
+msgstr ""
+
+#: prefs.js:327
+msgid "Select Surah File"
+msgstr ""
+
+#: prefs.js:334
+msgid "Select custom surah list JSON file"
+msgstr ""
+
+#: prefs.js:365
+msgid "Enable debug logs"
+msgstr ""
+
+#: prefs.js:366
+msgid "Enable debug logging for troubleshooting"
+msgstr ""

@@ -2,11 +2,11 @@ UUID = quran-player@faymaz.github.com
 EXTENSION_PATH = ~/.local/share/gnome-shell/extensions/$(UUID)
 SCHEMA_PATH = $(EXTENSION_PATH)/schemas
 
-.PHONY: all install uninstall compile-schemas zip clean
+.PHONY: all install uninstall compile-schemas zip clean update-po compile-po
 
 all: install
 
-install: compile-schemas check-files
+install: compile-schemas compile-po check-files
 	@echo "Installing Quran Player extension..."
 	@mkdir -p $(EXTENSION_PATH)
 	@cp -v extension.js prefs.js metadata.json stylesheet.css constants.js $(EXTENSION_PATH)
@@ -15,6 +15,8 @@ install: compile-schemas check-files
 	@cp -v custom-reciters.json $(EXTENSION_PATH)
 	@mkdir -p $(SCHEMA_PATH)
 	@cp -r schemas/* $(SCHEMA_PATH)
+	@mkdir -p $(EXTENSION_PATH)/locale
+	@cp -r locale/* $(EXTENSION_PATH)/locale/
 	@echo "Installation complete. Please restart GNOME Shell."
 	@echo "On X11: Alt+F2, then type 'r' and press Enter"
 	@echo "On Wayland: Log out and log back in"
@@ -45,7 +47,24 @@ zip: compile-schemas check-files
 		surahs.json juz.json custom-reciters.json schemas/
 	@echo "Created build/$(UUID).zip"
 
+compile-po:
+	@echo "Compiling translation files..."
+	@mkdir -p locale/tr/LC_MESSAGES
+	@mkdir -p locale/de/LC_MESSAGES
+	@mkdir -p locale/en/LC_MESSAGES
+	@mkdir -p locale/ar/LC_MESSAGES
+	@msgfmt -o locale/tr/LC_MESSAGES/$(UUID).mo po/tr/tr.po
+	@msgfmt -o locale/de/LC_MESSAGES/$(UUID).mo po/de/de.po
+	@msgfmt -o locale/en/LC_MESSAGES/$(UUID).mo po/en/en.po
+	@msgfmt -o locale/ar/LC_MESSAGES/$(UUID).mo po/ar/ar.po
+	@echo "Translation files compiled."
+
 clean:
 	@echo "Cleaning build files..."
 	@rm -rf build schemas/gschemas.compiled
 	@echo "Clean complete."
+
+update-po:
+	@echo "Updating translation templates..."
+	@xgettext --files-from=po/POTFILES.in --directory=. --output=po/quran-player.pot --from-code=UTF-8
+	@echo "Updated po/quran-player.pot"
