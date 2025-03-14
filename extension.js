@@ -102,7 +102,7 @@ const DEFAULT_RECITERS = [
         "audioFormat": "%id%.mp3"
       },
       {
-        "name": "Yusuf Ziya Özkan-Elmalı Meali",
+        "name": "Yusuf Ziya Özkan-Elmalı Meali-Cüz",
         "baseUrl": "https://archive.org/download/Yusuf-Ziya-Ozkan-Meal/",
         "audioFormat": "%id%_cuz.mp3"
       },
