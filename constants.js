@@ -9,97 +9,116 @@ export const DEFAULT_RECITERS = [
   {
     "name": "Abdullah Basfar",
     "baseUrl": "https://podcasts.qurancentral.com/abdullah-basfar/abdullah-basfar-",
-    "audioFormat": "%id%.mp3"
+    "audioFormat": "%id%.mp3",
+    "type": "surah"
   },
   {
     "name": "Abdullah Matrood",
     "baseUrl": "https://podcasts.qurancentral.com/abdullah-al-matrood/abdullah-al-matrood-",
-    "audioFormat": "%id%-muslimcentral.com.mp3"
+    "audioFormat": "%id%-muslimcentral.com.mp3",
+    "type": "surah"
   },
   {
     "name": "Abdul Rahman Al-Sudais",
     "baseUrl": "https://podcasts.qurancentral.com/abdul-rahman-al-sudais/192/abdul-rahman-al-sudais-",
-    "audioFormat": "%id%-qurancentral.com-192.mp3"
+    "audioFormat": "%id%-qurancentral.com-192.mp3",
+    "type": "surah"
   },
   {
-    "name": "Abdulbasit Abdussamed",
+    "name": "AbdulBaset AbdulSamad",
     "baseUrl": "https://download.quranicaudio.com/quran/abdul_basit_murattal/",
-    "audioFormat": "%id%.mp3"
+    "audioFormat": "%id%.mp3",
+    "type": "surah"
   },
   {
     "name": "Ahmed Al Ajmi",
     "baseUrl": "https://podcasts.qurancentral.com/ahmed-al-ajmi/ahmed-al-ajmi-",
-    "audioFormat": "%id%.mp3"
+    "audioFormat": "%id%.mp3",
+    "type": "surah"
   },
   {
     "name": "Ali Al-Huthaify",
     "baseUrl": "https://podcasts.qurancentral.com/ali-abdur-rahman-al-huthaify/ali-abdur-rahman-al-huthaify-",
-    "audioFormat": "%id%.mp3"
+    "audioFormat": "%id%.mp3",
+    "type": "surah"
   },
   {
     "name": "Fatih Seferagic",
     "baseUrl": "https://download.quranicaudio.com/quran/fatih_seferagic/",
-    "audioFormat": "%id%.mp3"
+    "audioFormat": "%id%.mp3",
+    "type": "surah"
   },
   {
     "name": "Hani Ar-Rifai",
     "baseUrl": "https://podcasts.qurancentral.com/hani-ar-rifai/hani-ar-rifai-",
-    "audioFormat": "%id%.mp3"
+    "audioFormat": "%id%.mp3",
+    "type": "surah"
   },
   {
-    "name": "Hayri Küçükdeniz-Suat Yıldırım Meali-Cüz",
+    "name": "Hayri Küçükdeniz-Suat Yıldırım Meali",
     "baseUrl": "https://archive.org/download/Kurani.Kerim.Meali.30.cuz.Prof.Dr.SuatYildirim/",
-    "audioFormat": "%id%cuz.mp3"
+    "audioFormat": "%id%cuz.mp3",
+    "type": "juz"
   },
   {
     "name": "Maher Al-Muaiqly",
     "baseUrl": "https://podcasts.qurancentral.com/ali-abdur-rahman-al-huthaify/ali-abdur-rahman-al-huthaify-",
-    "audioFormat": "%id%.mp3"
+    "audioFormat": "%id%.mp3",
+    "type": "surah"
   },
   {
     "name": "Mishary Al-Afasy",
     "baseUrl": "https://podcasts.qurancentral.com/mishary-rashid-alafasy/mishary-rashid-alafasy-",
-    "audioFormat": "%id%-muslimcentral.com.mp3"
+    "audioFormat": "%id%-muslimcentral.com.mp3",
+    "type": "surah"
   },
   {
-    "name": "Mehmet Emin Ay-Cüz",
+    "name": "Mehmet Emin Ay",
     "baseUrl": "https://ia800307.us.archive.org/1/items/MehmetEminAYmp3/Mehmet%20Emin%20AY%20_%20Hatm-i%20%C5%9Eerif%2",
-    "audioFormat": "%id%.C%C3%BCz.mp3"
+    "audioFormat": "%id%.C%C3%BCz.mp3",
+    "type": "juz"
   },
   {
     "name": "Muhammad Ayyub",
     "baseUrl": "https://podcasts.qurancentral.com/muhammad-ayyub/muhammad-ayyub-",
-    "audioFormat": "%id%.mp3"
+    "audioFormat": "%id%.mp3",
+    "type": "surah"
   },
   {
     "name": "Mustafa Ismail",
     "baseUrl": "https://download.quranicaudio.com/quran/mostafa_ismaeel/",
-    "audioFormat": "%id%.mp3"
+    "audioFormat": "%id%.mp3",
+    "type": "surah"
   },
   {
     "name": "Saad El-Ghamidi",
     "baseUrl": "https://podcasts.qurancentral.com/saad-al-ghamdi/saad-al-ghamdi-surah-",
-    "audioFormat": "%id%.mp3"
+    "audioFormat": "%id%.mp3",
+    "type": "surah"
   },
   {
     "name": "Saud Al-Shuraim",
     "baseUrl": "https://podcasts.qurancentral.com/saud-al-shuraim/saud-al-shuraim-",
-    "audioFormat": "%id%.mp3"
+    "audioFormat": "%id%.mp3",
+    "type": "surah"
   },
   {
     "name": "Wadee Hammadi Al Yamani",
     "baseUrl": "https://download.quranicaudio.com/quran/wadee_hammadi_al-yamani/",
-    "audioFormat": "%id%.mp3"
+    "audioFormat": "%id%.mp3",
+    "type": "surah"
   },
   {
-    "name": "Yusuf Ziya Özkan-Elmalı Meali-Cüz",
+    "name": "Yusuf Ziya Özkan-Elmalı Meali",
     "baseUrl": "https://archive.org/download/Yusuf-Ziya-Ozkan-Meal/",
-    "audioFormat": "%id%_cuz.mp3"
+    "audioFormat": "%id%_cuz.mp3",
+    "type": "juz"
   },
   {
     "name": "Yasser Al-Dosari",
     "baseUrl": "https://podcasts.qurancentral.com/yasser-al-dossari/yasser-al-dossari-",
-    "audioFormat": "%id%.mp3"
+    "audioFormat": "%id%.mp3",
+    "type": "surah"
   }
 ];
 
@@ -111,7 +130,25 @@ export function loadReciters() {
         const [success, contents] = recitersFile.load_contents(null);
         
         if (success) {
-            return JSON.parse(new TextDecoder().decode(contents));
+            let reciters = JSON.parse(new TextDecoder().decode(contents));
+            
+            // Make sure each reciter has a type field (default to 'surah')
+            reciters = reciters.map(reciter => {
+                if (!reciter.type) {
+                    // Try to auto-detect by checking the reciter name and audioFormat
+                    if (reciter.name.toLowerCase().includes('cüz') || 
+                        reciter.name.toLowerCase().includes('juz') ||
+                        reciter.audioFormat.includes('cuz') ||
+                        reciter.audioFormat.includes('juz')) {
+                        reciter.type = 'juz';
+                    } else {
+                        reciter.type = 'surah';
+                    }
+                }
+                return reciter;
+            });
+            
+            return reciters;
         } else {
             console.log("Quran Player: Failed to load reciters file, using defaults");
             return DEFAULT_RECITERS;
@@ -125,8 +162,25 @@ export function loadReciters() {
 // Load surahs from file
 export function loadSurahs() {
     try {
-        const extensionPath = ExtensionUtils.getCurrentExtension().path;
-        const surahsFile = Gio.File.new_for_path(GLib.build_filenamev([extensionPath, 'surahs.json']));
+        const extension = ExtensionUtils.getCurrentExtension();
+        const settings = ExtensionUtils.getSettings('org.gnome.shell.extensions.quran-player');
+        
+        // Check if custom path is set and try to load from there first
+        const customPath = settings.get_string('custom-surahs-list-path');
+        if (customPath && customPath.trim() !== '') {
+            try {
+                const customFile = Gio.File.new_for_path(customPath);
+                const [success, contents] = customFile.load_contents(null);
+                if (success) {
+                    return JSON.parse(new TextDecoder().decode(contents));
+                }
+            } catch (customErr) {
+                console.error("Quran Player: Error loading custom surahs file, falling back to default", customErr);
+            }
+        }
+        
+        // Fall back to default file if custom path fails or isn't set
+        const surahsFile = Gio.File.new_for_path(GLib.build_filenamev([extension.path, 'surahs.json']));
         const [success, contents] = surahsFile.load_contents(null);
         
         if (success) {
@@ -248,11 +302,11 @@ export function loadSurahs() {
                 {"name": "İhlas", "id": 112, "audioId": "112"},
                 {"name": "Felak", "id": 113, "audioId": "113"},
                 {"name": "Nas", "id": 114, "audioId": "114"}
-            ];
-        }
-    } catch (e) {
-        console.error("Quran Player: Error loading surahs", e);
-        return [
+              ];
+            }
+        } catch (e) {
+            console.error("Quran Player: Error loading surahs", e);
+            return [
             {"name": "Fatiha", "id": 1, "audioId": "001"},
             {"name": "Bakara", "id": 2, "audioId": "002"},
             {"name": "Al-i İmran", "id": 3, "audioId": "003"},
@@ -367,6 +421,59 @@ export function loadSurahs() {
             {"name": "İhlas", "id": 112, "audioId": "112"},
             {"name": "Felak", "id": 113, "audioId": "113"},
             {"name": "Nas", "id": 114, "audioId": "114"}
-        ];
+          ];
+        }
     }
+
+// Load juz data from file
+export function loadJuz() {
+  try {
+      const extension = ExtensionUtils.getCurrentExtension();
+      const settings = ExtensionUtils.getSettings('org.gnome.shell.extensions.quran-player');
+      
+      // Check if custom path is set and try to load from there first
+      const customPath = settings.get_string('custom-juz-list-path');
+      if (customPath && customPath.trim() !== '') {
+          try {
+              const customFile = Gio.File.new_for_path(customPath);
+              const [success, contents] = customFile.load_contents(null);
+              if (success) {
+                  return JSON.parse(new TextDecoder().decode(contents));
+              }
+          } catch (customErr) {
+              console.error("Quran Player: Error loading custom juz file, falling back to default", customErr);
+          }
+      }
+      
+      // Fall back to default file if custom path fails or isn't set
+      const juzFile = Gio.File.new_for_path(GLib.build_filenamev([extension.path, 'juz.json']));
+      const [success, contents] = juzFile.load_contents(null);
+      
+      if (success) {
+          return JSON.parse(new TextDecoder().decode(contents));
+      } else {
+          console.log("Quran Player: Failed to load juz file");
+          return [];
+      }
+  } catch (e) {
+      console.error("Quran Player: Error loading juz data", e);
+      return [];
+  }
+}
+
+// Check if reciter is juz-based
+export function isJuzBasedReciter(reciter) {
+  if (!reciter) return false;
+  
+  // Check explicit type first
+  if (reciter.type === 'juz') return true;
+  
+  // Check name and format as fallback
+  const nameIndicatesJuz = reciter.name.toLowerCase().includes('cüz') || 
+                            reciter.name.toLowerCase().includes('juz');
+                            
+  const formatIndicatesJuz = reciter.audioFormat.includes('cuz') || 
+                             reciter.audioFormat.includes('juz');
+                             
+  return nameIndicatesJuz || formatIndicatesJuz;
 }

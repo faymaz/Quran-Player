@@ -1,97 +1,116 @@
 [
-    {
-      "name": "Abdullah Basfar",
-      "baseUrl": "https://podcasts.qurancentral.com/abdullah-basfar/abdullah-basfar-",
-      "audioFormat": "%id%.mp3"
-    },
-    {
-      "name": "Abdullah Matrood",
-      "baseUrl": "https://podcasts.qurancentral.com/abdullah-al-matrood/abdullah-al-matrood-",
-      "audioFormat": "%id%-muslimcentral.com.mp3"
-    },
-    {
-      "name": "Abdul Rahman Al-Sudais",
-      "baseUrl": "https://podcasts.qurancentral.com/abdul-rahman-al-sudais/192/abdul-rahman-al-sudais-",
-      "audioFormat": "%id%-qurancentral.com-192.mp3"
-    },
-    {
-      "name": "Abdulbasit Abdussamed",
-      "baseUrl": "https://download.quranicaudio.com/quran/abdul_basit_murattal/",
-      "audioFormat": "%id%.mp3"
-    },
-    {
-      "name": "Ahmed Al Ajmi",
-      "baseUrl": "https://podcasts.qurancentral.com/ahmed-al-ajmi/ahmed-al-ajmi-",
-      "audioFormat": "%id%.mp3"
-    },
-    {
-      "name": "Ali Al-Huthaify",
-      "baseUrl": "https://podcasts.qurancentral.com/ali-abdur-rahman-al-huthaify/ali-abdur-rahman-al-huthaify-",
-      "audioFormat": "%id%.mp3"
-    },
-    {
-      "name": "Fatih Seferagic",
-      "baseUrl": "https://download.quranicaudio.com/quran/fatih_seferagic/",
-      "audioFormat": "%id%.mp3"
-    },
-    {
-      "name": "Hani Ar-Rifai",
-      "baseUrl": "https://podcasts.qurancentral.com/hani-ar-rifai/hani-ar-rifai-",
-      "audioFormat": "%id%.mp3"
-    },
-    {
-      "name": "Hayri Küçükdeniz-Suat Yıldırım Meali-Cüz",
-      "baseUrl": "https://archive.org/download/Kurani.Kerim.Meali.30.cuz.Prof.Dr.SuatYildirim/",
-      "audioFormat": "%id%cuz.mp3"
-    },
-    {
-      "name": "Maher Al-Muaiqly",
-      "baseUrl": "https://podcasts.qurancentral.com/ali-abdur-rahman-al-huthaify/ali-abdur-rahman-al-huthaify-",
-      "audioFormat": "%id%.mp3"
-    },
-    {
-      "name": "Mishary Al-Afasy",
-      "baseUrl": "https://podcasts.qurancentral.com/mishary-rashid-alafasy/mishary-rashid-alafasy-",
-      "audioFormat": "%id%-muslimcentral.com.mp3"
-    },
-    {
-      "name": "Mehmet Emin Ay-Cüz",
-      "baseUrl": "https://ia800307.us.archive.org/1/items/MehmetEminAYmp3/Mehmet%20Emin%20AY%20_%20Hatm-i%20%C5%9Eerif%2",
-      "audioFormat": "%id%.C%C3%BCz.mp3"
-    },
-    {
-      "name": "Muhammad Ayyub",
-      "baseUrl": "https://podcasts.qurancentral.com/muhammad-ayyub/muhammad-ayyub-",
-      "audioFormat": "%id%.mp3"
-    },
-    {
-      "name": "Mustafa Ismail",
-      "baseUrl": "https://download.quranicaudio.com/quran/mostafa_ismaeel/",
-      "audioFormat": "%id%.mp3"
-    },
-    {
-      "name": "Saad El-Ghamidi",
-      "baseUrl": "https://podcasts.qurancentral.com/saad-al-ghamdi/saad-al-ghamdi-surah-",
-      "audioFormat": "%id%.mp3"
-    },
-    {
-      "name": "Saud Al-Shuraim",
-      "baseUrl": "https://podcasts.qurancentral.com/saud-al-shuraim/saud-al-shuraim-",
-      "audioFormat": "%id%.mp3"
-    },
-    {
-      "name": "Wadee Hammadi Al Yamani",
-      "baseUrl": "https://download.quranicaudio.com/quran/wadee_hammadi_al-yamani/",
-      "audioFormat": "%id%.mp3"
-    },
-    {
-      "name": "Yusuf Ziya Özkan-Elmalı Meali-Cüz",
-      "baseUrl": "https://archive.org/download/Yusuf-Ziya-Ozkan-Meal/",
-      "audioFormat": "%id%_cuz.mp3"
-    },
-    {
-      "name": "Yasser Al-Dosari",
-      "baseUrl": "https://podcasts.qurancentral.com/yasser-al-dossari/yasser-al-dossari-",
-      "audioFormat": "%id%.mp3"
-    }
-  ]
+  {
+    "name": "Abdullah Basfar",
+    "baseUrl": "https://podcasts.qurancentral.com/abdullah-basfar/abdullah-basfar-",
+    "audioFormat": "%id%.mp3",
+    "type": "surah"
+  },
+  {
+    "name": "Abdullah Matrood",
+    "baseUrl": "https://podcasts.qurancentral.com/abdullah-al-matrood/abdullah-al-matrood-",
+    "audioFormat": "%id%-muslimcentral.com.mp3",
+    "type": "surah"
+  },
+  {
+    "name": "Abdul Rahman Al-Sudais",
+    "baseUrl": "https://podcasts.qurancentral.com/abdul-rahman-al-sudais/192/abdul-rahman-al-sudais-",
+    "audioFormat": "%id%-qurancentral.com-192.mp3",
+    "type": "surah"
+  },
+  {
+    "name": "AbdulBaset AbdulSamad",
+    "baseUrl": "https://download.quranicaudio.com/quran/abdul_basit_murattal/",
+    "audioFormat": "%id%.mp3",
+    "type": "surah"
+  },
+  {
+    "name": "Ahmed Al Ajmi",
+    "baseUrl": "https://podcasts.qurancentral.com/ahmed-al-ajmi/ahmed-al-ajmi-",
+    "audioFormat": "%id%.mp3",
+    "type": "surah"
+  },
+  {
+    "name": "Ali Al-Huthaify",
+    "baseUrl": "https://podcasts.qurancentral.com/ali-abdur-rahman-al-huthaify/ali-abdur-rahman-al-huthaify-",
+    "audioFormat": "%id%.mp3",
+    "type": "surah"
+  },
+  {
+    "name": "Fatih Seferagic",
+    "baseUrl": "https://download.quranicaudio.com/quran/fatih_seferagic/",
+    "audioFormat": "%id%.mp3",
+    "type": "surah"
+  },
+  {
+    "name": "Hani Ar-Rifai",
+    "baseUrl": "https://podcasts.qurancentral.com/hani-ar-rifai/hani-ar-rifai-",
+    "audioFormat": "%id%.mp3",
+    "type": "surah"
+  },
+  {
+    "name": "Hayri Küçükdeniz-Suat Yıldırım Meali",
+    "baseUrl": "https://archive.org/download/Kurani.Kerim.Meali.30.cuz.Prof.Dr.SuatYildirim/",
+    "audioFormat": "%id%cuz.mp3",
+    "type": "juz"
+  },
+  {
+    "name": "Maher Al-Muaiqly",
+    "baseUrl": "https://podcasts.qurancentral.com/ali-abdur-rahman-al-huthaify/ali-abdur-rahman-al-huthaify-",
+    "audioFormat": "%id%.mp3",
+    "type": "surah"
+  },
+  {
+    "name": "Mishary Al-Afasy",
+    "baseUrl": "https://podcasts.qurancentral.com/mishary-rashid-alafasy/mishary-rashid-alafasy-",
+    "audioFormat": "%id%-muslimcentral.com.mp3",
+    "type": "surah"
+  },
+  {
+    "name": "Mehmet Emin Ay",
+    "baseUrl": "https://ia800307.us.archive.org/1/items/MehmetEminAYmp3/Mehmet%20Emin%20AY%20_%20Hatm-i%20%C5%9Eerif%2",
+    "audioFormat": "%id%.C%C3%BCz.mp3",
+    "type": "juz"
+  },
+  {
+    "name": "Muhammad Ayyub",
+    "baseUrl": "https://podcasts.qurancentral.com/muhammad-ayyub/muhammad-ayyub-",
+    "audioFormat": "%id%.mp3",
+    "type": "surah"
+  },
+  {
+    "name": "Mustafa Ismail",
+    "baseUrl": "https://download.quranicaudio.com/quran/mostafa_ismaeel/",
+    "audioFormat": "%id%.mp3",
+    "type": "surah"
+  },
+  {
+    "name": "Saad El-Ghamidi",
+    "baseUrl": "https://podcasts.qurancentral.com/saad-al-ghamdi/saad-al-ghamdi-surah-",
+    "audioFormat": "%id%.mp3",
+    "type": "surah"
+  },
+  {
+    "name": "Saud Al-Shuraim",
+    "baseUrl": "https://podcasts.qurancentral.com/saud-al-shuraim/saud-al-shuraim-",
+    "audioFormat": "%id%.mp3",
+    "type": "surah"
+  },
+  {
+    "name": "Wadee Hammadi Al Yamani",
+    "baseUrl": "https://download.quranicaudio.com/quran/wadee_hammadi_al-yamani/",
+    "audioFormat": "%id%.mp3",
+    "type": "surah"
+  },
+  {
+    "name": "Yusuf Ziya Özkan-Elmalı Meali",
+    "baseUrl": "https://archive.org/download/Yusuf-Ziya-Ozkan-Meal/",
+    "audioFormat": "%id%_cuz.mp3",
+    "type": "juz"
+  },
+  {
+    "name": "Yasser Al-Dosari",
+    "baseUrl": "https://podcasts.qurancentral.com/yasser-al-dossari/yasser-al-dossari-",
+    "audioFormat": "%id%.mp3",
+    "type": "surah"
+  }
+]

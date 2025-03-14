@@ -13,6 +13,12 @@
       <description>Full path to a custom JSON file containing surah list</description>
     </key>
     
+    <key name="custom-juz-list-path" type="s">
+      <default>''</default>
+      <summary>Custom juz list file path</summary>
+      <description>Full path to a custom JSON file containing juz list</description>
+    </key>
+    
     <key name="autoplay-next" type="b">
       <default>false</default>
       <summary>Autoplay next surah</summary>

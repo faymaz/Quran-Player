@@ -14,7 +14,7 @@ import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import * as ExtensionUtils from 'resource:///org/gnome/shell/misc/extensionUtils.js';
 import * as MessageTray from 'resource:///org/gnome/shell/ui/messageTray.js';
 
-// Import constants but initialize data separately
+// Import from constants.js
 import {
     loadReciters,
     loadSurahs,
@@ -22,55 +22,28 @@ import {
     isJuzBasedReciter
 } from './constants.js';
 
-// Initialize Juz data directly from extension path
-function initializeJuzData() {
-    try {
-        // Try to load from extension's juz.json file
-        const extension = ExtensionUtils.getCurrentExtension();
-        const juzFilePath = GLib.build_filenamev([extension.path, 'juz.json']);
-        const juzFile = Gio.File.new_for_path(juzFilePath);
-        
-        if (!juzFile.query_exists(null)) {
-            log('Quran Player: juz.json not found at path: ' + juzFilePath);
-            return [];
-        }
-        
-        const [success, contents] = juzFile.load_contents(null);
-        
-        if (success && contents && contents.length > 0) {
-            const jsonData = JSON.parse(new TextDecoder().decode(contents));
-            log('Quran Player: Successfully loaded Juz data with ' + jsonData.length + ' entries');
-            return jsonData;
-        } else {
-            log('Quran Player: Failed to parse Juz data');
-            return [];
-        }
-    } catch (e) {
-        log('Quran Player: Error loading Juz data: ' + e.message);
-        return [];
-    }
-}
-
 // Initialize globals
 let surahs = [];
-let juzData = []; 
+let juzData = [];
 let RECITERS = [];
 
 try {
     // Load data
     surahs = loadSurahs();
+    juzData = loadJuz();
     RECITERS = loadReciters();
-    
-    // Load Juz data with direct method to ensure it's loaded
-    juzData = initializeJuzData();
-    
-    // Log data status
-    log('Quran Player: Loaded ' + surahs.length + ' surahs');
-    log('Quran Player: Loaded ' + juzData.length + ' juz entries');
-    log('Quran Player: Loaded ' + RECITERS.length + ' reciters');
 } catch (e) {
     logError(e, 'Quran Player: Failed to load data');
     // Default fallbacks are handled in the loading functions
+}
+
+// Ensure GStreamer is initialized
+try {
+    if (!Gst.init_check(null)) {
+        Gst.init(null);
+    }
+} catch (e) {
+    logError(e, 'Quran Player: Failed to initialize GStreamer');
 }
 
 const QuranPlayerIndicator = GObject.registerClass(
@@ -109,12 +82,6 @@ class QuranPlayerIndicator extends PanelMenu.Button {
         this._isPlaying = false;
         this._selectedReciter = RECITERS.length > 0 ? RECITERS[0] : null;
         this._isJuzMode = false; // Track if we're in juz mode
-        
-        // Reload Juz data to make sure it's available
-        if (juzData.length === 0) {
-            juzData = initializeJuzData();
-            log('Quran Player: Reloaded Juz data, now have ' + juzData.length + ' entries');
-        }
         
         // Load saved settings
         this._loadSettings();
@@ -335,19 +302,13 @@ class QuranPlayerIndicator extends PanelMenu.Button {
     _addJuzGroups() {
         // Check if we have juz data
         if (!juzData || juzData.length === 0) {
-            // Try loading directly one more time
-            juzData = initializeJuzData();
-            
-            // If still no data, show a message
-            if (!juzData || juzData.length === 0) {
-                this._log("No Juz data available, please check juz.json file");
-                let noDataItem = new PopupMenu.PopupMenuItem(_('No Juz data available'));
-                noDataItem.setSensitive(false);
-                this.menu.addMenuItem(noDataItem);
-                return;
-            }
+            // Show a message if no juz data
+            let noDataItem = new PopupMenu.PopupMenuItem(_('No Juz data available'));
+            noDataItem.setSensitive(false);
+            this.menu.addMenuItem(noDataItem);
+            return;
         }
-    
+
         // Group juz in sets of 5 (1-5, 6-10, etc)
         const groupSize = 5;
         const groupCount = Math.ceil(juzData.length / groupSize);
@@ -886,398 +847,22 @@ class QuranPlayerIndicator extends PanelMenu.Button {
     }
 });
 
-function debugJuzLoading() {
-    try {
-        const extension = ExtensionUtils.getCurrentExtension();
-        
-        // Log extension path
-        log('Quran Player: Extension path: ' + extension.path);
-        
-        // Check if juz.json exists
-        const juzFilePath = GLib.build_filenamev([extension.path, 'juz.json']);
-        log('Quran Player: Checking for juz.json at: ' + juzFilePath);
-        
-        const juzFile = Gio.File.new_for_path(juzFilePath);
-        const exists = juzFile.query_exists(null);
-        
-        log('Quran Player: juz.json exists: ' + exists);
-        
-        if (!exists) {
-            log('Quran Player: File not found. Creating juz.json with default data...');
-            
-            // Create default juz data
-            const juzData = [
-                {
-                    "name": "1. Cüz",
-                    "id": 1,
-                    "audioId": "01",
-                    "description": "Al-Fatiha 1 - Al-Baqarah 141",
-                    "startSurah": 1,
-                    "endSurah": 2,
-                    "endVerse": 141
-                  },
-                  {
-                    "name": "2. Cüz",
-                    "id": 2,
-                    "audioId": "02",
-                    "description": "Al-Baqarah 142 - Al-Baqarah 252",
-                    "startSurah": 2,
-                    "startVerse": 142,
-                    "endSurah": 2,
-                    "endVerse": 252
-                  },
-                  {
-                    "name": "3. Cüz",
-                    "id": 3,
-                    "audioId": "03",
-                    "description": "Al-Baqarah 253 - Al-Imran 92",
-                    "startSurah": 2,
-                    "startVerse": 253,
-                    "endSurah": 3,
-                    "endVerse": 92
-                  },
-                  {
-                    "name": "4. Cüz",
-                    "id": 4,
-                    "audioId": "04",
-                    "description": "Al-Imran 93 - An-Nisa 23",
-                    "startSurah": 3,
-                    "startVerse": 93,
-                    "endSurah": 4,
-                    "endVerse": 23
-                  },
-                  {
-                    "name": "5. Cüz",
-                    "id": 5,
-                    "audioId": "05",
-                    "description": "An-Nisa 24 - An-Nisa 147",
-                    "startSurah": 4,
-                    "startVerse": 24,
-                    "endSurah": 4,
-                    "endVerse": 147
-                  },
-                  {
-                    "name": "6. Cüz",
-                    "id": 6,
-                    "audioId": "06",
-                    "description": "An-Nisa 148 - Al-Ma'idah 81",
-                    "startSurah": 4,
-                    "startVerse": 148,
-                    "endSurah": 5,
-                    "endVerse": 81
-                  },
-                  {
-                    "name": "7. Cüz",
-                    "id": 7,
-                    "audioId": "07",
-                    "description": "Al-Ma'idah 82 - Al-An'am 110",
-                    "startSurah": 5,
-                    "startVerse": 82,
-                    "endSurah": 6,
-                    "endVerse": 110
-                  },
-                  {
-                    "name": "8. Cüz",
-                    "id": 8,
-                    "audioId": "08",
-                    "description": "Al-An'am 111 - Al-A'raf 87",
-                    "startSurah": 6,
-                    "startVerse": 111,
-                    "endSurah": 7,
-                    "endVerse": 87
-                  },
-                  {
-                    "name": "9. Cüz",
-                    "id": 9,
-                    "audioId": "09",
-                    "description": "Al-A'raf 88 - Al-Anfal 40",
-                    "startSurah": 7,
-                    "startVerse": 88,
-                    "endSurah": 8,
-                    "endVerse": 40
-                  },
-                  {
-                    "name": "10. Cüz",
-                    "id": 10,
-                    "audioId": "10",
-                    "description": "Al-Anfal 41 - At-Tawbah 92",
-                    "startSurah": 8,
-                    "startVerse": 41,
-                    "endSurah": 9,
-                    "endVerse": 92
-                  },
-                  {
-                    "name": "11. Cüz",
-                    "id": 11,
-                    "audioId": "11",
-                    "description": "At-Tawbah 93 - Hud 5",
-                    "startSurah": 9,
-                    "startVerse": 93,
-                    "endSurah": 11,
-                    "endVerse": 5
-                  },
-                  {
-                    "name": "12. Cüz",
-                    "id": 12,
-                    "audioId": "12",
-                    "description": "Hud 6 - Yusuf 52",
-                    "startSurah": 11,
-                    "startVerse": 6,
-                    "endSurah": 12,
-                    "endVerse": 52
-                  },
-                  {
-                    "name": "13. Cüz",
-                    "id": 13,
-                    "audioId": "13",
-                    "description": "Yusuf 53 - Ibrahim 52",
-                    "startSurah": 12,
-                    "startVerse": 53,
-                    "endSurah": 14,
-                    "endVerse": 52
-                  },
-                  {
-                    "name": "14. Cüz",
-                    "id": 14,
-                    "audioId": "14",
-                    "description": "Al-Hijr 1 - An-Nahl 128",
-                    "startSurah": 15,
-                    "startVerse": 1,
-                    "endSurah": 16,
-                    "endVerse": 128
-                  },
-                  {
-                    "name": "15. Cüz",
-                    "id": 15,
-                    "audioId": "15",
-                    "description": "Al-Isra 1 - Al-Kahf 74",
-                    "startSurah": 17,
-                    "startVerse": 1,
-                    "endSurah": 18,
-                    "endVerse": 74
-                  },
-                  {
-                    "name": "16. Cüz",
-                    "id": 16,
-                    "audioId": "16",
-                    "description": "Al-Kahf 75 - Ta-Ha 135",
-                    "startSurah": 18,
-                    "startVerse": 75,
-                    "endSurah": 20,
-                    "endVerse": 135
-                  },
-                  {
-                    "name": "17. Cüz",
-                    "id": 17,
-                    "audioId": "17",
-                    "description": "Al-Anbiya 1 - Al-Hajj 78",
-                    "startSurah": 21,
-                    "startVerse": 1,
-                    "endSurah": 22,
-                    "endVerse": 78
-                  },
-                  {
-                    "name": "18. Cüz",
-                    "id": 18,
-                    "audioId": "18",
-                    "description": "Al-Mu'minun 1 - Al-Furqan 20",
-                    "startSurah": 23,
-                    "startVerse": 1,
-                    "endSurah": 25,
-                    "endVerse": 20
-                  },
-                  {
-                    "name": "19. Cüz",
-                    "id": 19,
-                    "audioId": "19",
-                    "description": "Al-Furqan 21 - An-Naml 55",
-                    "startSurah": 25,
-                    "startVerse": 21,
-                    "endSurah": 27,
-                    "endVerse": 55
-                  },
-                  {
-                    "name": "20. Cüz",
-                    "id": 20,
-                    "audioId": "20",
-                    "description": "An-Naml 56 - Al-Ankabut 45",
-                    "startSurah": 27,
-                    "startVerse": 56,
-                    "endSurah": 29,
-                    "endVerse": 45
-                  },
-                  {
-                    "name": "21. Cüz",
-                    "id": 21,
-                    "audioId": "21",
-                    "description": "Al-Ankabut 46 - Al-Ahzab 30",
-                    "startSurah": 29,
-                    "startVerse": 46,
-                    "endSurah": 33,
-                    "endVerse": 30
-                  },
-                  {
-                    "name": "22. Cüz",
-                    "id": 22,
-                    "audioId": "22",
-                    "description": "Al-Ahzab 31 - Ya-Sin 27",
-                    "startSurah": 33,
-                    "startVerse": 31,
-                    "endSurah": 36,
-                    "endVerse": 27
-                  },
-                  {
-                    "name": "23. Cüz",
-                    "id": 23,
-                    "audioId": "23",
-                    "description": "Ya-Sin 28 - Az-Zumar 31",
-                    "startSurah": 36,
-                    "startVerse": 28,
-                    "endSurah": 39,
-                    "endVerse": 31
-                  },
-                  {
-                    "name": "24. Cüz",
-                    "id": 24,
-                    "audioId": "24",
-                    "description": "Az-Zumar 32 - Fussilat 46",
-                    "startSurah": 39,
-                    "startVerse": 32,
-                    "endSurah": 41,
-                    "endVerse": 46
-                  },
-                  {
-                    "name": "25. Cüz",
-                    "id": 25,
-                    "audioId": "25",
-                    "description": "Fussilat 47 - Al-Jathiyah 37",
-                    "startSurah": 41,
-                    "startVerse": 47,
-                    "endSurah": 45,
-                    "endVerse": 37
-                  },
-                  {
-                    "name": "26. Cüz",
-                    "id": 26,
-                    "audioId": "26",
-                    "description": "Al-Ahqaf 1 - Adh-Dhariyat 30",
-                    "startSurah": 46,
-                    "startVerse": 1,
-                    "endSurah": 51,
-                    "endVerse": 30
-                  },
-                  {
-                    "name": "27. Cüz",
-                    "id": 27,
-                    "audioId": "27",
-                    "description": "Adh-Dhariyat 31 - Al-Hadid 29",
-                    "startSurah": 51,
-                    "startVerse": 31,
-                    "endSurah": 57,
-                    "endVerse": 29
-                  },
-                  {
-                    "name": "28. Cüz",
-                    "id": 28,
-                    "audioId": "28",
-                    "description": "Al-Mujadila 1 - At-Tahrim 12",
-                    "startSurah": 58,
-                    "startVerse": 1,
-                    "endSurah": 66,
-                    "endVerse": 12
-                  },
-                  {
-                    "name": "29. Cüz",
-                    "id": 29,
-                    "audioId": "29",
-                    "description": "Al-Mulk 1 - Al-Mursalat 50",
-                    "startSurah": 67,
-                    "startVerse": 1,
-                    "endSurah": 77,
-                    "endVerse": 50
-                  },
-                  {
-                    "name": "30. Cüz",
-                    "id": 30,
-                    "audioId": "30",
-                    "description": "An-Naba 1 - An-Nas 6",
-                    "startSurah": 78,
-                    "startVerse": 1,
-                    "endSurah": 114,
-                    "endVerse": 6
-                  }
-            ];
-            
-            // Convert to JSON
-            const juzContent = JSON.stringify(juzData, null, 2);
-            
-            // Write to file
-            try {
-                const bytes = new TextEncoder().encode(juzContent);
-                const outputStream = juzFile.replace(null, false, Gio.FileCreateFlags.NONE, null);
-                outputStream.write_all(bytes, null);
-                outputStream.close(null);
-                log('Quran Player: Successfully created juz.json with default data');
-            } catch (writeError) {
-                log('Quran Player: Error writing juz.json: ' + writeError.message);
-            }
-            
-            return juzData;
-        }
-        
-        // Try to read the file
-        try {
-            const [success, contents] = juzFile.load_contents(null);
-            
-            if (success && contents && contents.length > 0) {
-                const jsonData = JSON.parse(new TextDecoder().decode(contents));
-                log('Quran Player: Successfully loaded Juz data with ' + jsonData.length + ' entries');
-                return jsonData;
-            } else {
-                log('Quran Player: Failed to read juz.json contents');
-                return [];
-            }
-        } catch (readError) {
-            log('Quran Player: Error reading juz.json: ' + readError.message);
-            return [];
-        }
-    } catch (e) {
-        log('Quran Player: Debug error: ' + e.message);
-        return [];
-    }
-}
-
 export default class QuranPlayerExtension extends Extension {
     enable() {
-        log('Quran Player: Enabling extension');
-        
-        // Load juz data directly
-        if (juzData.length === 0) {
-            log('Quran Player: No Juz data loaded, trying debug loading...');
-            juzData = debugJuzLoading();
-            log('Quran Player: Debug loaded ' + juzData.length + ' juz entries');
-        }
-        
         // Load settings schema
         this._settings = this.getSettings();
         
         // Create and add indicator to panel
         this._indicator = new QuranPlayerIndicator(this);
         Main.panel.addToStatusArea('quran-player', this._indicator);
-        
-        log('Quran Player: Extension enabled');
     }
     
     disable() {
-        log('Quran Player: Disabling extension');
-        
         if (this._indicator) {
             this._indicator.destroy();
             this._indicator = null;
         }
         this._settings = null;
-        
-        log('Quran Player: Extension disabled');
     }
     
     getSettings() {
