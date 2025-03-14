@@ -732,6 +732,10 @@ class QuranPlayerIndicator extends PanelMenu.Button {
         this._nextButton.connect('clicked', () => {
             this._playNext();
         });
+        this._settings.connect('changed::interface-language', () => {
+                       this._showNotification(_("Language Changed"), 
+                                 _("Please restart GNOME Shell for the language change to take effect"));
+        });
     }        
     
     _addSurahGroups() {
@@ -1328,7 +1332,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             this._player = null;
             this._isPlaying = false;
             
-            // Tekrarlama ayarını kontrol et
+  
             if (this._settings.get_boolean('repeat-current') && this._currentItem) {
                 this._log("Tekrarlama modu aktif, mevcut öğeyi tekrar oynat");
                 // Mevcut öğeyi tekrar oynat
@@ -1338,7 +1342,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
                     this._playJuz(this._currentItem);
                 }
             }
-            // Tekrarlama aktif değilse, otomatik olarak sonraki öğeye geç
+
             else if (this._settings.get_boolean('autoplay-next') && this._currentItem) {
                 this._playNext();
             } else {
@@ -1371,12 +1375,31 @@ export default class QuranPlayerExtension extends Extension {
         // Load settings schema
         this._settings = this.getSettings();
         
+        // Dil ayarını yükle
+        this._configureLocale();
        
         // Create and add indicator to panel
         this._indicator = new QuranPlayerIndicator(this);
         Main.panel.addToStatusArea('quran-player', this._indicator);
         
         log('Quran Player: Extension enabled');
+    }
+
+    _configureLocale() {
+        const interfaceLanguage = this._settings.get_string('interface-language');
+        if (interfaceLanguage) {
+            try {
+                // Dil dosyasını belirle ve yükle
+                const localeDir = GLib.build_filenamev([this.path, 'locale']);
+                Gettext.bindtextdomain('quran-player@faymaz.github.com', localeDir);
+                Gettext.textdomain('quran-player@faymaz.github.com');
+                
+                // Dili değiştir
+                GLib.setenv('LANGUAGE', interfaceLanguage, true);
+            } catch (e) {
+                log(`Quran Player: Error setting locale: ${e.message}`);
+            }
+        }
     }
     
     disable() {
