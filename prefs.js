@@ -47,7 +47,7 @@ try {
       },
       {
         "name": "Ali Al-Huthaify",
-        "baseUrl": "https://podcasts.qurancentral.com/ali-al-huthaify/ali-al-huthaify-",
+        "baseUrl": "https://podcasts.qurancentral.com/ali-abdur-rahman-al-huthaify/ali-abdur-rahman-al-huthaify-",
         "audioFormat": "%id%.mp3"
       },
       {
@@ -67,13 +67,13 @@ try {
       },
       {
         "name": "Maher Al-Muaiqly",
-        "baseUrl": "https://podcasts.qurancentral.com/maher-al-muaiqly/maher-al-muaiqly-",
+        "baseUrl": "https://podcasts.qurancentral.com/ali-abdur-rahman-al-huthaify/ali-abdur-rahman-al-huthaify-",
         "audioFormat": "%id%.mp3"
       },
       {
         "name": "Mishary Al-Afasy",
-        "baseUrl": "https://podcasts.qurancentral.com/mishary-al-afasy/mishary-al-afasy-",
-        "audioFormat": "%id%.mp3"
+        "baseUrl": "https://podcasts.qurancentral.com/mishary-rashid-alafasy/mishary-rashid-alafasy-",
+        "audioFormat": "%id%-muslimcentral.com.mp3"
       },
       {
         "name": "Mehmet Emin Ay-Cüz",
@@ -112,7 +112,7 @@ try {
       },
       {
         "name": "Yasser Al-Dosari",
-        "baseUrl": "https://podcasts.qurancentral.com/yasser-al-dosari/yasser-al-dosari-",
+        "baseUrl": "https://podcasts.qurancentral.com/yasser-al-dossari/yasser-al-dossari-",
         "audioFormat": "%id%.mp3"
       }
     ];
