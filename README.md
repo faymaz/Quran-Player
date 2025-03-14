@@ -1,4 +1,11 @@
+![Visitor Count](https://visitor-badge.laobi.icu/badge?page_id=faymaz.quran-player)
 # Quran Player GNOME Shell Extension
+
+
+**Author:** [faymaz](https://github.com/faymaz)
+
+
+![quran-player - 1](img/quran-player_1.png)
 
 A GNOME Shell extension that lets you listen to Quran recitations directly from your desktop.
 
