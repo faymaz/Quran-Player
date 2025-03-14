@@ -1,0 +1,17 @@
+{
+  "name": "Quran Player",
+  "description": "Listen to Quran recitations directly from your GNOME Shell",
+  "uuid": "quran-player@faymaz.github.com",
+  "donations": {
+      "github": "https://github.com/faymaz"
+  },
+  "settings-schema": "org.gnome.shell.extensions.quran-player",
+  "shell-version": [
+      "45",
+      "46",
+      "47"
+  ],
+  "version": 1,
+  "url": "https://github.com/faymaz/quran-player-extension",
+  "gettext-domain": "quran-player-extension"
+}

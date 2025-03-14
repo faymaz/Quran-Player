@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+  <schema id="org.gnome.shell.extensions.quran-player" path="/org/gnome/shell/extensions/quran-player/">
+    <key name="selected-reciter" type="s">
+      <default>'Mustafa Ismail'</default>
+      <summary>Selected Quran reciter</summary>
+      <description>The name of the reciter to use for Quran audio</description>
+    </key>
+
+    <key name="custom-surahs-list-path" type="s">
+      <default>''</default>
+      <summary>Custom surah list file path</summary>
+      <description>Full path to a custom JSON file containing surah list</description>
+    </key>
+    
+    <key name="autoplay-next" type="b">
+      <default>false</default>
+      <summary>Autoplay next surah</summary>
+      <description>Whether to automatically play the next surah when current one finishes</description>
+    </key>
+    
+    <key name="enable-debug-log" type="b">
+      <default>false</default>
+      <summary>Enable debug logging</summary>
+      <description>Enable debug logging for troubleshooting</description>
+    </key>
+
+    <key name="show-notifications" type="b">
+      <default>true</default>
+      <summary>Show notifications</summary>
+      <description>Show notifications when playback starts/stops</description>
+    </key>
+  </schema>
+</schemalist>

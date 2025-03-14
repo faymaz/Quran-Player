@@ -1,0 +1,36 @@
+.quran-player-box {
+  padding: 8px;
+  spacing: 10px;
+}
+
+.quran-now-playing {
+  font-weight: bold;
+  text-align: center;
+  padding-bottom: 6px;
+}
+
+.quran-panel-label {
+  margin-left: 4px;
+}
+
+.quran-controls-box {
+  spacing: 15px;
+  padding: 5px;
+  border-radius: 5px;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.quran-control-button {
+  width: 30px;
+  height: 30px;
+  border-radius: 15px;
+  padding: 5px;
+}
+
+.quran-control-button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.quran-control-button:active {
+  background-color: rgba(255, 255, 255, 0.3);
+}
