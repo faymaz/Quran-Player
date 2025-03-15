@@ -49,15 +49,15 @@ zip: compile-schemas check-files
 	@echo "Created build/$(UUID).zip"
 
 compile-po:
-	@echo "Compiling translation files..."
-	@mkdir -p locale/tr/LC_MESSAGES
-	@mkdir -p locale/de/LC_MESSAGES
-	@mkdir -p locale/en/LC_MESSAGES
-	@mkdir -p locale/ar/LC_MESSAGES
-	@msgfmt -o locale/tr/LC_MESSAGES/$(UUID).mo po/tr/tr.po
-	@msgfmt -o locale/de/LC_MESSAGES/$(UUID).mo po/de/de.po
-	@msgfmt -o locale/en/LC_MESSAGES/$(UUID).mo po/en/en.po
-	@msgfmt -o locale/ar/LC_MESSAGES/$(UUID).mo po/ar/ar.po
+    @echo "Compiling translation files..."
+    @mkdir -p locale/tr/LC_MESSAGES
+    @mkdir -p locale/de/LC_MESSAGES
+    @mkdir -p locale/en/LC_MESSAGES
+    @mkdir -p locale/ar/LC_MESSAGES
+    @msgfmt -o locale/tr/LC_MESSAGES/quran-player.mo po/tr/tr.po
+    @msgfmt -o locale/de/LC_MESSAGES/quran-player.mo po/de/de.po
+    @msgfmt -o locale/en/LC_MESSAGES/quran-player.mo po/en/en.po
+    @msgfmt -o locale/ar/LC_MESSAGES/quran-player.mo po/ar/ar.po
 	@echo "Translation files compiled."
 
 clean:
