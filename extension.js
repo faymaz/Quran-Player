@@ -539,10 +539,18 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             style_class: 'panel-status-menu-box'
         });
         
-        let icon = new St.Icon({
-            icon_name: 'audio-headphones-symbolic',
-            style_class: 'system-status-icon',
-        });
+        try {
+            this._icon = new St.Icon({
+                gicon: Gio.icon_new_for_string(GLib.build_filenamev([this._extension.path, 'icons', 'icon1.svg'])),
+                style_class: 'system-status-icon'
+            });
+        } catch (error) {
+            console.error('[PrayerTimes] Error loading icon:', error);
+            this._icon = new St.Icon({
+                icon_name: 'audio-headphones-symbolic',
+                style_class: 'system-status-icon'
+            });
+        }
         
         // Add label for currently playing surah or juz
         this._panelLabel = new St.Label({
