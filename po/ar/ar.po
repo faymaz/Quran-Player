@@ -1,0 +1,423 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: quran-player\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-03-14 12:00+0300\n"
+"PO-Revision-Date: 2025-03-14 12:00+0300\n"
+"Last-Translator: \n"
+"Language-Team: Arabic\n"
+"Language: ar\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+# واجهة المستخدم
+msgid "Quran Player"
+msgstr "مشغّل القرآن"
+
+msgid "Settings"
+msgstr "الإعدادات"
+
+msgid "Reciter"
+msgstr "القارئ"
+
+msgid "Now playing"
+msgstr "يشتغل الآن"
+
+msgid "No Juz data available"
+msgstr "لا توجد بيانات الجزء"
+
+msgid "Repeat current item"
+msgstr "تكرار العنصر الحالي"
+
+msgid "Repeatedly play the current surah/juz until stopped"
+msgstr "تشغيل السورة/الجزء الحالي بشكل متكرر حتى يتم إيقافه"
+
+msgid "Interface Language"
+msgstr "لغة الواجهة"
+
+msgid "Select language for the interface (changes take effect after restart)"
+msgstr "اختر لغة الواجهة (التغييرات تصبح سارية بعد إعادة التشغيل)"
+
+msgid "System Default"
+msgstr "الإعداد الافتراضي للنظام"
+
+msgid "Autoplay next item"
+msgstr "تشغيل العنصر التالي تلقائيًا"
+
+msgid "Automatically play the next surah/juz when current one finishes"
+msgstr "تشغيل السورة/الجزء التالي تلقائيًا عند انتهاء الحالي"
+
+msgid "Show notifications"
+msgstr "عرض الإشعارات"
+
+msgid "Display notifications when playback starts/stops"
+msgstr "عرض الإشعارات عند بدء/إيقاف التشغيل"
+
+msgid "Custom surah list file path"
+msgstr "مسار ملف قائمة السور المخصصة"
+
+msgid "Custom juz list file path"
+msgstr "مسار ملف قائمة الأجزاء المخصصة"
+
+msgid "Enable debug logs"
+msgstr "تمكين سجلات التصحيح"
+
+msgid "Enable debug logging for troubleshooting"
+msgstr "تمكين تسجيل التصحيح لاستكشاف الأخطاء وإصلاحها"
+
+msgid "Language Settings"
+msgstr "إعدادات اللغة"
+
+msgid "General Settings"
+msgstr "الإعدادات العامة"
+
+msgid "Advanced Settings"
+msgstr "الإعدادات المتقدمة"
+
+# أسماء السور
+msgid "Al-Fatihah"
+msgstr "الفاتحة"
+
+msgid "Al-Baqarah"
+msgstr "البقرة"
+
+msgid "Ali 'Imran"
+msgstr "آل عمران"
+
+msgid "An-Nisa"
+msgstr "النساء"
+
+msgid "Al-Ma'idah"
+msgstr "المائدة"
+
+msgid "Al-An'am"
+msgstr "الأنعام"
+
+msgid "Al-A'raf"
+msgstr "الأعراف"
+
+msgid "Al-Anfal"
+msgstr "الأنفال"
+
+msgid "At-Tawbah"
+msgstr "التوبة"
+
+msgid "Yunus"
+msgstr "يونس"
+
+msgid "Hud"
+msgstr "هود"
+
+msgid "Yusuf"
+msgstr "يوسف"
+
+msgid "Ar-Ra'd"
+msgstr "الرعد"
+
+msgid "Ibrahim"
+msgstr "إبراهيم"
+
+msgid "Al-Hijr"
+msgstr "الحجر"
+
+msgid "An-Nahl"
+msgstr "النحل"
+
+msgid "Al-Isra"
+msgstr "الإسراء"
+
+msgid "Al-Kahf"
+msgstr "الكهف"
+
+msgid "Maryam"
+msgstr "مريم"
+
+msgid "Ta-Ha"
+msgstr "طه"
+
+msgid "Al-Anbya"
+msgstr "الأنبياء"
+
+msgid "Al-Hajj"
+msgstr "الحج"
+
+msgid "Al-Mu'minun"
+msgstr "المؤمنون"
+
+msgid "An-Nur"
+msgstr "النور"
+
+msgid "Al-Furqan"
+msgstr "الفرقان"
+
+msgid "Ash-Shu'ara"
+msgstr "الشعراء"
+
+msgid "An-Naml"
+msgstr "النمل"
+
+msgid "Al-Qasas"
+msgstr "القصص"
+
+msgid "Al-'Ankabut"
+msgstr "العنكبوت"
+
+msgid "Ar-Rum"
+msgstr "الروم"
+
+msgid "Luqman"
+msgstr "لقمان"
+
+msgid "As-Sajdah"
+msgstr "السجدة"
+
+msgid "Al-Ahzab"
+msgstr "الأحزاب"
+
+msgid "Saba"
+msgstr "سبأ"
+
+msgid "Fatir"
+msgstr "فاطر"
+
+msgid "Ya-Sin"
+msgstr "يس"
+
+msgid "As-Saffat"
+msgstr "الصافات"
+
+msgid "Sad"
+msgstr "ص"
+
+msgid "Az-Zumar"
+msgstr "الزمر"
+
+msgid "Ghafir"
+msgstr "غافر"
+
+msgid "Fussilat"
+msgstr "فصلت"
+
+msgid "Ash-Shura"
+msgstr "الشورى"
+
+msgid "Az-Zukhruf"
+msgstr "الزخرف"
+
+msgid "Ad-Dukhan"
+msgstr "الدخان"
+
+msgid "Al-Jathiyah"
+msgstr "الجاثية"
+
+msgid "Al-Ahqaf"
+msgstr "الأحقاف"
+
+msgid "Muhammad"
+msgstr "محمد"
+
+msgid "Al-Fath"
+msgstr "الفتح"
+
+msgid "Al-Hujurat"
+msgstr "الحجرات"
+
+msgid "Qaf"
+msgstr "ق"
+
+msgid "Adh-Dhariyat"
+msgstr "الذاريات"
+
+msgid "At-Tur"
+msgstr "الطور"
+
+msgid "An-Najm"
+msgstr "النجم"
+
+msgid "Al-Qamar"
+msgstr "القمر"
+
+msgid "Ar-Rahman"
+msgstr "الرحمن"
+
+msgid "Al-Waqi'ah"
+msgstr "الواقعة"
+
+msgid "Al-Hadid"
+msgstr "الحديد"
+
+msgid "Al-Mujadilah"
+msgstr "المجادلة"
+
+msgid "Al-Hashr"
+msgstr "الحشر"
+
+msgid "Al-Mumtahanah"
+msgstr "الممتحنة"
+
+msgid "As-Saff"
+msgstr "الصف"
+
+msgid "Al-Jumu'ah"
+msgstr "الجمعة"
+
+msgid "Al-Munafiqun"
+msgstr "المنافقون"
+
+msgid "At-Taghabun"
+msgstr "التغابن"
+
+msgid "At-Talaq"
+msgstr "الطلاق"
+
+msgid "At-Tahrim"
+msgstr "التحريم"
+
+msgid "Al-Mulk"
+msgstr "الملك"
+
+msgid "Al-Qalam"
+msgstr "القلم"
+
+msgid "Al-Haqqah"
+msgstr "الحاقة"
+
+msgid "Al-Ma'arij"
+msgstr "المعارج"
+
+msgid "Nuh"
+msgstr "نوح"
+
+msgid "Al-Jinn"
+msgstr "الجن"
+
+msgid "Al-Muzzammil"
+msgstr "المزمل"
+
+msgid "Al-Muddathir"
+msgstr "المدثر"
+
+msgid "Al-Qiyamah"
+msgstr "القيامة"
+
+msgid "Al-Insan"
+msgstr "الإنسان"
+
+msgid "Al-Mursalat"
+msgstr "المرسلات"
+
+msgid "An-Naba"
+msgstr "النبأ"
+
+msgid "An-Nazi'at"
+msgstr "النازعات"
+
+msgid "Abasa"
+msgstr "عبس"
+
+msgid "At-Takwir"
+msgstr "التكوير"
+
+msgid "Al-Infitar"
+msgstr "الانفطار"
+
+msgid "Al-Mutaffifin"
+msgstr "المطففين"
+
+msgid "Al-Inshiqaq"
+msgstr "الانشقاق"
+
+msgid "Al-Buruj"
+msgstr "البروج"
+
+msgid "At-Tariq"
+msgstr "الطارق"
+
+msgid "Al-A'la"
+msgstr "الأعلى"
+
+msgid "Al-Ghashiyah"
+msgstr "الغاشية"
+
+msgid "Al-Fajr"
+msgstr "الفجر"
+
+msgid "Al-Balad"
+msgstr "البلد"
+
+msgid "Ash-Shams"
+msgstr "الشمس"
+
+msgid "Al-Layl"
+msgstr "الليل"
+
+msgid "Ad-Duha"
+msgstr "الضحى"
+
+msgid "Ash-Sharh"
+msgstr "الشرح"
+
+msgid "At-Tin"
+msgstr "التين"
+
+msgid "Al-Alaq"
+msgstr "العلق"
+
+msgid "Al-Qadr"
+msgstr "القدر"
+
+msgid "Al-Bayyinah"
+msgstr "البينة"
+
+msgid "Az-Zalzalah"
+msgstr "الزلزلة"
+
+msgid "Al-Adiyat"
+msgstr "العاديات"
+
+msgid "Al-Qari'ah"
+msgstr "القارعة"
+
+msgid "At-Takathur"
+msgstr "التكاثر"
+
+msgid "Al-Asr"
+msgstr "العصر"
+
+msgid "Al-Humazah"
+msgstr "الهمزة"
+
+msgid "Al-Fil"
+msgstr "الفيل"
+
+msgid "Quraysh"
+msgstr "قريش"
+
+msgid "Al-Ma'un"
+msgstr "الماعون"
+
+msgid "Al-Kawthar"
+msgstr "الكوثر"
+
+msgid "Al-Kafirun"
+msgstr "الكافرون"
+
+msgid "An-Nasr"
+msgstr "النصر"
+
+msgid "Al-Masad"
+msgstr "المسد"
+
+msgid "Al-Ikhlas"
+msgstr "الإخلاص"
+
+msgid "Al-Falaq"
+msgstr "الفلق"
+
+msgid "An-Nas"
+msgstr "الناس"
+
+msgid "Juz"
+msgstr "الجزء"
