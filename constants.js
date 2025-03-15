@@ -21,7 +21,7 @@ import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
 import * as ExtensionUtils from 'resource:///org/gnome/shell/misc/extensionUtils.js';
 
-// Default reciters if custom JSON fails to load
+
 export const DEFAULT_RECITERS = [
   {
     "name": "Abdullah Basfar",
@@ -238,7 +238,7 @@ export const DEFAULT_RECITERS = [
   }
 ];
 
-// Load reciters from file
+
 export function loadReciters(extension) {
   try {
       const extensionPath = extension.path;
@@ -248,10 +248,10 @@ export function loadReciters(extension) {
       if (success) {
           let reciters = JSON.parse(new TextDecoder().decode(contents));
           
-          // Make sure each reciter has a type field (default to 'surah')
+         
           reciters = reciters.map(reciter => {
               if (!reciter.type) {
-                  // Try to auto-detect by checking the reciter name and audioFormat
+                 
                   if (reciter.name.toLowerCase().includes('cüz') || 
                       reciter.name.toLowerCase().includes('juz') ||
                       reciter.audioFormat.includes('cuz') ||
@@ -275,12 +275,12 @@ export function loadReciters(extension) {
   }
 }
 
-// Load surahs from file
+
 export function loadSurahs(extension) {
     try {
         const settings = extension.getSettings();
         
-        // Check if custom path is set and try to load from there first
+       
         const customPath = settings.get_string('custom-surahs-list-path');
         if (customPath && customPath.trim() !== '') {
             try {
@@ -294,7 +294,7 @@ export function loadSurahs(extension) {
             }
         }
         
-        // Fall back to default file if custom path fails or isn't set
+       
         const surahsFile = Gio.File.new_for_path(GLib.build_filenamev([extension.path, 'surahs.json']));
         const [success, contents] = surahsFile.load_contents(null);
         
@@ -542,12 +542,12 @@ export function loadSurahs(extension) {
         }
     }
 
-// Load juz data from file
+
 export function loadJuz(extension) {
   try {
       const settings = extension.getSettings();
       
-      // Check if custom path is set and try to load from there first
+     
       const customPath = settings.get_string('custom-juz-list-path');
       if (customPath && customPath.trim() !== '') {
           try {
@@ -561,7 +561,7 @@ export function loadJuz(extension) {
           }
       }
       
-      // Fall back to default file if custom path fails or isn't set
+     
       const juzFile = Gio.File.new_for_path(GLib.build_filenamev([extension.path, 'juz.json']));
       const [success, contents] = juzFile.load_contents(null);
       
@@ -577,14 +577,14 @@ export function loadJuz(extension) {
   }
 }
 
-// Helper function to check if reciter is juz-based
+
 export function isJuzBasedReciter(reciter) {
   if (!reciter) return false;
   
-  // Check explicit type first
+ 
   if (reciter.type === 'juz') return true;
   
-  // Check name and format as fallback
+ 
   const nameIndicatesJuz = reciter.name.toLowerCase().includes('cüz') || 
                             reciter.name.toLowerCase().includes('juz');
                             

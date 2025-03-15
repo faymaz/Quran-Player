@@ -24,14 +24,13 @@ import GLib from 'gi://GLib';
 import GObject from 'gi://GObject';
 import {ExtensionPreferences, gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
-// Helper function to detect juz-based reciters
+
 function isJuzBasedReciter(reciter) {
     if (!reciter) return false;
     
-    // Check explicit type first
+    
     if (reciter.type === 'juz') return true;
     
-    // Check name and format as fallback
     const nameIndicatesJuz = reciter.name.toLowerCase().includes('cüz') || 
                             reciter.name.toLowerCase().includes('juz');
                             
@@ -41,7 +40,6 @@ function isJuzBasedReciter(reciter) {
     return nameIndicatesJuz || formatIndicatesJuz;
 }
 
-// Default reciters as fallback (with type field)
 const DEFAULT_RECITERS = [
     {
         "name": "Abdullah Basfar",
@@ -258,7 +256,7 @@ const DEFAULT_RECITERS = [
       }
 ];
 
-// Main preferences page
+
 const QuranPlayerPrefsPage = GObject.registerClass(
     class QuranPlayerPrefsPage extends Adw.PreferencesPage {
         _init(settings, reciters) {
@@ -271,16 +269,16 @@ const QuranPlayerPrefsPage = GObject.registerClass(
             this._settings = settings;
             this._reciters = reciters;
 
-            // General Settings Group
+           
             const generalGroup = new Adw.PreferencesGroup({
                 title: _('General Settings'),
             });
             this.add(generalGroup);
 
-            // Reciter Selection
+           
             const reciterModel = new Gtk.StringList();
             this._reciters.forEach(reciter => {
-                // Add badge to indicate juz-based reciters
+               
                 const isJuzReciter = isJuzBasedReciter(reciter);
                 let displayName = reciter.name;
                 if (isJuzReciter) {
@@ -295,24 +293,24 @@ const QuranPlayerPrefsPage = GObject.registerClass(
                 model: reciterModel,
             });
 
-            // Select current reciter from settings
+           
             const currentReciterName = this._settings.get_string('selected-reciter');
             const reciterIndex = this._reciters.findIndex(r => r.name === currentReciterName);
             if (reciterIndex >= 0) {
                 reciterRow.selected = reciterIndex;
             }
 
-            // Update settings when changed
+           
             reciterRow.connect('notify::selected', (row) => {
                 if (row.selected >= 0 && row.selected < this._reciters.length) {
-                    // Extract original reciter name (removing [Cüz] if present)
+                   
                     this._settings.set_string('selected-reciter', this._reciters[row.selected].name);
                 }
             });
 
             generalGroup.add(reciterRow);
 
-        // Autoplay next surah
+       
         const autoplayRow = new Adw.SwitchRow({
             title: _('Autoplay next item'),
             subtitle: _('Automatically play the next surah/juz when current one finishes'),
@@ -325,7 +323,7 @@ const QuranPlayerPrefsPage = GObject.registerClass(
         
         generalGroup.add(autoplayRow);
 
-        // Show notifications
+       
         const notifyRow = new Adw.SwitchRow({
             title: _('Show notifications'),
             subtitle: _('Display notifications when playback starts/stops'),
@@ -356,13 +354,13 @@ const QuranPlayerPrefsPage = GObject.registerClass(
         });
         this.add(languageGroup);
         
-        // Dil Seçimi
+       
         const languageRow = new Adw.ComboRow({
             title: _('Interface Language'),
             subtitle: _('Select language for the interface (changes take effect after restart)'),
         });
         
-        // Dil listesi modeli
+       
         const languageModel = Gtk.StringList.new([
             _('System Default'),
             'Türkçe',
@@ -372,9 +370,9 @@ const QuranPlayerPrefsPage = GObject.registerClass(
         ]);
         languageRow.model = languageModel;
         
-        // Mevcut dili seç
+       
         const currentLanguage = this._settings.get_string('interface-language');
-        let langIndex = 0; // Default to system
+        let langIndex = 0;
         const langCodes = ['', 'tr', 'de', 'en', 'ar'];
         const foundIndex = langCodes.indexOf(currentLanguage);
         if (foundIndex >= 0) {
@@ -382,7 +380,7 @@ const QuranPlayerPrefsPage = GObject.registerClass(
         }
         languageRow.selected = langIndex;
         
-        // Değiştiğinde ayarları güncelle
+       
         languageRow.connect('notify::selected', (row) => {
             if (row.selected >= 0 && row.selected < langCodes.length) {
                 this._settings.set_string('interface-language', langCodes[row.selected]);
@@ -391,13 +389,13 @@ const QuranPlayerPrefsPage = GObject.registerClass(
         
         languageGroup.add(languageRow);
 
-        // Advanced Settings Group
+       
         const advancedGroup = new Adw.PreferencesGroup({
             title: _('Advanced Settings'),
         });
         this.add(advancedGroup);
         
-        // Custom juz file path
+       
         const customJuzPathRow = new Adw.EntryRow({
             title: _('Custom juz list file path'),
             text: this._settings.get_string('custom-juz-list-path') || '',
@@ -409,7 +407,7 @@ const QuranPlayerPrefsPage = GObject.registerClass(
         
         advancedGroup.add(customJuzPathRow);
 
-        // Juz File Chooser Button
+       
         const juzFileChooserButton = new Gtk.Button({
             label: _('Select Juz File'),
             margin_top: 5,
@@ -447,7 +445,7 @@ const QuranPlayerPrefsPage = GObject.registerClass(
 
         advancedGroup.add(juzFileChooserButton);
 
-        // Custom surah list path
+       
         const customSurahsPathRow = new Adw.EntryRow({
             title: _('Custom surah list file path'),
             text: this._settings.get_string('custom-surahs-list-path') || '',
@@ -459,7 +457,7 @@ const QuranPlayerPrefsPage = GObject.registerClass(
         
         advancedGroup.add(customSurahsPathRow);
 
-        // Surah File Chooser Button
+       
         const surahFileChooserButton = new Gtk.Button({
             label: _('Select Surah File'),
             margin_top: 5,
@@ -497,7 +495,7 @@ const QuranPlayerPrefsPage = GObject.registerClass(
 
         advancedGroup.add(surahFileChooserButton);
 
-        // Debug logging
+       
         const debugRow = new Adw.SwitchRow({
             title: _('Enable debug logs'),
             subtitle: _('Enable debug logging for troubleshooting'),
@@ -513,20 +511,20 @@ const QuranPlayerPrefsPage = GObject.registerClass(
 });
 
 export default class QuranPlayerPreferences extends ExtensionPreferences {
-    // Load reciters from the extension directory
+   
     _loadReciters() {
         try {
-            // Use this.path instead of Me.path
+           
             const recitersFile = Gio.File.new_for_path(GLib.build_filenamev([this.path, 'custom-reciters.json']));
             const [success, contents] = recitersFile.load_contents(null);
             
             if (success) {
                 let reciters = JSON.parse(new TextDecoder().decode(contents));
                 
-                // Make sure each reciter has a type field (default to 'surah')
+               
                 reciters = reciters.map(reciter => {
                     if (!reciter.type) {
-                        // Try to auto-detect by checking the reciter name and audioFormat
+                       
                         if (reciter.name.toLowerCase().includes('cüz') || 
                             reciter.name.toLowerCase().includes('juz') ||
                             reciter.audioFormat.includes('cuz') ||
@@ -553,10 +551,10 @@ export default class QuranPlayerPreferences extends ExtensionPreferences {
     fillPreferencesWindow(window) {
         const settings = this.getSettings();
         
-        // Load reciters here using the extension path
+       
         const reciters = this._loadReciters();
         
-        // Add main page and pass the loaded reciters
+       
         const page = new QuranPlayerPrefsPage(settings, reciters);
         window.add(page);
     }
