@@ -1,8 +1,25 @@
+/*
+ * Quran Player GNOME Shell Extension
+ * Copyright (C) 2025 faymaz - https://github.com/faymaz
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 'use strict';
 
 import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
-import * as ExtensionUtils from 'resource:///org/gnome/shell/misc/extensionUtils.js';
+import * as ExtensionUtils from 'resource:///org/gnome/shell/extensions/extension.js';
 
 // Default reciters if custom JSON fails to load
 export const DEFAULT_RECITERS = [
@@ -222,47 +239,46 @@ export const DEFAULT_RECITERS = [
 ];
 
 // Load reciters from file
-export function loadReciters() {
-    try {
-        const extensionPath = ExtensionUtils.getCurrentExtension().path;
-        const recitersFile = Gio.File.new_for_path(GLib.build_filenamev([extensionPath, 'custom-reciters.json']));
-        const [success, contents] = recitersFile.load_contents(null);
-        
-        if (success) {
-            let reciters = JSON.parse(new TextDecoder().decode(contents));
-            
-            // Make sure each reciter has a type field (default to 'surah')
-            reciters = reciters.map(reciter => {
-                if (!reciter.type) {
-                    // Try to auto-detect by checking the reciter name and audioFormat
-                    if (reciter.name.toLowerCase().includes('cüz') || 
-                        reciter.name.toLowerCase().includes('juz') ||
-                        reciter.audioFormat.includes('cuz') ||
-                        reciter.audioFormat.includes('juz')) {
-                        reciter.type = 'juz';
-                    } else {
-                        reciter.type = 'surah';
-                    }
-                }
-                return reciter;
-            });
-            
-            return reciters;
-        } else {
-            console.log("Quran Player: Failed to load reciters file, using defaults");
-            return DEFAULT_RECITERS;
-        }
-    } catch (e) {
-        console.error("Quran Player: Error loading reciters", e);
-        return DEFAULT_RECITERS;
-    }
+export function loadReciters(extension) {
+  try {
+      const extensionPath = extension.path;
+      const recitersFile = Gio.File.new_for_path(GLib.build_filenamev([extensionPath, 'custom-reciters.json']));
+      const [success, contents] = recitersFile.load_contents(null);
+      
+      if (success) {
+          let reciters = JSON.parse(new TextDecoder().decode(contents));
+          
+          // Make sure each reciter has a type field (default to 'surah')
+          reciters = reciters.map(reciter => {
+              if (!reciter.type) {
+                  // Try to auto-detect by checking the reciter name and audioFormat
+                  if (reciter.name.toLowerCase().includes('cüz') || 
+                      reciter.name.toLowerCase().includes('juz') ||
+                      reciter.audioFormat.includes('cuz') ||
+                      reciter.audioFormat.includes('juz')) {
+                      reciter.type = 'juz';
+                  } else {
+                      reciter.type = 'surah';
+                  }
+              }
+              return reciter;
+          });
+          
+          return reciters;
+      } else {
+          log("Quran Player: Failed to load reciters file, using defaults");
+          return DEFAULT_RECITERS;
+      }
+  } catch (e) {
+      logError(e, "Quran Player: Error loading reciters");
+      return DEFAULT_RECITERS;
+  }
 }
 
 // Load surahs from file
-export function loadSurahs() {
+export function loadSurahs(extension) {
     try {
-        const extension = ExtensionUtils.getCurrentExtension();
-        const settings = ExtensionUtils.getSettings('org.gnome.shell.extensions.quran-player');
+        const settings = extension.getSettings();
         
         // Check if custom path is set and try to load from there first
         const customPath = settings.get_string('custom-surahs-list-path');
@@ -274,7 +290,7 @@ export function loadSurahs() {
                     return JSON.parse(new TextDecoder().decode(contents));
                 }
             } catch (customErr) {
-                console.error("Quran Player: Error loading custom surahs file, falling back to default", customErr);
+                logError("Quran Player: Error loading custom surahs file, falling back to default", customErr);
             }
         }
         
@@ -285,7 +301,7 @@ export function loadSurahs() {
         if (success) {
             return JSON.parse(new TextDecoder().decode(contents));
         } else {
-            console.log("Quran Player: Failed to load surahs file, using defaults");
+            log("Quran Player: Failed to load surahs file, using defaults");
             return [
                 {"name": "Al-Fatihah", "id": 1, "audioId": "001"},
                 {"name": "Al-Baqarah", "id": 2, "audioId": "002"},
@@ -404,7 +420,7 @@ export function loadSurahs() {
               ];
             }
         } catch (e) {
-            console.error("Quran Player: Error loading surahs", e);
+            logError("Quran Player: Error loading surahs", e);
             return [
               [
                 {"name": "Al-Fatihah", "id": 1, "audioId": "001"},
@@ -527,10 +543,9 @@ export function loadSurahs() {
     }
 
 // Load juz data from file
-export function loadJuz() {
+export function loadJuz(extension) {
   try {
-      const extension = ExtensionUtils.getCurrentExtension();
-      const settings = ExtensionUtils.getSettings('org.gnome.shell.extensions.quran-player');
+      const settings = extension.getSettings();
       
       // Check if custom path is set and try to load from there first
       const customPath = settings.get_string('custom-juz-list-path');
@@ -542,7 +557,7 @@ export function loadJuz() {
                   return JSON.parse(new TextDecoder().decode(contents));
               }
           } catch (customErr) {
-              console.error("Quran Player: Error loading custom juz file, falling back to default", customErr);
+              logError("Quran Player: Error loading custom juz file, falling back to default", customErr);
           }
       }
       
@@ -553,11 +568,11 @@ export function loadJuz() {
       if (success) {
           return JSON.parse(new TextDecoder().decode(contents));
       } else {
-          console.log("Quran Player: Failed to load juz file");
+          log("Quran Player: Failed to load juz file");
           return [];
       }
   } catch (e) {
-      console.error("Quran Player: Error loading juz data", e);
+      logError("Quran Player: Error loading juz data", e);
       return [];
   }
 }

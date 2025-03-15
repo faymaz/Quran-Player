@@ -44,7 +44,8 @@ zip: compile-schemas check-files
 	@echo "Creating zip archive..."
 	@mkdir -p build
 	@zip -r build/$(UUID).zip extension.js prefs.js metadata.json stylesheet.css constants.js \
-		surahs.json juz.json custom-reciters.json schemas/
+		surahs.json juz.json custom-reciters.json schemas/ locale/ po/ \
+		LICENSE README.md
 	@echo "Created build/$(UUID).zip"
 
 compile-po:

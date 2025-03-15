@@ -1,3 +1,20 @@
+/*
+ * Quran Player GNOME Shell Extension
+ * Copyright (C) 2025 faymaz - https://github.com/faymaz
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 'use strict';
 
 import GObject from 'gi://GObject';
@@ -7,12 +24,11 @@ import GLib from 'gi://GLib';
 import Clutter from 'gi://Clutter';
 import Gst from 'gi://Gst';
 
-
+import * as ExtensionUtils from 'resource:///org/gnome/shell/extensions/extension.js';
 import {Extension, gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
-import * as ExtensionUtils from 'resource:///org/gnome/shell/misc/extensionUtils.js';
 import * as MessageTray from 'resource:///org/gnome/shell/ui/messageTray.js';
 
 
@@ -1371,7 +1387,14 @@ class QuranPlayerIndicator extends PanelMenu.Button {
 export default class QuranPlayerExtension extends Extension {
     enable() {
         log('Quran Player: Enabling extension');
-        
+        // Initialize GStreamer
+        try {
+            if (!Gst.init_check(null)) {
+                Gst.init(null);
+            }
+        } catch (e) {
+            logError(e, 'Quran Player: Failed to initialize GStreamer');
+        }
         // Load settings schema
         this._settings = this.getSettings();
         
@@ -1389,13 +1412,12 @@ export default class QuranPlayerExtension extends Extension {
         const interfaceLanguage = this._settings.get_string('interface-language');
         if (interfaceLanguage) {
             try {
-                // Dil dosyasını belirle ve yükle
-                const localeDir = GLib.build_filenamev([this.path, 'locale']);
-                Gettext.bindtextdomain('quran-player@faymaz.github.com', localeDir);
-                Gettext.textdomain('quran-player@faymaz.github.com');
-                
-                // Dili değiştir
+                // Dil ayarını ortam değişkeni olarak ayarla
                 GLib.setenv('LANGUAGE', interfaceLanguage, true);
+                
+                // Uzantının dil ayarlarını belirle
+                // Not: ExtensionUtils zaten gettext ayarlarını yapıyor, 
+                // bu nedenle manuel olarak bindtextdomain çağırmaya gerek yok
             } catch (e) {
                 log(`Quran Player: Error setting locale: ${e.message}`);
             }
@@ -1404,6 +1426,16 @@ export default class QuranPlayerExtension extends Extension {
     
     disable() {
         log('Quran Player: Disabling extension');
+        
+        // GLib.timeout_add ile eklenen tüm timeout'ları temizle
+        if (this._timeoutSources) {
+            this._timeoutSources.forEach(source => {
+                if (source > 0) {
+                    GLib.source_remove(source);
+                }
+            });
+            this._timeoutSources = [];
+        }
         
         if (this._indicator) {
             this._indicator.destroy();

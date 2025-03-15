@@ -1,3 +1,20 @@
+/*
+ * Quran Player GNOME Shell Extension
+ * Copyright (C) 2025 faymaz - https://github.com/faymaz
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 'use strict';
 
 import Adw from 'gi://Adw';
@@ -6,7 +23,7 @@ import Gtk from 'gi://Gtk';
 import GLib from 'gi://GLib';
 import GObject from 'gi://GObject';
 import {ExtensionPreferences, gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
-
+import * as ExtensionUtils from 'resource:///org/gnome/shell/extensions/extension.js';
 
 // Helper function to detect juz-based reciters
 function isJuzBasedReciter(reciter) {
@@ -28,7 +45,7 @@ function isJuzBasedReciter(reciter) {
 // Load reciters list
 let RECITERS = [];
 try {
-    const recitersFile = Gio.File.new_for_path(GLib.build_filenamev([imports.misc.extensionUtils.getCurrentExtension().path, 'custom-reciters.json']));
+    const recitersFile = Gio.File.new_for_path(GLib.build_filenamev([ExtensionUtils.getCurrentExtension().path, 'custom-reciters.json']));
     const [success, contents] = recitersFile.load_contents(null);
     if (success) {
         let reciters = JSON.parse(new TextDecoder().decode(contents));
