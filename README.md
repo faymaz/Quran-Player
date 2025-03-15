@@ -6,7 +6,9 @@
 
 
 ![quran-player - 1](img/quran-player_1.png)
+
 ![quran-player - 2](img/quran-player_2.png)
+
 ![quran-player - 3](img/quran-player_3.png)
 
 A GNOME Shell extension that lets you listen to Quran recitations directly from your desktop.
