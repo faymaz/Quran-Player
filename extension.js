@@ -541,7 +541,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
         
         try {
             this._icon = new St.Icon({
-                gicon: Gio.icon_new_for_string(GLib.build_filenamev([this._extension.path, 'icons', 'icon1.png'])),
+                gicon: Gio.icon_new_for_string(GLib.build_filenamev([this._extension.path, 'icons', 'icon2.svg'])),
                 style_class: 'system-status-icon'
             });
         } catch (e) {
