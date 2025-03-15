@@ -58,7 +58,8 @@ try {
         });
     }
 } catch (e) {
-    logError('Quran Player: Failed to load custom-reciters.json in preferences', e);
+    logError(e, 'Quran Player: Failed to load custom-reciters.json in preferences');
+    
     // Default reciters as fallback (with type field)
     RECITERS = [
         {

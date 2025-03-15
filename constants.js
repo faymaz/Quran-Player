@@ -290,7 +290,7 @@ export function loadSurahs(extension) {
                     return JSON.parse(new TextDecoder().decode(contents));
                 }
             } catch (customErr) {
-                logError("Quran Player: Error loading custom surahs file, falling back to default", customErr);
+                logError(customErr,"Quran Player: Error loading custom surahs file, falling back to default");
             }
         }
         
@@ -420,7 +420,7 @@ export function loadSurahs(extension) {
               ];
             }
         } catch (e) {
-            logError("Quran Player: Error loading surahs", e);
+            logError(e,"Quran Player: Error loading surahs");
             return [
               [
                 {"name": "Al-Fatihah", "id": 1, "audioId": "001"},
@@ -557,7 +557,7 @@ export function loadJuz(extension) {
                   return JSON.parse(new TextDecoder().decode(contents));
               }
           } catch (customErr) {
-              logError("Quran Player: Error loading custom juz file, falling back to default", customErr);
+              logError(customErr,"Quran Player: Error loading custom juz file, falling back to default");
           }
       }
       
@@ -572,7 +572,7 @@ export function loadJuz(extension) {
           return [];
       }
   } catch (e) {
-      logError("Quran Player: Error loading juz data", e);
+      logError(e,"Quran Player: Error loading juz data");
       return [];
   }
 }
