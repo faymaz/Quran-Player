@@ -524,14 +524,14 @@ class QuranPlayerIndicator extends PanelMenu.Button {
         this._juzData = initializeJuzData(extension);
         
         // Log data status
-        log('Quran Player: Loaded ' + this._surahs.length + ' surahs');
-        log('Quran Player: Loaded ' + this._juzData.length + ' juz entries');
-        log('Quran Player: Loaded ' + this._reciters.length + ' reciters');
+        this._log('Loaded ' + this._surahs.length + ' surahs');
+        this._log('Loaded ' + this._juzData.length + ' juz entries');
+        this._log('Loaded ' + this._reciters.length + ' reciters');
         
         // If juz data is still empty, try debug loading
         if (this._juzData.length === 0) {
             this._juzData = debugJuzLoading(extension);
-            log('Quran Player: Debug loaded ' + this._juzData.length + ' juz entries');
+            this._log('Debug loaded ' + this._juzData.length + ' juz entries');
         }
         
         // Create panel icon and label container
@@ -541,11 +541,11 @@ class QuranPlayerIndicator extends PanelMenu.Button {
         
         try {
             this._icon = new St.Icon({
-                gicon: Gio.icon_new_for_string(GLib.build_filenamev([this._extension.path, 'icons', 'icon2.svg'])),
+                gicon: Gio.icon_new_for_string(GLib.build_filenamev([this._extension.path, 'icons', 'icon.svg'])),
                 style_class: 'system-status-icon'
             });
         } catch (e) {
-            logError(e,'[PrayerTimes] Error loading icon:');
+            this._log('Error loading icon: ' + e.message);
             this._icon = new St.Icon({
                 icon_name: 'audio-headphones-symbolic',
                 style_class: 'system-status-icon'
@@ -568,6 +568,10 @@ class QuranPlayerIndicator extends PanelMenu.Button {
         this._player = null;
         this._currentItem = null; // Will hold either surah or juz
         this._isPlaying = false;
+        this._usingFallback = false; // Track if we're using fallback player
+        this._busEosId = 0; // Store bus signal IDs for cleanup
+        this._busErrorId = 0;
+        this._timeoutSources = []; // Store timeout source IDs for cleanup
         this._selectedReciter = this._reciters.length > 0 ? this._reciters[0] : null;
         this._isJuzMode = false; // Track if we're in juz mode
         
@@ -579,12 +583,19 @@ class QuranPlayerIndicator extends PanelMenu.Button {
         
         // Create menu items based on mode
         this._rebuildContentMenu();
-        
-        // Add settings menu
-        this._addSettingsMenu();
-        
+       
         // Connect button event handlers
         this._connectSignals();
+    }
+
+    _attachPlayerUI() {
+        // Add player to menu
+        let playerItem = new PopupMenu.PopupBaseMenuItem({
+            reactive: false,
+            can_focus: false
+        });
+        playerItem.add_child(this._playerBox);
+        this.menu.addMenuItem(playerItem);
     }
 
     _loadSettings() {
@@ -627,46 +638,39 @@ class QuranPlayerIndicator extends PanelMenu.Button {
     }
     
     _rebuildContentMenu() {
-        // Önce tüm mevcut menü öğelerini temizle (kontroller ve ayarlar haricinde)
-        let items = this.menu._getMenuItems();
-        let contentStartIndex = -1;
-        let contentEndIndex = -1;
+        this._log("Completely rebuilding menu");
         
-        // İçerik bölümünü bul
-        for (let i = 0; i < items.length; i++) {
-            if (items[i] instanceof PopupMenu.PopupSeparatorMenuItem) {
-                if (contentStartIndex === -1) {
-                    contentStartIndex = i + 1;
-                } else {
-                    contentEndIndex = i;
-                    break;
-                }
-            }
+        // Step 1: Remove ALL existing menu items
+        const items = this.menu._getMenuItems();
+        for (let i = items.length - 1; i >= 0; i--) {
+            items[i].destroy();
         }
         
-        // Eğer bulunduysa, içerik öğelerini sil
-        if (contentStartIndex !== -1 && contentEndIndex !== -1) {
-            // Sondan başlayarak sil (dizin değişimini önlemek için)
-            for (let i = contentEndIndex - 1; i >= contentStartIndex; i--) {
-                try {
-                    items[i].destroy();
-                } catch(e) {
-                    this._log(`Menü öğesini silerken hata: ${e.message}`);
-                }
-            }
-        }
+        // Step 2: Create UI elements from scratch
         
-        // Modu kontrol et ve sadece o moda ait grupları ekle
+        // Create and attach player UI
+        this._createPlayerUI(true);
+        
+        // Create a clean category title for clarity
+        const categoryTitle = this._isJuzMode ? 
+            new PopupMenu.PopupMenuItem(_("Juz Selection"), { reactive: false, style_class: 'category-title' }) :
+            new PopupMenu.PopupMenuItem(_("Surah Selection"), { reactive: false, style_class: 'category-title' });
+        
+        this.menu.addMenuItem(categoryTitle);
+        
+        // Add the appropriate content based on mode
         if (this._isJuzMode) {
-            this._log("Cüz modu aktif, sûreleri gizle, cüzleri göster");
+            this._log("Juz mode active, showing juz groups only");
             this._addJuzGroups();
         } else {
-            this._log("Sûre modu aktif, cüzleri gizle, sûreleri göster");
+            this._log("Surah mode active, showing surah groups only");
             this._addSurahGroups();
         }
+        
+        this._addSettingsMenu();
     }
     
-    _createPlayerUI() {
+    _createPlayerUI(fullReset = false) {
         // Main player container
         this._playerBox = new St.BoxLayout({
             vertical: true,
@@ -680,52 +684,14 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             x_align: Clutter.ActorAlign.CENTER
         });
         
-        // Controls container
-        this._controlsBox = new St.BoxLayout({
-            style_class: 'quran-controls-box'
-        });
-        
-        // Control buttons
-        this._prevButton = new St.Button({
-            style_class: 'quran-control-button',
-            child: new St.Icon({
-                icon_name: 'media-skip-backward-symbolic',
-                icon_size: 16
-            })
-        });
-        
-        this._playButton = new St.Button({
-            style_class: 'quran-control-button',
-            child: new St.Icon({
-                icon_name: 'media-playback-start-symbolic', 
-                icon_size: 16
-            })
-        });
-        
-        this._stopButton = new St.Button({
-            style_class: 'quran-control-button',
-            child: new St.Icon({
-                icon_name: 'media-playback-stop-symbolic',
-                icon_size: 16
-            })
-        });
-        
-        this._nextButton = new St.Button({
-            style_class: 'quran-control-button',
-            child: new St.Icon({
-                icon_name: 'media-skip-forward-symbolic',
-                icon_size: 16
-            })
-        });
-        
-        // Add buttons to controls box
-        this._controlsBox.add_child(this._prevButton);
-        this._controlsBox.add_child(this._playButton);
-        this._controlsBox.add_child(this._stopButton);
-        this._controlsBox.add_child(this._nextButton);
-        
         // Add elements to player box
         this._playerBox.add_child(this._nowPlayingLabel);
+            
+        if (fullReset || !this._controlsBox) {
+            // Create new controls if needed
+            this._resetPlayerControls();
+        }
+        
         this._playerBox.add_child(this._controlsBox);
         
         // Add player to menu
@@ -738,29 +704,117 @@ class QuranPlayerIndicator extends PanelMenu.Button {
         
         // Add separator
         this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
-    }
+        }
     
+    _resetPlayerControls() {
+        // Re-create control buttons
+        if (this._playButton) {
+            this._playButton.destroy();
+        }
+        if (this._stopButton) {
+            this._stopButton.destroy();
+        }
+        if (this._prevButton) {
+            this._prevButton.destroy();
+        }
+        if (this._nextButton) {
+            this._nextButton.destroy();
+        }
+        
+        // Clean up old controls box if it exists
+        if (this._controlsBox) {
+            this._controlsBox.destroy();
+            this._controlsBox = null;
+        }
+        
+        // Create new controls
+        this._controlsBox = new St.BoxLayout({
+            style_class: 'quran-controls-box'
+        });
+        
+        // Control buttons
+        this._prevButton = new St.Button({
+            style_class: 'quran-control-button',
+            can_focus: true,
+            track_hover: true,
+            child: new St.Icon({
+                icon_name: 'media-skip-backward-symbolic',
+                icon_size: 16
+            })
+        });
+        
+        this._playButton = new St.Button({
+            style_class: 'quran-control-button',
+            can_focus: true,
+            track_hover: true,
+            child: new St.Icon({
+                icon_name: 'media-playback-start-symbolic', 
+                icon_size: 16
+            })
+        });
+        
+        this._stopButton = new St.Button({
+            style_class: 'quran-control-button',
+            can_focus: true,
+            track_hover: true,
+            child: new St.Icon({
+                icon_name: 'media-playback-stop-symbolic',
+                icon_size: 16
+            })
+        });
+        
+        this._nextButton = new St.Button({
+            style_class: 'quran-control-button',
+            can_focus: true,
+            track_hover: true,
+            child: new St.Icon({
+                icon_name: 'media-skip-forward-symbolic',
+                icon_size: 16
+            })
+        });
+        
+        // Add buttons to controls box
+        this._controlsBox.add_child(this._prevButton);
+        this._controlsBox.add_child(this._playButton);
+        this._controlsBox.add_child(this._stopButton);
+        this._controlsBox.add_child(this._nextButton);
+        
+        // Reconnect signals
+        this._connectSignals();
+        
+        return this._controlsBox;
+    }
+
     _connectSignals() {
         this._playButton.connect('clicked', () => {
+            this._log("Play button clicked");
             this._togglePlay();
+            return Clutter.EVENT_PROPAGATE;
         });
         
         this._stopButton.connect('clicked', () => {
+            this._log("Stop button clicked");
             this._stopPlayback();
+            return Clutter.EVENT_PROPAGATE;
         });
         
         this._prevButton.connect('clicked', () => {
+            this._log("Previous button clicked");
             this._playPrevious();
+            return Clutter.EVENT_PROPAGATE;
         });
         
         this._nextButton.connect('clicked', () => {
+            this._log("Next button clicked");
             this._playNext();
+            return Clutter.EVENT_PROPAGATE;
         });
+        
         this._settings.connect('changed::interface-language', () => {
-                       this._showNotification(_("Language Changed"), 
-                                 _("Please restart GNOME Shell for the language change to take effect"));
+            this._showNotification(_("Language Changed"), 
+                        _("Please restart GNOME Shell for the language change to take effect"));
         });
-    }        
+    }    
     
     _addSurahGroups() {
         // Group surahs in sets of 15
@@ -873,34 +927,25 @@ class QuranPlayerIndicator extends PanelMenu.Button {
                 // Safer reciter change handler
                 item.connect('activate', () => {
                     try {
-                        // First stop any current playback
+                        // Stop any current playback
                         this._stopPlayback();
                         
                         // Change reciter
-                        this._selectedReciter = {...reciter}; // Create a copy to avoid reference issues
+                        this._selectedReciter = {...reciter};
                         
                         // Update juz mode based on reciter type
                         const wasJuzMode = this._isJuzMode;
                         this._isJuzMode = isJuzBasedReciter(reciter);
                         
-                        // Rebuild menu if mode changed
-                        if (wasJuzMode !== this._isJuzMode) {
-                            this._rebuildContentMenu();
-                        }
+                        // Always rebuild the menu when reciter changes
+                        this._rebuildContentMenu();
                         
                         // Save to settings
-                        if (this._settings) {
-                            try {
-                                this._settings.set_string('selected-reciter', reciter.name);
-                            } catch (settingsError) {
-                                this._log(`Settings error: ${settingsError.message}`);
-                            }
-                        }
+                        this._settings.set_string('selected-reciter', reciter.name);
                         
-                        // Update UI without full rebuild
+                        // Update UI
                         this._updateReciterSelection();
                         
-                        // Update now playing label if needed
                         if (this._currentItem) {
                             this._updatePlayerUI();
                         }
@@ -1128,6 +1173,9 @@ class QuranPlayerIndicator extends PanelMenu.Button {
                 Gst.init(null);
             }
             
+            // Stop any existing playback first
+            this._stopPlayback();
+            
             // Create new player
             this._player = Gst.ElementFactory.make("playbin", "player");
             
@@ -1143,12 +1191,12 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             bus.add_signal_watch();
             
             // Handle end of stream
-            bus.connect('message::eos', () => {
+            this._busEosId = bus.connect('message::eos', () => {
                 this._onPlaybackEnded();
             });
             
             // Handle errors
-            bus.connect('message::error', (_, msg) => {
+            this._busErrorId = bus.connect('message::error', (_, msg) => {
                 let [error, debug] = msg.parse_error();
                 this._log(`GStreamer playback error: ${error.message} (${debug})`);
                 this._onPlaybackEnded();
@@ -1164,7 +1212,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             try {
                 if (this._settings && this._settings.get_boolean('show-notifications')) {
                     // Use a timeout to prevent blocking the UI
-                    GLib.timeout_add(GLib.PRIORITY_DEFAULT, 100, () => {
+                    const timeoutId = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 100, () => {
                         try {
                             this._showNotification(notificationTitle, notificationBody);
                         } catch (e) {
@@ -1172,11 +1220,20 @@ class QuranPlayerIndicator extends PanelMenu.Button {
                         }
                         return GLib.SOURCE_REMOVE;
                     });
+                    
+                    // Store timeout source for cleanup
+                    if (!this._timeoutSources) {
+                        this._timeoutSources = [];
+                    }
+                    this._timeoutSources.push(timeoutId);
                 }
             } catch (notifyError) {
                 // Only log notification errors, don't let them break playback
                 this._log(`Notification error: ${notifyError.message}`);
             }
+            
+            this._isPlaying = true;
+            
         } catch (gstError) {
             this._log(`GStreamer error: ${gstError.message}`);
             
@@ -1187,6 +1244,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
                 // Try to download and play with mpv or similar
                 GLib.spawn_command_line_async(`bash -c "curl -s '${audioUrl}' | mpv --no-terminal --no-video -"`);
                 playbackSuccess = true;
+                this._usingFallback = true;  // Track that we're using fallback
             } catch (e2) {
                 this._log(`curl+mpv fallback failed: ${e2.message}`);
                 
@@ -1194,6 +1252,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
                 try {
                     GLib.spawn_command_line_async(`mpv --no-terminal --no-video '${audioUrl}'`);
                     playbackSuccess = true;
+                    this._usingFallback = true;  // Track that we're using fallback
                 } catch (e3) {
                     this._log(`mpv fallback failed: ${e3.message}`);
                     
@@ -1201,6 +1260,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
                     try {
                         GLib.spawn_command_line_async(`xdg-open "${audioUrl}"`);
                         playbackSuccess = true;
+                        this._usingFallback = true;  // Track that we're using fallback
                     } catch (e4) {
                         this._log(`xdg-open fallback failed: ${e4.message}`);
                         logError(e4, "Quran Player: Could not play audio file");
@@ -1226,10 +1286,10 @@ class QuranPlayerIndicator extends PanelMenu.Button {
                 } catch (e) {
                     // Ignore notification errors in fallback mode
                 }
+                
+                this._isPlaying = true;
             }
         }
-        
-        this._isPlaying = true;
         
         // Update UI
         this._updatePlayerUI();
@@ -1242,30 +1302,70 @@ class QuranPlayerIndicator extends PanelMenu.Button {
     }
     
     _togglePlay() {
-        if (!this._player || !this._currentItem) {
-            if (this._currentItem) {
+        this._log(`Toggle play called. Player exists: ${!!this._player}, Using fallback: ${this._usingFallback}, Is playing: ${this._isPlaying}`);
+        // If we're using a fallback player or don't have a player at all
+        if (!this._player || this._usingFallback) {
+            if (this._isPlaying) {
+                // If already playing with fallback, stop it (can't pause fallback)
+                this._stopPlayback();
+                return;
+            } else if (this._currentItem) {
+                // If not playing but have a current item, play it
                 if (this._currentItem.type === 'surah') {
                     this._playSurah(this._currentItem);
-                    this._log("Toggle play/pause");
                 } else if (this._currentItem.type === 'juz') {
                     this._playJuz(this._currentItem);
                 }
+                return;
             }
             return;
         }
         
+        // If we have a GStreamer player, toggle play/pause
         try {
             if (this._isPlaying) {
-                this._player.set_state(Gst.State.PAUSED);
-                this._isPlaying = false;
+                // Query current state to ensure it's actually playing
+                let state;
+                const stateQuery = this._player.query_state(Gst.Format.TIME, false);
+                if (stateQuery) {
+                    state = stateQuery[1];  // Get the current state
+                } else {
+                    // If query fails, assume it's playing
+                    state = Gst.State.PLAYING;
+                }
+                
+                if (state === Gst.State.PLAYING) {
+                    this._player.set_state(Gst.State.PAUSED);
+                    this._isPlaying = false;
+                    this._log("Paused playback");
+                } else {
+                    this._player.set_state(Gst.State.PLAYING);
+                    this._isPlaying = true;
+                    this._log("Resumed playback");
+                }
             } else {
                 this._player.set_state(Gst.State.PLAYING);
                 this._isPlaying = true;
+                this._log("Started playback");
             }
             
             this._updatePlayerUI();
         } catch (e) {
             this._log(`Error toggling playback: ${e.message}`);
+            
+            // If there was an error, try to reset player
+            try {
+                this._stopPlayback();
+                if (this._currentItem) {
+                    if (this._currentItem.type === 'surah') {
+                        this._playSurah(this._currentItem);
+                    } else if (this._currentItem.type === 'juz') {
+                        this._playJuz(this._currentItem);
+                    }
+                }
+            } catch (resetError) {
+                this._log(`Error resetting player: ${resetError.message}`);
+            }
         }
     }
     
@@ -1288,17 +1388,46 @@ class QuranPlayerIndicator extends PanelMenu.Button {
     }
     
     _stopPlayback() {
+        // First, disconnect any bus signals to prevent callbacks after destruction
         if (this._player) {
             try {
+                const bus = this._player.get_bus();
+                if (bus) {
+                    if (this._busEosId) {
+                        bus.disconnect(this._busEosId);
+                        this._busEosId = 0;
+                    }
+                    if (this._busErrorId) {
+                        bus.disconnect(this._busErrorId);
+                        this._busErrorId = 0;
+                    }
+                    
+                    // Remove signal watch
+                    bus.remove_signal_watch();
+                }
+                
+                // Set player to NULL state
                 this._player.set_state(Gst.State.NULL);
                 this._player = null;
-                this._isPlaying = false;
-                this._updatePlayerUI();
-                this._log("Stop playback");
             } catch (e) {
-                this._log(`Error stopping playback: ${e.message}`);
+                this._log(`Error during GStreamer cleanup: ${e.message}`);
             }
         }
+        
+        // Handle fallback player if needed
+        if (this._usingFallback) {
+            try {
+                // Try to kill any mpv instances
+                GLib.spawn_command_line_async('pkill -f "mpv --no-terminal --no-video"');
+            } catch (e) {
+                this._log(`Error stopping fallback player: ${e.message}`);
+            }
+            this._usingFallback = false;
+        }
+        
+        this._isPlaying = false;
+        this._updatePlayerUI();
+        this._log("Stopped playback");
     }
     
     _playNext() {
@@ -1379,14 +1508,18 @@ class QuranPlayerIndicator extends PanelMenu.Button {
     }
     
     destroy() {
-        if (this._player) {
-            try {
-                this._player.set_state(Gst.State.NULL);
-            } catch (e) {
-                // Ignore errors during cleanup
-            }
-            this._player = null;
+        // Clean up any GLib timeout sources
+        if (this._timeoutSources) {
+            this._timeoutSources.forEach(sourceId => {
+                if (sourceId > 0) {
+                    GLib.Source.remove(sourceId);
+                }
+            });
+            this._timeoutSources = [];
         }
+        
+        // Clean up player and bus signals
+        this._stopPlayback();
         
         super.destroy();
     }
@@ -1435,20 +1568,33 @@ export default class QuranPlayerExtension extends Extension {
     disable() {
         log('Quran Player: Disabling extension');
         
+        // If we have an indicator, make sure to call stopPlayback first
+        if (this._indicator) {
+            try {
+                if (typeof this._indicator._stopPlayback === 'function') {
+                    this._indicator._stopPlayback();
+                }
+            } catch (e) {
+                log(`Quran Player: Error stopping playback during disable: ${e.message}`);
+            }
+        }
+        
         // GLib.timeout_add ile eklenen tüm timeout'ları temizle
         if (this._timeoutSources) {
             this._timeoutSources.forEach(source => {
                 if (source > 0) {
-                    GLib.source_remove(source);
+                    GLib.Source.remove(source);
                 }
             });
             this._timeoutSources = [];
         }
         
+        // Make sure to dispose of indicator properly
         if (this._indicator) {
             this._indicator.destroy();
             this._indicator = null;
         }
+        
         this._settings = null;
         
         log('Quran Player: Extension disabled');
