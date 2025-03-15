@@ -118,18 +118,6 @@ The `audioFormat` field supports these placeholders:
 - `%audioId%`: The audioId from surahs.json
 - `%name%`: Surah name
 
-### Custom Surah List
-
-You can create a custom surah list by creating a JSON file with the same format as `surahs.json`:
-
-```json
-[
-  {"name": "Surah Name", "id": 1, "audioId": "001"},
-  ...
-]
-```
-
-Then set the path to this file in the extension settings.
 
 ## Troubleshooting
 
