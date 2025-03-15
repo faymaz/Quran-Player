@@ -24,11 +24,11 @@ import GLib from 'gi://GLib';
 import Clutter from 'gi://Clutter';
 import Gst from 'gi://Gst';
 
-import * as ExtensionUtils from 'resource:///org/gnome/shell/extensions/extension.js';
 import {Extension, gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
+import * as ExtensionUtils from 'resource:///org/gnome/shell/misc/extensionUtils.js';
 import * as MessageTray from 'resource:///org/gnome/shell/ui/messageTray.js';
 
 

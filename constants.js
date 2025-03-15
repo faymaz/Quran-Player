@@ -19,7 +19,7 @@
 
 import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
-import * as ExtensionUtils from 'resource:///org/gnome/shell/extensions/extension.js';
+import * as ExtensionUtils from 'resource:///org/gnome/shell/misc/extensionUtils.js';
 
 // Default reciters if custom JSON fails to load
 export const DEFAULT_RECITERS = [

@@ -23,7 +23,6 @@ import Gtk from 'gi://Gtk';
 import GLib from 'gi://GLib';
 import GObject from 'gi://GObject';
 import {ExtensionPreferences, gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
-import * as ExtensionUtils from 'resource:///org/gnome/shell/extensions/extension.js';
 
 // Helper function to detect juz-based reciters
 function isJuzBasedReciter(reciter) {
@@ -45,7 +44,7 @@ function isJuzBasedReciter(reciter) {
 // Load reciters list
 let RECITERS = [];
 try {
-    const recitersFile = Gio.File.new_for_path(GLib.build_filenamev([ExtensionUtils.getCurrentExtension().path, 'custom-reciters.json']));
+    const recitersFile = Gio.File.new_for_path(GLib.build_filenamev([Me.path, 'custom-reciters.json']));
     const [success, contents] = recitersFile.load_contents(null);
     if (success) {
         let reciters = JSON.parse(new TextDecoder().decode(contents));
@@ -59,7 +58,7 @@ try {
         });
     }
 } catch (e) {
-    logError(e, 'Quran Player: Failed to load custom-reciters.json in preferences');
+    logError('Quran Player: Failed to load custom-reciters.json in preferences', e);
     // Default reciters as fallback (with type field)
     RECITERS = [
         {
@@ -280,15 +279,15 @@ try {
 
 // Main preferences page
 const QuranPlayerPrefsPage = GObject.registerClass(
-class QuranPlayerPrefsPage extends Adw.PreferencesPage {
-    _init(settings) {
-        super._init({
-            title: _('Quran Player Settings'),
-            icon_name: 'audio-headphones-symbolic',
-            name: 'QuranPlayerPrefsPage',
-        });
-
-        this._settings = settings;
+    class QuranPlayerPrefsPage extends Adw.PreferencesPage {
+        _init(settings) {
+            super._init({
+                title: _('Quran Player Settings'),
+                icon_name: 'audio-headphones-symbolic',
+                name: 'QuranPlayerPrefsPage',
+            });
+    
+            this._settings = settings;
 
         // General Settings Group
         const generalGroup = new Adw.PreferencesGroup({
