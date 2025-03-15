@@ -541,11 +541,11 @@ class QuranPlayerIndicator extends PanelMenu.Button {
         
         try {
             this._icon = new St.Icon({
-                gicon: Gio.icon_new_for_string(GLib.build_filenamev([this._extension.path, 'icons', 'icon1.svg'])),
+                gicon: Gio.icon_new_for_string(GLib.build_filenamev([this._extension.path, 'icons', 'icon1.png'])),
                 style_class: 'system-status-icon'
             });
-        } catch (error) {
-            console.error('[PrayerTimes] Error loading icon:', error);
+        } catch (e) {
+            logError(e,'[PrayerTimes] Error loading icon:');
             this._icon = new St.Icon({
                 icon_name: 'audio-headphones-symbolic',
                 style_class: 'system-status-icon'
@@ -559,7 +559,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             style_class: 'quran-panel-label'
         });
         
-        this._panelBox.add_child(icon);
+        this._panelBox.add_child(this._icon);
         this._panelBox.add_child(this._panelLabel);
         
         this.add_child(this._panelBox);
