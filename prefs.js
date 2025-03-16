@@ -141,6 +141,12 @@ const DEFAULT_RECITERS = [
         "type": "surah"
       },
       {
+        "name": "Mehmet Ali Şengül",
+        "baseUrl": "https://archive.org/download/mehmetalisengul/Mehmet%20Ali%20%C5%9Eeng%C3%BCl%20ile%20Hatm-i%20%C5%9Eerif%20_%20",
+        "audioFormat": "%id%.%20C%C3%BCz%20%28256kbit%29.mp3",
+        "type": "juz"
+      },
+      {
         "name": "Mehmet Emin Ay",
         "baseUrl": "https://archive.org/download/MehmetEminAYmp3/Mehmet%20Emin%20AY%20_%20Hatm-i%20%C5%9Eerif%20",
         "audioFormat": "%specialFormat%",
