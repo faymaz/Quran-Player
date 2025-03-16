@@ -1095,10 +1095,10 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             return;
         }
         
-       
+
         this._currentItem = { ...juz, type: 'juz' };
         
-       
+
         if (this._player) {
             try {
                 this._player.set_state(Gst.State.NULL);
@@ -1108,11 +1108,11 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             }
         }
         
-       
+
         if (!this._selectedReciter && this._reciters.length > 0) {
             this._selectedReciter = this._reciters.find(r => isJuzBasedReciter(r)) || this._reciters[0];
         } else if (!this._selectedReciter) {
-           
+
             this._selectedReciter = {
                 "name": "Hayri Küçükdeniz-Suat Yıldırım Meali",
                 "baseUrl": "https://archive.org/download/Kurani.Kerim.Meali.30.cuz.Prof.Dr.SuatYildirim/",
@@ -1121,25 +1121,22 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             };
         }
         
-       
         let audioUrl;
         
-       
         const paddedId = juz.id.toString().padStart(2, '0');
         
-       
         const audioId = juz.audioId || paddedId;
         
         try {
-           
+
             if (this._selectedReciter.hasSpecialFormat && this._selectedReciter.formatMap) {
-               
+
                 if (this._selectedReciter.formatMap[audioId]) {
                     const specialFormat = this._selectedReciter.formatMap[audioId];
                     audioUrl = `${this._selectedReciter.baseUrl}${specialFormat}`;
                     this._log(`Using special format for juz ${juz.id}: ${audioUrl}`);
                 } else {
-                   
+
                     audioUrl = `${this._selectedReciter.baseUrl}${this._selectedReciter.audioFormat}`
                         .replace(/%id%/g, paddedId)
                         .replace(/%audioId%/g, audioId)
@@ -1148,7 +1145,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
                     this._log(`Using fallback format for juz ${juz.id}: ${audioUrl}`);
                 }
             } else {
-               
+
                 audioUrl = `${this._selectedReciter.baseUrl}${this._selectedReciter.audioFormat}`
                     .replace(/%id%/g, paddedId)
                     .replace(/%audioId%/g, audioId)
