@@ -163,7 +163,7 @@ function debugJuzLoading(extension) {
            
             const juzData = [
                 {
-                    "name": "1.Juz",
+                    "name": "1. Juz",
                     "id": 1,
                     "audioId": "01",
                     "description": "Al-Fatiha 1 - Al-Baqarah 141",
@@ -172,7 +172,7 @@ function debugJuzLoading(extension) {
                     "endVerse": 141
                   },
                   {
-                    "name": "2.Juz",
+                    "name": "2. Juz",
                     "id": 2,
                     "audioId": "02",
                     "description": "Al-Baqarah 142 - Al-Baqarah 252",
@@ -182,7 +182,7 @@ function debugJuzLoading(extension) {
                     "endVerse": 252
                   },
                   {
-                    "name": "3.Juz",
+                    "name": "3. Juz",
                     "id": 3,
                     "audioId": "03",
                     "description": "Al-Baqarah 253 - Al-Imran 92",
@@ -192,7 +192,7 @@ function debugJuzLoading(extension) {
                     "endVerse": 92
                   },
                   {
-                    "name": "4.Juz",
+                    "name": "4. Juz",
                     "id": 4,
                     "audioId": "04",
                     "description": "Al-Imran 93 - An-Nisa 23",
@@ -202,7 +202,7 @@ function debugJuzLoading(extension) {
                     "endVerse": 23
                   },
                   {
-                    "name": "5.Juz",
+                    "name": "5. Juz",
                     "id": 5,
                     "audioId": "05",
                     "description": "An-Nisa 24 - An-Nisa 147",
@@ -212,7 +212,7 @@ function debugJuzLoading(extension) {
                     "endVerse": 147
                   },
                   {
-                    "name": "6.Juz",
+                    "name": "6. Juz",
                     "id": 6,
                     "audioId": "06",
                     "description": "An-Nisa 148 - Al-Ma'idah 81",
@@ -222,7 +222,7 @@ function debugJuzLoading(extension) {
                     "endVerse": 81
                   },
                   {
-                    "name": "7.Juz",
+                    "name": "7. Juz",
                     "id": 7,
                     "audioId": "07",
                     "description": "Al-Ma'idah 82 - Al-An'am 110",
@@ -232,7 +232,7 @@ function debugJuzLoading(extension) {
                     "endVerse": 110
                   },
                   {
-                    "name": "8.Juz",
+                    "name": "8. Juz",
                     "id": 8,
                     "audioId": "08",
                     "description": "Al-An'am 111 - Al-A'raf 87",
@@ -242,7 +242,7 @@ function debugJuzLoading(extension) {
                     "endVerse": 87
                   },
                   {
-                    "name": "9.Juz",
+                    "name": "9. Juz",
                     "id": 9,
                     "audioId": "09",
                     "description": "Al-A'raf 88 - Al-Anfal 40",
@@ -252,7 +252,7 @@ function debugJuzLoading(extension) {
                     "endVerse": 40
                   },
                   {
-                    "name": "10.Juz",
+                    "name": "10. Juz",
                     "id": 10,
                     "audioId": "10",
                     "description": "Al-Anfal 41 - At-Tawbah 92",
@@ -262,7 +262,7 @@ function debugJuzLoading(extension) {
                     "endVerse": 92
                   },
                   {
-                    "name": "11.Juz",
+                    "name": "11. Juz",
                     "id": 11,
                     "audioId": "11",
                     "description": "At-Tawbah 93 - Hud 5",
@@ -272,7 +272,7 @@ function debugJuzLoading(extension) {
                     "endVerse": 5
                   },
                   {
-                    "name": "12.Juz",
+                    "name": "12. Juz",
                     "id": 12,
                     "audioId": "12",
                     "description": "Hud 6 - Yusuf 52",
@@ -282,7 +282,7 @@ function debugJuzLoading(extension) {
                     "endVerse": 52
                   },
                   {
-                    "name": "13.Juz",
+                    "name": "13. Juz",
                     "id": 13,
                     "audioId": "13",
                     "description": "Yusuf 53 - Ibrahim 52",
@@ -292,7 +292,7 @@ function debugJuzLoading(extension) {
                     "endVerse": 52
                   },
                   {
-                    "name": "14.Juz",
+                    "name": "14. Juz",
                     "id": 14,
                     "audioId": "14",
                     "description": "Al-Hijr 1 - An-Nahl 128",
@@ -302,7 +302,7 @@ function debugJuzLoading(extension) {
                     "endVerse": 128
                   },
                   {
-                    "name": "15.Juz",
+                    "name": "15. Juz",
                     "id": 15,
                     "audioId": "15",
                     "description": "Al-Isra 1 - Al-Kahf 74",
@@ -312,7 +312,7 @@ function debugJuzLoading(extension) {
                     "endVerse": 74
                   },
                   {
-                    "name": "16.Juz",
+                    "name": "16. Juz",
                     "id": 16,
                     "audioId": "16",
                     "description": "Al-Kahf 75 - Ta-Ha 135",
@@ -322,7 +322,7 @@ function debugJuzLoading(extension) {
                     "endVerse": 135
                   },
                   {
-                    "name": "17.Juz",
+                    "name": "17. Juz",
                     "id": 17,
                     "audioId": "17",
                     "description": "Al-Anbiya 1 - Al-Hajj 78",
@@ -332,7 +332,7 @@ function debugJuzLoading(extension) {
                     "endVerse": 78
                   },
                   {
-                    "name": "18.Juz",
+                    "name": "18. Juz",
                     "id": 18,
                     "audioId": "18",
                     "description": "Al-Mu'minun 1 - Al-Furqan 20",
@@ -342,7 +342,7 @@ function debugJuzLoading(extension) {
                     "endVerse": 20
                   },
                   {
-                    "name": "19.Juz",
+                    "name": "19. Juz",
                     "id": 19,
                     "audioId": "19",
                     "description": "Al-Furqan 21 - An-Naml 55",
@@ -352,7 +352,7 @@ function debugJuzLoading(extension) {
                     "endVerse": 55
                   },
                   {
-                    "name": "20.Juz",
+                    "name": "20. Juz",
                     "id": 20,
                     "audioId": "20",
                     "description": "An-Naml 56 - Al-Ankabut 45",
@@ -362,7 +362,7 @@ function debugJuzLoading(extension) {
                     "endVerse": 45
                   },
                   {
-                    "name": "21.Juz",
+                    "name": "21. Juz",
                     "id": 21,
                     "audioId": "21",
                     "description": "Al-Ankabut 46 - Al-Ahzab 30",
@@ -372,7 +372,7 @@ function debugJuzLoading(extension) {
                     "endVerse": 30
                   },
                   {
-                    "name": "22.Juz",
+                    "name": "22. Juz",
                     "id": 22,
                     "audioId": "22",
                     "description": "Al-Ahzab 31 - Ya-Sin 27",
@@ -382,7 +382,7 @@ function debugJuzLoading(extension) {
                     "endVerse": 27
                   },
                   {
-                    "name": "23.Juz",
+                    "name": "23. Juz",
                     "id": 23,
                     "audioId": "23",
                     "description": "Ya-Sin 28 - Az-Zumar 31",
@@ -392,7 +392,7 @@ function debugJuzLoading(extension) {
                     "endVerse": 31
                   },
                   {
-                    "name": "24.Juz",
+                    "name": "24. Juz",
                     "id": 24,
                     "audioId": "24",
                     "description": "Az-Zumar 32 - Fussilat 46",
@@ -402,7 +402,7 @@ function debugJuzLoading(extension) {
                     "endVerse": 46
                   },
                   {
-                    "name": "25.Juz",
+                    "name": "25. Juz",
                     "id": 25,
                     "audioId": "25",
                     "description": "Fussilat 47 - Al-Jathiyah 37",
@@ -412,7 +412,7 @@ function debugJuzLoading(extension) {
                     "endVerse": 37
                   },
                   {
-                    "name": "26.Juz",
+                    "name": "26. Juz",
                     "id": 26,
                     "audioId": "26",
                     "description": "Al-Ahqaf 1 - Adh-Dhariyat 30",
@@ -422,7 +422,7 @@ function debugJuzLoading(extension) {
                     "endVerse": 30
                   },
                   {
-                    "name": "27.Juz",
+                    "name": "27. Juz",
                     "id": 27,
                     "audioId": "27",
                     "description": "Adh-Dhariyat 31 - Al-Hadid 29",
@@ -432,7 +432,7 @@ function debugJuzLoading(extension) {
                     "endVerse": 29
                   },
                   {
-                    "name": "28.Juz",
+                    "name": "28. Juz",
                     "id": 28,
                     "audioId": "28",
                     "description": "Al-Mujadila 1 - At-Tahrim 12",
@@ -442,7 +442,7 @@ function debugJuzLoading(extension) {
                     "endVerse": 12
                   },
                   {
-                    "name": "29.Juz",
+                    "name": "29. Juz",
                     "id": 29,
                     "audioId": "29",
                     "description": "Al-Mulk 1 - Al-Mursalat 50",
@@ -452,7 +452,7 @@ function debugJuzLoading(extension) {
                     "endVerse": 50
                   },
                   {
-                    "name": "30.Juz",
+                    "name": "30. Juz",
                     "id": 30,
                     "audioId": "30",
                     "description": "An-Naba 1 - An-Nas 6",
@@ -877,7 +877,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
            
             const firstId = this._juzData[startIdx].id;
             const lastId = this._juzData[endIdx-1].id;
-            const groupLabel = `Cüz ${firstId}-${lastId}`;
+            const groupLabel = `Juz ${firstId}-${lastId}`;
             
            
             let subMenu = new PopupMenu.PopupSubMenuMenuItem(groupLabel);

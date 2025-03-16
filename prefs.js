@@ -288,7 +288,7 @@ const QuranPlayerPrefsPage = GObject.registerClass(
                 const isJuzReciter = isJuzBasedReciter(reciter);
                 let displayName = reciter.name;
                 if (isJuzReciter) {
-                    displayName = `${displayName} [Cüz]`;
+                    displayName = `${displayName} [Juz]`;
                 }
                 reciterModel.append(displayName);
             });
