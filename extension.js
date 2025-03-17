@@ -786,35 +786,76 @@ class QuranPlayerIndicator extends PanelMenu.Button {
     }
 
     _connectSignals() {
-        this._playButton.connect('clicked', () => {
+        // Monitor language setting changes
+        this._settings.connect('changed::interface-language', () => {
+            log('Quran Player: Language setting changed');
+            
+            // Show notification to user
+            this._showNotification(_("Language Changed"), 
+                _("Please restart GNOME Shell for the language change to take effect"));
+                
+            // Update locale settings (won't take effect until restart)
+            this._configureLocale();
+        });            
+        // Clear any existing signal handlers if needed
+        if (this._signalHandlers) {
+            this._signalHandlers.forEach(handler => {
+                if (handler.obj && handler.id) {
+                    handler.obj.disconnect(handler.id);
+                }
+            });
+        }
+        
+        // Initialize signal handlers array
+        this._signalHandlers = [];
+        
+        // Helper function to safely connect signals
+        const safeConnect = (obj, signal, callback) => {
+            if (obj) {
+                try {
+                    const id = obj.connect(signal, callback);
+                    this._signalHandlers.push({ obj, id });
+                    return id;
+                } catch (e) {
+                    this._log(`Error connecting signal ${signal}: ${e.message}`);
+                }
+            }
+            return 0;
+        };
+        
+        // Connect UI element signals
+        safeConnect(this._playButton, 'clicked', () => {
             this._log("Play button clicked");
             this._togglePlay();
             return Clutter.EVENT_PROPAGATE;
         });
         
-        this._stopButton.connect('clicked', () => {
+        safeConnect(this._stopButton, 'clicked', () => {
             this._log("Stop button clicked");
             this._stopPlayback();
             return Clutter.EVENT_PROPAGATE;
         });
         
-        this._prevButton.connect('clicked', () => {
+        safeConnect(this._prevButton, 'clicked', () => {
             this._log("Previous button clicked");
             this._playPrevious();
             return Clutter.EVENT_PROPAGATE;
         });
         
-        this._nextButton.connect('clicked', () => {
+        safeConnect(this._nextButton, 'clicked', () => {
             this._log("Next button clicked");
             this._playNext();
             return Clutter.EVENT_PROPAGATE;
         });
         
-        this._settings.connect('changed::interface-language', () => {
-            this._showNotification(_("Language Changed"), 
-                        _("Please restart GNOME Shell for the language change to take effect"));
-        });
-    }    
+        // Connect settings signals
+        if (this._settings) {
+            safeConnect(this._settings, 'changed::interface-language', () => {
+                this._showNotification(_("Language Changed"), 
+                    _("Please restart GNOME Shell for the language change to take effect"));
+            });
+        }
+    }
     
     _addSurahGroups() {
        
@@ -1505,7 +1546,21 @@ class QuranPlayerIndicator extends PanelMenu.Button {
     }
     
     destroy() {
-       
+        // Disconnect all signal handlers
+        if (this._signalHandlers) {
+            this._signalHandlers.forEach(handler => {
+                if (handler.obj && handler.id) {
+                    try {
+                        handler.obj.disconnect(handler.id);
+                    } catch (e) {
+                        // Ignore errors when disconnecting signals
+                    }
+                }
+            });
+            this._signalHandlers = [];
+        }
+        
+        // Clean up timeout sources
         if (this._timeoutSources) {
             this._timeoutSources.forEach(sourceId => {
                 if (sourceId > 0) {
@@ -1515,7 +1570,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             this._timeoutSources = [];
         }
         
-       
+        // Stop playback
         this._stopPlayback();
         
         super.destroy();
@@ -1523,23 +1578,52 @@ class QuranPlayerIndicator extends PanelMenu.Button {
 });
 
 export default class QuranPlayerExtension extends Extension {
+    initTranslations() {
+        const domain = 'quran-player';
+        const localeDir = Gio.File.new_for_path(this.path).get_child('locale');
+
+        if (localeDir.query_exists(null)) {
+            try {
+                // For pre-GNOME 3.38
+                imports.gettext.bindtextdomain(domain, localeDir.get_path());
+                imports.gettext.textdomain(domain);
+            } catch (e) {
+                log(`Quran Player: Legacy bindtextdomain failed: ${e}`);
+            }
+            
+            try {
+                // For GNOME 3.38+
+                const Gettext = imports.gettext;
+                const localeDir = this.dir.get_child('locale');
+                Gettext.bindtextdomain(domain, localeDir.get_path());
+                Gettext.textdomain(domain);
+            } catch (e) {
+                log(`Quran Player: Modern bindtextdomain failed: ${e}`);
+            }
+        }
+    }
+
     enable() {
         log('Quran Player: Enabling extension');
-       
-        try {
-            if (!Gst.init_check(null)) {
-                Gst.init(null);
-            }
-        } catch (e) {
-            logError(e, 'Quran Player: Failed to initialize GStreamer');
-        }
-       
+        
+        // Initialize translations first
+        this._initTranslations();
+        
+        // Initialize settings
         this._settings = this.getSettings();
         
-       
+        // Configure locale
         this._configureLocale();
-       
-       
+        
+        // Listen for language changes
+        this._settingsChangedId = this._settings.connect('changed::interface-language', () => {
+            log('Quran Player: Language setting changed');
+            this._configureLocale();
+            this._showNotification(_("Language Changed"), 
+                _("Please restart GNOME Shell for the language change to take effect"));
+        });
+        
+        // Create the indicator
         this._indicator = new QuranPlayerIndicator(this);
         Main.panel.addToStatusArea('quran-player', this._indicator);
         
@@ -1550,21 +1634,39 @@ export default class QuranPlayerExtension extends Extension {
         const interfaceLanguage = this._settings.get_string('interface-language');
         if (interfaceLanguage) {
             try {
-               
-                GLib.setenv('LANGUAGE', interfaceLanguage, true);
+                log(`Quran Player: Setting language to ${interfaceLanguage}`);
                 
-               
-               
-               
+                // Set environment variables
+                GLib.setenv('LANGUAGE', interfaceLanguage, true);
+                GLib.setenv('LC_MESSAGES', interfaceLanguage, true);
+                
+                // Re-initialize translations with new language
+                this.initTranslations();
+                                
+                // Log translation test
+                log(`Quran Player: Translated 'Settings' = ${_('Settings')}`);
             } catch (e) {
                 log(`Quran Player: Error setting locale: ${e.message}`);
             }
+        }
+            // If the indicator exists, rebuild it
+        if (this._indicator) {
+            // Remove the old indicator
+            this._indicator.destroy();
+            
+            // Create a new one
+            this._indicator = new QuranPlayerIndicator(this);
+            Main.panel.addToStatusArea('quran-player', this._indicator);
         }
     }
     
     disable() {
         log('Quran Player: Disabling extension');
         
+        if (this._settingsChangedId) {
+            this._settings.disconnect(this._settingsChangedId);
+            this._settingsChangedId = 0;
+        }
        
         if (this._indicator) {
             try {
