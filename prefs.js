@@ -16,13 +16,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 'use strict';
-
+//import {ExtensionPreferences, gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
+import {ExtensionPreferences, gettext as _, ngettext} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 import Adw from 'gi://Adw';
 import Gio from 'gi://Gio';
 import Gtk from 'gi://Gtk';
 import GLib from 'gi://GLib';
 import GObject from 'gi://GObject';
-import {ExtensionPreferences, gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
 
 function isJuzBasedReciter(reciter) {
@@ -288,7 +288,7 @@ const QuranPlayerPrefsPage = GObject.registerClass(
                 const isJuzReciter = isJuzBasedReciter(reciter);
                 let displayName = reciter.name;
                 if (isJuzReciter) {
-                    displayName = `${displayName} [Juz]`;
+                    displayName = `${displayName} [${_("Juz")}]`;
                 }
                 reciterModel.append(displayName);
             });
@@ -386,13 +386,19 @@ const QuranPlayerPrefsPage = GObject.registerClass(
         }
         languageRow.selected = langIndex;
         
-       
         languageRow.connect('notify::selected', (row) => {
             if (row.selected >= 0 && row.selected < langCodes.length) {
-                this._settings.set_string('interface-language', langCodes[row.selected]);
+                const selectedLang = langCodes[row.selected];
+                this._settings.set_string('interface-language', selectedLang);
+                
+                // Call the parent's translation loader
+                const prefs = this.get_root().get_parent()._delegate;
+                if (prefs && typeof prefs._loadTranslations === 'function') {
+                    prefs._loadTranslations(selectedLang);
+                }
             }
         });
-        
+               
         languageGroup.add(languageRow);
 
        
@@ -517,7 +523,54 @@ const QuranPlayerPrefsPage = GObject.registerClass(
 });
 
 export default class QuranPlayerPreferences extends ExtensionPreferences {
+
+    _loadTranslations(locale) {
+        try {
+            // Set the environment variables
+            GLib.setenv('LANGUAGE', locale, true);
+            
+            // Try to bind translations domain
+            const domain = 'quran-player';
+            
+            // For older GNOME
+            try {
+                imports.gettext.bindtextdomain(domain, GLib.build_filenamev([this.path, 'locale']));
+                imports.gettext.textdomain(domain);
+            } catch (e) {
+                log(`Failed to set up legacy gettext: ${e}`);
+            }
+            
+            // For newer GNOME
+            try {
+                Gettext.bindtextdomain(domain, GLib.build_filenamev([this.path, 'locale']));
+                Gettext.textdomain(domain);
+            } catch (e) {
+                log(`Failed to set up modern gettext: ${e}`);
+            }
+            
+            // Reload the preferences page
+            this._rebuildPrefsUI();
+        } catch (e) {
+            log(`Error loading translations: ${e}`);
+        }
+    }
    
+    _rebuildPrefsUI() {
+        // Store a reference to the window
+        if (this._prefsWindow && this._prefsPage) {
+            // Remove the existing page
+            this._prefsWindow.remove(this._prefsPage);
+            
+            // Create a new page with fresh translations
+            const settings = this.getSettings();
+            const reciters = this._loadReciters();
+            this._prefsPage = new QuranPlayerPrefsPage(settings, reciters);
+            
+            // Add the new page
+            this._prefsWindow.add(this._prefsPage);
+        }
+    }
+
     _loadReciters() {
         try {
            
@@ -554,14 +607,12 @@ export default class QuranPlayerPreferences extends ExtensionPreferences {
         }
     }
 
-    fillPreferencesWindow(window) {
-        const settings = this.getSettings();
-        
-       
-        const reciters = this._loadReciters();
-        
-       
-        const page = new QuranPlayerPrefsPage(settings, reciters);
-        window.add(page);
-    }
+fillPreferencesWindow(window) {
+    this._prefsWindow = window;
+    const settings = this.getSettings();
+    const reciters = this._loadReciters();
+    
+    this._prefsPage = new QuranPlayerPrefsPage(settings, reciters);
+    window.add(this._prefsPage);
+}
 }
