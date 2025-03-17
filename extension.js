@@ -1578,7 +1578,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
 });
 
 export default class QuranPlayerExtension extends Extension {
-    initTranslations() {
+    _initTranslations() {
         const domain = 'quran-player';
         const localeDir = Gio.File.new_for_path(this.path).get_child('locale');
 
@@ -1607,7 +1607,7 @@ export default class QuranPlayerExtension extends Extension {
         log('Quran Player: Enabling extension');
         
         // Initialize translations first
-        this._initTranslations();
+        this.initTranslations();
         
         // Initialize settings
         this._settings = this.getSettings();
