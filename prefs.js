@@ -16,8 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 'use strict';
-//import {ExtensionPreferences, gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 import {ExtensionPreferences, gettext as _, ngettext} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
+import GettextNative from 'gi://GLib/gettext';
 import Adw from 'gi://Adw';
 import Gio from 'gi://Gio';
 import Gtk from 'gi://Gtk';
@@ -391,7 +391,7 @@ const QuranPlayerPrefsPage = GObject.registerClass(
                 const selectedLang = langCodes[row.selected];
                 this._settings.set_string('interface-language', selectedLang);
                 
-                // Call the parent's translation loader
+               
                 const prefs = this.get_root().get_parent()._delegate;
                 if (prefs && typeof prefs._loadTranslations === 'function') {
                     prefs._loadTranslations(selectedLang);
@@ -526,13 +526,13 @@ export default class QuranPlayerPreferences extends ExtensionPreferences {
 
     _loadTranslations(locale) {
         try {
-            // Set the environment variables
+           
             GLib.setenv('LANGUAGE', locale, true);
             
-            // Try to bind translations domain
+           
             const domain = 'quran-player';
             
-            // For older GNOME
+           
             try {
                 imports.gettext.bindtextdomain(domain, GLib.build_filenamev([this.path, 'locale']));
                 imports.gettext.textdomain(domain);
@@ -540,7 +540,7 @@ export default class QuranPlayerPreferences extends ExtensionPreferences {
                 log(`Failed to set up legacy gettext: ${e}`);
             }
             
-            // For newer GNOME
+           
             try {
                 Gettext.bindtextdomain(domain, GLib.build_filenamev([this.path, 'locale']));
                 Gettext.textdomain(domain);
@@ -548,7 +548,7 @@ export default class QuranPlayerPreferences extends ExtensionPreferences {
                 log(`Failed to set up modern gettext: ${e}`);
             }
             
-            // Reload the preferences page
+           
             this._rebuildPrefsUI();
         } catch (e) {
             log(`Error loading translations: ${e}`);
@@ -556,17 +556,17 @@ export default class QuranPlayerPreferences extends ExtensionPreferences {
     }
    
     _rebuildPrefsUI() {
-        // Store a reference to the window
+       
         if (this._prefsWindow && this._prefsPage) {
-            // Remove the existing page
+           
             this._prefsWindow.remove(this._prefsPage);
             
-            // Create a new page with fresh translations
+           
             const settings = this.getSettings();
             const reciters = this._loadReciters();
             this._prefsPage = new QuranPlayerPrefsPage(settings, reciters);
             
-            // Add the new page
+           
             this._prefsWindow.add(this._prefsPage);
         }
     }
@@ -607,12 +607,18 @@ export default class QuranPlayerPreferences extends ExtensionPreferences {
         }
     }
 
-fillPreferencesWindow(window) {
-    this._prefsWindow = window;
-    const settings = this.getSettings();
-    const reciters = this._loadReciters();
-    
-    this._prefsPage = new QuranPlayerPrefsPage(settings, reciters);
-    window.add(this._prefsPage);
-}
+    fillPreferencesWindow(window) {
+        this._prefsWindow = window;
+        
+        // Load current language
+        const settings = this.getSettings();
+        const currentLanguage = settings.get_string('interface-language');
+        if (currentLanguage) {
+            this._loadTranslations(currentLanguage);
+        }
+        
+        const reciters = this._loadReciters();
+        this._prefsPage = new QuranPlayerPrefsPage(settings, reciters);
+        window.add(this._prefsPage);
+    }
 }

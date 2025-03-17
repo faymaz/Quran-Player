@@ -20,11 +20,11 @@ msgstr "Kuran Tilaveti"
 
 #: extension.js:656
 msgid "Juz Selection"
-msgstr ""
+msgstr "Cüz Seçimi"
 
 #: extension.js:657
 msgid "Surah Selection"
-msgstr ""
+msgstr "Sure Seçimi"
 
 #: extension.js:794 extension.js:854 extension.js:1622
 #, fuzzy
@@ -33,7 +33,7 @@ msgstr "Dil Ayarları"
 
 #: extension.js:795 extension.js:855 extension.js:1623
 msgid "Please restart GNOME Shell for the language change to take effect"
-msgstr ""
+msgstr "Dil değişikliğinin geçerli olması için lütfen GNOME Shell'i yeniden başlatın."
 
 #: extension.js:903
 msgid "No Juz data available"
@@ -73,7 +73,7 @@ msgstr "Hafız"
 
 #: prefs.js:298
 msgid "Select a reciter for audio playback"
-msgstr ""
+msgstr "Sesli oynatma için bir hafız seçin"
 
 #: prefs.js:321
 msgid "Autoplay next item"
@@ -109,8 +109,7 @@ msgstr "Arayüz Dili"
 
 #: prefs.js:366
 msgid "Select language for the interface (changes take effect after restart)"
-msgstr ""
-"Arayüz için dil seçin (değişiklikler yeniden başlatma sonrası etkinleşir)"
+msgstr "Arayüz için dil seçin (değişiklikler yeniden başlatma sonrası etkinleşir)"
 
 #: prefs.js:371
 msgid "System Default"
@@ -126,7 +125,7 @@ msgstr "Özel cüz listesi dosya yolu"
 
 #: prefs.js:418
 msgid "Select Juz File"
-msgstr ""
+msgstr "Cüz Dosyası Seçin"
 
 #: prefs.js:425
 #, fuzzy
@@ -135,11 +134,11 @@ msgstr "Özel cüz listesi dosya yolu"
 
 #: prefs.js:431 prefs.js:481
 msgid "Cancel"
-msgstr ""
+msgstr "İptal"
 
 #: prefs.js:432 prefs.js:482
 msgid "Select"
-msgstr ""
+msgstr "Seç"
 
 #: prefs.js:456
 msgid "Custom surah list file path"
@@ -147,7 +146,7 @@ msgstr "Özel sure listesi dosya yolu"
 
 #: prefs.js:468
 msgid "Select Surah File"
-msgstr ""
+msgstr "Sure Dosyası Seç"
 
 #: prefs.js:475
 #, fuzzy

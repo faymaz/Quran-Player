@@ -786,18 +786,18 @@ class QuranPlayerIndicator extends PanelMenu.Button {
     }
 
     _connectSignals() {
-        // Monitor language setting changes
+       
         this._settings.connect('changed::interface-language', () => {
             log('Quran Player: Language setting changed');
             
-            // Show notification to user
+           
             this._showNotification(_("Language Changed"), 
                 _("Please restart GNOME Shell for the language change to take effect"));
                 
-            // Update locale settings (won't take effect until restart)
+           
             this._configureLocale();
         });            
-        // Clear any existing signal handlers if needed
+       
         if (this._signalHandlers) {
             this._signalHandlers.forEach(handler => {
                 if (handler.obj && handler.id) {
@@ -806,10 +806,10 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             });
         }
         
-        // Initialize signal handlers array
+       
         this._signalHandlers = [];
         
-        // Helper function to safely connect signals
+       
         const safeConnect = (obj, signal, callback) => {
             if (obj) {
                 try {
@@ -823,7 +823,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             return 0;
         };
         
-        // Connect UI element signals
+       
         safeConnect(this._playButton, 'clicked', () => {
             this._log("Play button clicked");
             this._togglePlay();
@@ -848,7 +848,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             return Clutter.EVENT_PROPAGATE;
         });
         
-        // Connect settings signals
+       
         if (this._settings) {
             safeConnect(this._settings, 'changed::interface-language', () => {
                 this._showNotification(_("Language Changed"), 
@@ -918,7 +918,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
            
             const firstId = this._juzData[startIdx].id;
             const lastId = this._juzData[endIdx-1].id;
-            //const groupLabel = `Juz ${firstId}-${lastId}`;
+           
            const groupLabel = `${_("Juz")} ${firstId}-${lastId}`;
 
             let subMenu = new PopupMenu.PopupSubMenuMenuItem(groupLabel);
@@ -1045,7 +1045,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
                     if (item instanceof PopupMenu.PopupMenuItem) {
                        
                         const displayName = item.label.text;
-                        const reciterName = displayName.replace(' [Juz]', '');
+                        const reciterName = displayName.replace(' ${_("Juz")}', '');
                         
                         const isSelected = this._selectedReciter && 
                                         reciterName === this._selectedReciter.name;
@@ -1546,21 +1546,21 @@ class QuranPlayerIndicator extends PanelMenu.Button {
     }
     
     destroy() {
-        // Disconnect all signal handlers
+       
         if (this._signalHandlers) {
             this._signalHandlers.forEach(handler => {
                 if (handler.obj && handler.id) {
                     try {
                         handler.obj.disconnect(handler.id);
                     } catch (e) {
-                        // Ignore errors when disconnecting signals
+                       
                     }
                 }
             });
             this._signalHandlers = [];
         }
         
-        // Clean up timeout sources
+       
         if (this._timeoutSources) {
             this._timeoutSources.forEach(sourceId => {
                 if (sourceId > 0) {
@@ -1570,7 +1570,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             this._timeoutSources = [];
         }
         
-        // Stop playback
+       
         this._stopPlayback();
         
         super.destroy();
@@ -1584,7 +1584,7 @@ export default class QuranPlayerExtension extends Extension {
 
         if (localeDir.query_exists(null)) {
             try {
-                // For pre-GNOME 3.38
+               
                 imports.gettext.bindtextdomain(domain, localeDir.get_path());
                 imports.gettext.textdomain(domain);
             } catch (e) {
@@ -1592,7 +1592,7 @@ export default class QuranPlayerExtension extends Extension {
             }
             
             try {
-                // For GNOME 3.38+
+               
                 const Gettext = imports.gettext;
                 const localeDir = this.dir.get_child('locale');
                 Gettext.bindtextdomain(domain, localeDir.get_path());
@@ -1606,16 +1606,16 @@ export default class QuranPlayerExtension extends Extension {
     enable() {
         log('Quran Player: Enabling extension');
         
-        // Initialize translations first
+       
         this.initTranslations();
         
-        // Initialize settings
+       
         this._settings = this.getSettings();
         
-        // Configure locale
+       
         this._configureLocale();
         
-        // Listen for language changes
+       
         this._settingsChangedId = this._settings.connect('changed::interface-language', () => {
             log('Quran Player: Language setting changed');
             this._configureLocale();
@@ -1623,7 +1623,7 @@ export default class QuranPlayerExtension extends Extension {
                 _("Please restart GNOME Shell for the language change to take effect"));
         });
         
-        // Create the indicator
+       
         this._indicator = new QuranPlayerIndicator(this);
         Main.panel.addToStatusArea('quran-player', this._indicator);
         
@@ -1636,25 +1636,25 @@ export default class QuranPlayerExtension extends Extension {
             try {
                 log(`Quran Player: Setting language to ${interfaceLanguage}`);
                 
-                // Set environment variables
+               
                 GLib.setenv('LANGUAGE', interfaceLanguage, true);
                 GLib.setenv('LC_MESSAGES', interfaceLanguage, true);
                 
-                // Re-initialize translations with new language
+               
                 this.initTranslations();
                                 
-                // Log translation test
+               
                 log(`Quran Player: Translated 'Settings' = ${_('Settings')}`);
             } catch (e) {
                 log(`Quran Player: Error setting locale: ${e.message}`);
             }
         }
-            // If the indicator exists, rebuild it
+           
         if (this._indicator) {
-            // Remove the old indicator
+           
             this._indicator.destroy();
             
-            // Create a new one
+           
             this._indicator = new QuranPlayerIndicator(this);
             Main.panel.addToStatusArea('quran-player', this._indicator);
         }
