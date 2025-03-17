@@ -1,6 +1,6 @@
 {
   "name": "Quran Player",
-  "description": "Listen to Quran recitations directly from your GNOME Shell",
+  "description": "Listen to Quran recitations directly from your GNOME Shell. Features multiple reciters with audio from QuranCentral.com and Archive.org servers.",
   "uuid": "quran-player@faymaz.github.com",
   "donations": {
       "github": "https://github.com/faymaz"
