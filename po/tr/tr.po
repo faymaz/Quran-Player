@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: quran-player\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-14 12:00+0300\n"
+"POT-Creation-Date: 2025-03-17 23:52+0100\n"
 "PO-Revision-Date: 2025-03-14 12:00+0300\n"
 "Last-Translator: \n"
 "Language-Team: Turkish\n"
@@ -13,411 +13,497 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 # Arayüz terimleri
+#: extension.js:516 extension.js:557 extension.js:682 extension.js:1511
+#: extension.js:1512
 msgid "Quran Player"
-msgstr "Kuran Okuyucu"
+msgstr "Kuran Tilaveti"
 
-msgid "Settings"
-msgstr "Ayarlar"
+#: extension.js:656
+msgid "Juz Selection"
+msgstr ""
 
-msgid "Reciter"
-msgstr "Hafız"
+#: extension.js:657
+msgid "Surah Selection"
+msgstr ""
 
-msgid "Now playing"
-msgstr "Şimdi oynatılıyor"
+#: extension.js:794 extension.js:854 extension.js:1622
+#, fuzzy
+msgid "Language Changed"
+msgstr "Dil Ayarları"
 
+#: extension.js:795 extension.js:855 extension.js:1623
+msgid "Please restart GNOME Shell for the language change to take effect"
+msgstr ""
+
+#: extension.js:903
 msgid "No Juz data available"
 msgstr "Cüz verisi bulunamadı"
 
-msgid "Repeat current item"
-msgstr "Mevcut öğeyi tekrarla"
+#: extension.js:922 extension.js:958
+msgid "Juz"
+msgstr "Cüz"
 
-msgid "Repeatedly play the current surah/juz until stopped"
-msgstr "Durdurulana kadar mevcut sure/cüzü tekrarlayarak çal"
+#: extension.js:947 extension.js:1039
+msgid "Reciter"
+msgstr "Hafız"
 
-msgid "Interface Language"
-msgstr "Arayüz Dili"
+#: extension.js:1002
+#, fuzzy
+msgid "No reciters available"
+msgstr "Cüz verisi bulunamadı"
 
-msgid "Select language for the interface (changes take effect after restart)"
-msgstr "Arayüz için dil seçin (değişiklikler yeniden başlatma sonrası etkinleşir)"
+#: extension.js:1010 extension.js:1647
+msgid "Settings"
+msgstr "Ayarlar"
 
-msgid "System Default"
-msgstr "Sistem Varsayılanı"
+# Arayüz terimleri
+#: prefs.js:270
+#, fuzzy
+msgid "Quran Player Settings"
+msgstr "Kuran Tilaveti"
 
-msgid "Autoplay next item"
-msgstr "Sonraki öğeyi otomatik oynat"
-
-msgid "Automatically play the next surah/juz when current one finishes"
-msgstr "Mevcut bittikten sonra sonraki sure/cüzü otomatik oynat"
-
-msgid "Show notifications"
-msgstr "Bildirimleri göster"
-
-msgid "Display notifications when playback starts/stops"
-msgstr "Oynatma başladığında/durduğunda bildirim göster"
-
-msgid "Custom surah list file path"
-msgstr "Özel sure listesi dosya yolu"
-
-msgid "Custom juz list file path"
-msgstr "Özel cüz listesi dosya yolu"
-
-msgid "Enable debug logs"
-msgstr "Hata ayıklama günlüklerini etkinleştir"
-
-msgid "Enable debug logging for troubleshooting"
-msgstr "Sorun giderme için hata ayıklama günlüklemesini etkinleştir"
-
-msgid "Language Settings"
-msgstr "Dil Ayarları"
-
+#: prefs.js:280
 msgid "General Settings"
 msgstr "Genel Ayarlar"
 
+#: prefs.js:297
+#, fuzzy
+msgid "Quran Reciter"
+msgstr "Hafız"
+
+#: prefs.js:298
+msgid "Select a reciter for audio playback"
+msgstr ""
+
+#: prefs.js:321
+msgid "Autoplay next item"
+msgstr "Sonraki öğeyi otomatik oynat"
+
+#: prefs.js:322
+msgid "Automatically play the next surah/juz when current one finishes"
+msgstr "Mevcut bittikten sonra sonraki sure/cüzü otomatik oynat"
+
+#: prefs.js:334
+msgid "Show notifications"
+msgstr "Bildirimleri göster"
+
+#: prefs.js:335
+msgid "Display notifications when playback starts/stops"
+msgstr "Oynatma başladığında/durduğunda bildirim göster"
+
+#: prefs.js:347
+msgid "Repeat current item"
+msgstr "Mevcut öğeyi tekrarla"
+
+#: prefs.js:348
+msgid "Repeatedly play the current surah/juz until stopped"
+msgstr "Durdurulana kadar mevcut sure/cüzü tekrarlayarak çal"
+
+#: prefs.js:359
+msgid "Language Settings"
+msgstr "Dil Ayarları"
+
+#: prefs.js:365
+msgid "Interface Language"
+msgstr "Arayüz Dili"
+
+#: prefs.js:366
+msgid "Select language for the interface (changes take effect after restart)"
+msgstr ""
+"Arayüz için dil seçin (değişiklikler yeniden başlatma sonrası etkinleşir)"
+
+#: prefs.js:371
+msgid "System Default"
+msgstr "Sistem Varsayılanı"
+
+#: prefs.js:400
 msgid "Advanced Settings"
 msgstr "Gelişmiş Ayarlar"
 
+#: prefs.js:406
+msgid "Custom juz list file path"
+msgstr "Özel cüz listesi dosya yolu"
+
+#: prefs.js:418
+msgid "Select Juz File"
+msgstr ""
+
+#: prefs.js:425
+#, fuzzy
+msgid "Select custom juz list JSON file"
+msgstr "Özel cüz listesi dosya yolu"
+
+#: prefs.js:431 prefs.js:481
+msgid "Cancel"
+msgstr ""
+
+#: prefs.js:432 prefs.js:482
+msgid "Select"
+msgstr ""
+
+#: prefs.js:456
+msgid "Custom surah list file path"
+msgstr "Özel sure listesi dosya yolu"
+
+#: prefs.js:468
+msgid "Select Surah File"
+msgstr ""
+
+#: prefs.js:475
+#, fuzzy
+msgid "Select custom surah list JSON file"
+msgstr "Özel sure listesi dosya yolu"
+
+#: prefs.js:506
+msgid "Enable debug logs"
+msgstr "Hata ayıklama günlüklerini etkinleştir"
+
+#: prefs.js:507
+msgid "Enable debug logging for troubleshooting"
+msgstr "Sorun giderme için hata ayıklama günlüklemesini etkinleştir"
+
+#~ msgid "Now playing"
+#~ msgstr "Şimdi oynatılıyor"
+
 # Sure isimleri
-msgid "Al-Fatihah"
-msgstr "Fatiha"
+#~ msgid "Al-Fatihah"
+#~ msgstr "Fatiha"
 
-msgid "Al-Baqarah"
-msgstr "Bakara"
+#~ msgid "Al-Baqarah"
+#~ msgstr "Bakara"
 
-msgid "Ali 'Imran"
-msgstr "Al-i İmran"
+#~ msgid "Ali 'Imran"
+#~ msgstr "Al-i İmran"
 
-msgid "An-Nisa"
-msgstr "Nisa"
+#~ msgid "An-Nisa"
+#~ msgstr "Nisa"
 
-msgid "Al-Ma'idah"
-msgstr "Maide"
+#~ msgid "Al-Ma'idah"
+#~ msgstr "Maide"
 
-msgid "Al-An'am"
-msgstr "En'am"
+#~ msgid "Al-An'am"
+#~ msgstr "En'am"
 
-msgid "Al-A'raf"
-msgstr "A'raf"
+#~ msgid "Al-A'raf"
+#~ msgstr "A'raf"
 
-msgid "Al-Anfal"
-msgstr "Enfal"
+#~ msgid "Al-Anfal"
+#~ msgstr "Enfal"
 
-msgid "At-Tawbah"
-msgstr "Tevbe"
+#~ msgid "At-Tawbah"
+#~ msgstr "Tevbe"
 
-msgid "Yunus"
-msgstr "Yunus"
+#~ msgid "Yunus"
+#~ msgstr "Yunus"
 
-msgid "Hud"
-msgstr "Hud"
+#~ msgid "Hud"
+#~ msgstr "Hud"
 
-msgid "Yusuf"
-msgstr "Yusuf"
+#~ msgid "Yusuf"
+#~ msgstr "Yusuf"
 
-msgid "Ar-Ra'd"
-msgstr "Ra'd"
+#~ msgid "Ar-Ra'd"
+#~ msgstr "Ra'd"
 
-msgid "Ibrahim"
-msgstr "İbrahim"
+#~ msgid "Ibrahim"
+#~ msgstr "İbrahim"
 
-msgid "Al-Hijr"
-msgstr "Hicr"
+#~ msgid "Al-Hijr"
+#~ msgstr "Hicr"
 
-msgid "An-Nahl"
-msgstr "Nahl"
+#~ msgid "An-Nahl"
+#~ msgstr "Nahl"
 
-msgid "Al-Isra"
-msgstr "İsra"
+#~ msgid "Al-Isra"
+#~ msgstr "İsra"
 
-msgid "Al-Kahf"
-msgstr "Kehf"
+#~ msgid "Al-Kahf"
+#~ msgstr "Kehf"
 
-msgid "Maryam"
-msgstr "Meryem"
+#~ msgid "Maryam"
+#~ msgstr "Meryem"
 
-msgid "Ta-Ha"
-msgstr "Taha"
+#~ msgid "Ta-Ha"
+#~ msgstr "Taha"
 
-msgid "Al-Anbya"
-msgstr "Enbiya"
+#~ msgid "Al-Anbya"
+#~ msgstr "Enbiya"
 
-msgid "Al-Hajj"
-msgstr "Hac"
+#~ msgid "Al-Hajj"
+#~ msgstr "Hac"
 
-msgid "Al-Mu'minun"
-msgstr "Mü'minun"
+#~ msgid "Al-Mu'minun"
+#~ msgstr "Mü'minun"
 
-msgid "An-Nur"
-msgstr "Nur"
+#~ msgid "An-Nur"
+#~ msgstr "Nur"
 
-msgid "Al-Furqan"
-msgstr "Furkan"
+#~ msgid "Al-Furqan"
+#~ msgstr "Furkan"
 
-msgid "Ash-Shu'ara"
-msgstr "Şuara"
+#~ msgid "Ash-Shu'ara"
+#~ msgstr "Şuara"
 
-msgid "An-Naml"
-msgstr "Neml"
+#~ msgid "An-Naml"
+#~ msgstr "Neml"
 
-msgid "Al-Qasas"
-msgstr "Kasas"
+#~ msgid "Al-Qasas"
+#~ msgstr "Kasas"
 
-msgid "Al-'Ankabut"
-msgstr "Ankebut"
+#~ msgid "Al-'Ankabut"
+#~ msgstr "Ankebut"
 
-msgid "Ar-Rum"
-msgstr "Rum"
+#~ msgid "Ar-Rum"
+#~ msgstr "Rum"
 
-msgid "Luqman"
-msgstr "Lokman"
+#~ msgid "Luqman"
+#~ msgstr "Lokman"
 
-msgid "As-Sajdah"
-msgstr "Secde"
+#~ msgid "As-Sajdah"
+#~ msgstr "Secde"
 
-msgid "Al-Ahzab"
-msgstr "Ahzab"
+#~ msgid "Al-Ahzab"
+#~ msgstr "Ahzab"
 
-msgid "Saba"
-msgstr "Sebe"
+#~ msgid "Saba"
+#~ msgstr "Sebe"
 
-msgid "Fatir"
-msgstr "Fatır"
+#~ msgid "Fatir"
+#~ msgstr "Fatır"
 
-msgid "Ya-Sin"
-msgstr "Yasin"
+#~ msgid "Ya-Sin"
+#~ msgstr "Yasin"
 
-msgid "As-Saffat"
-msgstr "Saffat"
+#~ msgid "As-Saffat"
+#~ msgstr "Saffat"
 
-msgid "Sad"
-msgstr "Sad"
+#~ msgid "Sad"
+#~ msgstr "Sad"
 
-msgid "Az-Zumar"
-msgstr "Zümer"
+#~ msgid "Az-Zumar"
+#~ msgstr "Zümer"
 
-msgid "Ghafir"
-msgstr "Mü'min"
+#~ msgid "Ghafir"
+#~ msgstr "Mü'min"
 
-msgid "Fussilat"
-msgstr "Fussilet"
+#~ msgid "Fussilat"
+#~ msgstr "Fussilet"
 
-msgid "Ash-Shura"
-msgstr "Şura"
+#~ msgid "Ash-Shura"
+#~ msgstr "Şura"
 
-msgid "Az-Zukhruf"
-msgstr "Zuhruf"
+#~ msgid "Az-Zukhruf"
+#~ msgstr "Zuhruf"
 
-msgid "Ad-Dukhan"
-msgstr "Duhan"
+#~ msgid "Ad-Dukhan"
+#~ msgstr "Duhan"
 
-msgid "Al-Jathiyah"
-msgstr "Casiye"
+#~ msgid "Al-Jathiyah"
+#~ msgstr "Casiye"
 
-msgid "Al-Ahqaf"
-msgstr "Ahkaf"
+#~ msgid "Al-Ahqaf"
+#~ msgstr "Ahkaf"
 
-msgid "Muhammad"
-msgstr "Muhammed"
+#~ msgid "Muhammad"
+#~ msgstr "Muhammed"
 
-msgid "Al-Fath"
-msgstr "Fetih"
+#~ msgid "Al-Fath"
+#~ msgstr "Fetih"
 
-msgid "Al-Hujurat"
-msgstr "Hucurat"
+#~ msgid "Al-Hujurat"
+#~ msgstr "Hucurat"
 
-msgid "Qaf"
-msgstr "Kaf"
+#~ msgid "Qaf"
+#~ msgstr "Kaf"
 
-msgid "Adh-Dhariyat"
-msgstr "Zariyat"
+#~ msgid "Adh-Dhariyat"
+#~ msgstr "Zariyat"
 
-msgid "At-Tur"
-msgstr "Tur"
+#~ msgid "At-Tur"
+#~ msgstr "Tur"
 
-msgid "An-Najm"
-msgstr "Necm"
+#~ msgid "An-Najm"
+#~ msgstr "Necm"
 
-msgid "Al-Qamar"
-msgstr "Kamer"
+#~ msgid "Al-Qamar"
+#~ msgstr "Kamer"
 
-msgid "Ar-Rahman"
-msgstr "Rahman"
+#~ msgid "Ar-Rahman"
+#~ msgstr "Rahman"
 
-msgid "Al-Waqi'ah"
-msgstr "Vakıa"
+#~ msgid "Al-Waqi'ah"
+#~ msgstr "Vakıa"
 
-msgid "Al-Hadid"
-msgstr "Hadid"
+#~ msgid "Al-Hadid"
+#~ msgstr "Hadid"
 
-msgid "Al-Mujadilah"
-msgstr "Mücadele"
+#~ msgid "Al-Mujadilah"
+#~ msgstr "Mücadele"
 
-msgid "Al-Hashr"
-msgstr "Haşr"
+#~ msgid "Al-Hashr"
+#~ msgstr "Haşr"
 
-msgid "Al-Mumtahanah"
-msgstr "Mümtehine"
+#~ msgid "Al-Mumtahanah"
+#~ msgstr "Mümtehine"
 
-msgid "As-Saff"
-msgstr "Saff"
+#~ msgid "As-Saff"
+#~ msgstr "Saff"
 
-msgid "Al-Jumu'ah"
-msgstr "Cuma"
+#~ msgid "Al-Jumu'ah"
+#~ msgstr "Cuma"
 
-msgid "Al-Munafiqun"
-msgstr "Münafikun"
+#~ msgid "Al-Munafiqun"
+#~ msgstr "Münafikun"
 
-msgid "At-Taghabun"
-msgstr "Teğabün"
+#~ msgid "At-Taghabun"
+#~ msgstr "Teğabün"
 
-msgid "At-Talaq"
-msgstr "Talak"
+#~ msgid "At-Talaq"
+#~ msgstr "Talak"
 
-msgid "At-Tahrim"
-msgstr "Tahrim"
+#~ msgid "At-Tahrim"
+#~ msgstr "Tahrim"
 
-msgid "Al-Mulk"
-msgstr "Mülk"
+#~ msgid "Al-Mulk"
+#~ msgstr "Mülk"
 
-msgid "Al-Qalam"
-msgstr "Kalem"
+#~ msgid "Al-Qalam"
+#~ msgstr "Kalem"
 
-msgid "Al-Haqqah"
-msgstr "Hakka"
+#~ msgid "Al-Haqqah"
+#~ msgstr "Hakka"
 
-msgid "Al-Ma'arij"
-msgstr "Mearic"
+#~ msgid "Al-Ma'arij"
+#~ msgstr "Mearic"
 
-msgid "Nuh"
-msgstr "Nuh"
+#~ msgid "Nuh"
+#~ msgstr "Nuh"
 
-msgid "Al-Jinn"
-msgstr "Cin"
+#~ msgid "Al-Jinn"
+#~ msgstr "Cin"
 
-msgid "Al-Muzzammil"
-msgstr "Müzzemmil"
+#~ msgid "Al-Muzzammil"
+#~ msgstr "Müzzemmil"
 
-msgid "Al-Muddathir"
-msgstr "Müddessir"
+#~ msgid "Al-Muddathir"
+#~ msgstr "Müddessir"
 
-msgid "Al-Qiyamah"
-msgstr "Kıyame"
+#~ msgid "Al-Qiyamah"
+#~ msgstr "Kıyame"
 
-msgid "Al-Insan"
-msgstr "İnsan"
+#~ msgid "Al-Insan"
+#~ msgstr "İnsan"
 
-msgid "Al-Mursalat"
-msgstr "Mürselat"
+#~ msgid "Al-Mursalat"
+#~ msgstr "Mürselat"
 
-msgid "An-Naba"
-msgstr "Nebe"
+#~ msgid "An-Naba"
+#~ msgstr "Nebe"
 
-msgid "An-Nazi'at"
-msgstr "Naziat"
+#~ msgid "An-Nazi'at"
+#~ msgstr "Naziat"
 
-msgid "Abasa"
-msgstr "Abese"
+#~ msgid "Abasa"
+#~ msgstr "Abese"
 
-msgid "At-Takwir"
-msgstr "Tekvir"
+#~ msgid "At-Takwir"
+#~ msgstr "Tekvir"
 
-msgid "Al-Infitar"
-msgstr "İnfitar"
+#~ msgid "Al-Infitar"
+#~ msgstr "İnfitar"
 
-msgid "Al-Mutaffifin"
-msgstr "Mutaffifin"
+#~ msgid "Al-Mutaffifin"
+#~ msgstr "Mutaffifin"
 
-msgid "Al-Inshiqaq"
-msgstr "İnşikak"
+#~ msgid "Al-Inshiqaq"
+#~ msgstr "İnşikak"
 
-msgid "Al-Buruj"
-msgstr "Büruc"
+#~ msgid "Al-Buruj"
+#~ msgstr "Büruc"
 
-msgid "At-Tariq"
-msgstr "Tarık"
+#~ msgid "At-Tariq"
+#~ msgstr "Tarık"
 
-msgid "Al-A'la"
-msgstr "A'la"
+#~ msgid "Al-A'la"
+#~ msgstr "A'la"
 
-msgid "Al-Ghashiyah"
-msgstr "Gaşiye"
+#~ msgid "Al-Ghashiyah"
+#~ msgstr "Gaşiye"
 
-msgid "Al-Fajr"
-msgstr "Fecr"
+#~ msgid "Al-Fajr"
+#~ msgstr "Fecr"
 
-msgid "Al-Balad"
-msgstr "Beled"
+#~ msgid "Al-Balad"
+#~ msgstr "Beled"
 
-msgid "Ash-Shams"
-msgstr "Şems"
+#~ msgid "Ash-Shams"
+#~ msgstr "Şems"
 
-msgid "Al-Layl"
-msgstr "Leyl"
+#~ msgid "Al-Layl"
+#~ msgstr "Leyl"
 
-msgid "Ad-Duha"
-msgstr "Duha"
+#~ msgid "Ad-Duha"
+#~ msgstr "Duha"
 
-msgid "Ash-Sharh"
-msgstr "İnşirah"
+#~ msgid "Ash-Sharh"
+#~ msgstr "İnşirah"
 
-msgid "At-Tin"
-msgstr "Tin"
+#~ msgid "At-Tin"
+#~ msgstr "Tin"
 
-msgid "Al-Alaq"
-msgstr "Alak"
+#~ msgid "Al-Alaq"
+#~ msgstr "Alak"
 
-msgid "Al-Qadr"
-msgstr "Kadir"
+#~ msgid "Al-Qadr"
+#~ msgstr "Kadir"
 
-msgid "Al-Bayyinah"
-msgstr "Beyyine"
+#~ msgid "Al-Bayyinah"
+#~ msgstr "Beyyine"
 
-msgid "Az-Zalzalah"
-msgstr "Zilzal"
+#~ msgid "Az-Zalzalah"
+#~ msgstr "Zilzal"
 
-msgid "Al-Adiyat"
-msgstr "Adiyat"
+#~ msgid "Al-Adiyat"
+#~ msgstr "Adiyat"
 
-msgid "Al-Qari'ah"
-msgstr "Karia"
+#~ msgid "Al-Qari'ah"
+#~ msgstr "Karia"
 
-msgid "At-Takathur"
-msgstr "Tekasür"
+#~ msgid "At-Takathur"
+#~ msgstr "Tekasür"
 
-msgid "Al-Asr"
-msgstr "Asr"
+#~ msgid "Al-Asr"
+#~ msgstr "Asr"
 
-msgid "Al-Humazah"
-msgstr "Hümeze"
+#~ msgid "Al-Humazah"
+#~ msgstr "Hümeze"
 
-msgid "Al-Fil"
-msgstr "Fil"
+#~ msgid "Al-Fil"
+#~ msgstr "Fil"
 
-msgid "Quraysh"
-msgstr "Kureyş"
+#~ msgid "Quraysh"
+#~ msgstr "Kureyş"
 
-msgid "Al-Ma'un"
-msgstr "Maun"
+#~ msgid "Al-Ma'un"
+#~ msgstr "Maun"
 
-msgid "Al-Kawthar"
-msgstr "Kevser"
+#~ msgid "Al-Kawthar"
+#~ msgstr "Kevser"
 
-msgid "Al-Kafirun"
-msgstr "Kafirun"
+#~ msgid "Al-Kafirun"
+#~ msgstr "Kafirun"
 
-msgid "An-Nasr"
-msgstr "Nasr"
+#~ msgid "An-Nasr"
+#~ msgstr "Nasr"
 
-msgid "Al-Masad"
-msgstr "Tebbet"
+#~ msgid "Al-Masad"
+#~ msgstr "Tebbet"
 
-msgid "Al-Ikhlas"
-msgstr "İhlas"
+#~ msgid "Al-Ikhlas"
+#~ msgstr "İhlas"
 
-msgid "Al-Falaq"
-msgstr "Felak"
+#~ msgid "Al-Falaq"
+#~ msgstr "Felak"
 
-msgid "An-Nas"
-msgstr "Nas"
-
-msgid "Juz"
-msgstr "Cüz"
+#~ msgid "An-Nas"
+#~ msgstr "Nas"

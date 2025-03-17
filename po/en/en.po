@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: quran-player\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-14 12:00+0300\n"
+"POT-Creation-Date: 2025-03-17 23:10+0100\n"
 "PO-Revision-Date: 2025-03-14 12:00+0300\n"
 "Last-Translator: \n"
 "Language-Team: English\n"
@@ -13,411 +13,496 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 # Interface terms
+#: extension.js:516 extension.js:557 extension.js:682 extension.js:1511
+#: extension.js:1512
 msgid "Quran Player"
 msgstr "Quran Player"
 
-msgid "Settings"
-msgstr "Settings"
+#: extension.js:656
+msgid "Juz Selection"
+msgstr "Juz Selection"
 
-msgid "Reciter"
-msgstr "Reciter"
+#: extension.js:657
+msgid "Surah Selection"
+msgstr "urah Selection"
 
-msgid "Now playing"
-msgstr "Now playing"
+#: extension.js:794 extension.js:854 extension.js:1622
+#, fuzzy
+msgid "Language Changed"
+msgstr "Language Settings"
 
+#: extension.js:795 extension.js:855 extension.js:1623
+msgid "Please restart GNOME Shell for the language change to take effect"
+msgstr "Please restart GNOME Shell for the language change to take effect"
+
+#: extension.js:903
 msgid "No Juz data available"
 msgstr "No Juz data available"
 
-msgid "Repeat current item"
-msgstr "Repeat current item"
+#: extension.js:922
+msgid "Juz"
+msgstr "Juz"
 
-msgid "Repeatedly play the current surah/juz until stopped"
-msgstr "Repeatedly play the current surah/juz until stopped"
+#: extension.js:947 extension.js:1039
+msgid "Reciter"
+msgstr "Reciter"
 
-msgid "Interface Language"
-msgstr "Interface Language"
+#: extension.js:1002
+#, fuzzy
+msgid "No reciters available"
+msgstr "No Juz data available"
 
-msgid "Select language for the interface (changes take effect after restart)"
-msgstr "Select language for the interface (changes take effect after restart)"
+#: extension.js:1010 extension.js:1647
+msgid "Settings"
+msgstr "Settings"
 
-msgid "System Default"
-msgstr "System Default"
+# Interface terms
+#: prefs.js:270
+#, fuzzy
+msgid "Quran Player Settings"
+msgstr "Quran Player"
 
-msgid "Autoplay next item"
-msgstr "Autoplay next item"
-
-msgid "Automatically play the next surah/juz when current one finishes"
-msgstr "Automatically play the next surah/juz when current one finishes"
-
-msgid "Show notifications"
-msgstr "Show notifications"
-
-msgid "Display notifications when playback starts/stops"
-msgstr "Display notifications when playback starts/stops"
-
-msgid "Custom surah list file path"
-msgstr "Custom surah list file path"
-
-msgid "Custom juz list file path"
-msgstr "Custom juz list file path"
-
-msgid "Enable debug logs"
-msgstr "Enable debug logs"
-
-msgid "Enable debug logging for troubleshooting"
-msgstr "Enable debug logging for troubleshooting"
-
-msgid "Language Settings"
-msgstr "Language Settings"
-
+#: prefs.js:280
 msgid "General Settings"
 msgstr "General Settings"
 
+#: prefs.js:297
+#, fuzzy
+msgid "Quran Reciter"
+msgstr "Reciter"
+
+#: prefs.js:298
+msgid "Select a reciter for audio playback"
+msgstr ""
+
+#: prefs.js:321
+msgid "Autoplay next item"
+msgstr "Autoplay next item"
+
+#: prefs.js:322
+msgid "Automatically play the next surah/juz when current one finishes"
+msgstr "Automatically play the next surah/juz when current one finishes"
+
+#: prefs.js:334
+msgid "Show notifications"
+msgstr "Show notifications"
+
+#: prefs.js:335
+msgid "Display notifications when playback starts/stops"
+msgstr "Display notifications when playback starts/stops"
+
+#: prefs.js:347
+msgid "Repeat current item"
+msgstr "Repeat current item"
+
+#: prefs.js:348
+msgid "Repeatedly play the current surah/juz until stopped"
+msgstr "Repeatedly play the current surah/juz until stopped"
+
+#: prefs.js:359
+msgid "Language Settings"
+msgstr "Language Settings"
+
+#: prefs.js:365
+msgid "Interface Language"
+msgstr "Interface Language"
+
+#: prefs.js:366
+msgid "Select language for the interface (changes take effect after restart)"
+msgstr "Select language for the interface (changes take effect after restart)"
+
+#: prefs.js:371
+msgid "System Default"
+msgstr "System Default"
+
+#: prefs.js:400
 msgid "Advanced Settings"
 msgstr "Advanced Settings"
 
+#: prefs.js:406
+msgid "Custom juz list file path"
+msgstr "Custom juz list file path"
+
+#: prefs.js:418
+msgid "Select Juz File"
+msgstr ""
+
+#: prefs.js:425
+#, fuzzy
+msgid "Select custom juz list JSON file"
+msgstr "Custom juz list file path"
+
+#: prefs.js:431 prefs.js:481
+msgid "Cancel"
+msgstr ""
+
+#: prefs.js:432 prefs.js:482
+msgid "Select"
+msgstr ""
+
+#: prefs.js:456
+msgid "Custom surah list file path"
+msgstr "Custom surah list file path"
+
+#: prefs.js:468
+msgid "Select Surah File"
+msgstr ""
+
+#: prefs.js:475
+#, fuzzy
+msgid "Select custom surah list JSON file"
+msgstr "Custom surah list file path"
+
+#: prefs.js:506
+msgid "Enable debug logs"
+msgstr "Enable debug logs"
+
+#: prefs.js:507
+msgid "Enable debug logging for troubleshooting"
+msgstr "Enable debug logging for troubleshooting"
+
+#~ msgid "Now playing"
+#~ msgstr "Now playing"
+
 # Surah names
-msgid "Al-Fatihah"
-msgstr "Al-Fatihah"
+#~ msgid "Al-Fatihah"
+#~ msgstr "Al-Fatihah"
 
-msgid "Al-Baqarah"
-msgstr "Al-Baqarah"
+#~ msgid "Al-Baqarah"
+#~ msgstr "Al-Baqarah"
 
-msgid "Ali 'Imran"
-msgstr "Ali 'Imran"
+#~ msgid "Ali 'Imran"
+#~ msgstr "Ali 'Imran"
 
-msgid "An-Nisa"
-msgstr "An-Nisa"
+#~ msgid "An-Nisa"
+#~ msgstr "An-Nisa"
 
-msgid "Al-Ma'idah"
-msgstr "Al-Ma'idah"
+#~ msgid "Al-Ma'idah"
+#~ msgstr "Al-Ma'idah"
 
-msgid "Al-An'am"
-msgstr "Al-An'am"
+#~ msgid "Al-An'am"
+#~ msgstr "Al-An'am"
 
-msgid "Al-A'raf"
-msgstr "Al-A'raf"
+#~ msgid "Al-A'raf"
+#~ msgstr "Al-A'raf"
 
-msgid "Al-Anfal"
-msgstr "Al-Anfal"
+#~ msgid "Al-Anfal"
+#~ msgstr "Al-Anfal"
 
-msgid "At-Tawbah"
-msgstr "At-Tawbah"
+#~ msgid "At-Tawbah"
+#~ msgstr "At-Tawbah"
 
-msgid "Yunus"
-msgstr "Yunus"
+#~ msgid "Yunus"
+#~ msgstr "Yunus"
 
-msgid "Hud"
-msgstr "Hud"
+#~ msgid "Hud"
+#~ msgstr "Hud"
 
-msgid "Yusuf"
-msgstr "Yusuf"
+#~ msgid "Yusuf"
+#~ msgstr "Yusuf"
 
-msgid "Ar-Ra'd"
-msgstr "Ar-Ra'd"
+#~ msgid "Ar-Ra'd"
+#~ msgstr "Ar-Ra'd"
 
-msgid "Ibrahim"
-msgstr "Ibrahim"
+#~ msgid "Ibrahim"
+#~ msgstr "Ibrahim"
 
-msgid "Al-Hijr"
-msgstr "Al-Hijr"
+#~ msgid "Al-Hijr"
+#~ msgstr "Al-Hijr"
 
-msgid "An-Nahl"
-msgstr "An-Nahl"
+#~ msgid "An-Nahl"
+#~ msgstr "An-Nahl"
 
-msgid "Al-Isra"
-msgstr "Al-Isra"
+#~ msgid "Al-Isra"
+#~ msgstr "Al-Isra"
 
-msgid "Al-Kahf"
-msgstr "Al-Kahf"
+#~ msgid "Al-Kahf"
+#~ msgstr "Al-Kahf"
 
-msgid "Maryam"
-msgstr "Maryam"
+#~ msgid "Maryam"
+#~ msgstr "Maryam"
 
-msgid "Ta-Ha"
-msgstr "Ta-Ha"
+#~ msgid "Ta-Ha"
+#~ msgstr "Ta-Ha"
 
-msgid "Al-Anbya"
-msgstr "Al-Anbya"
+#~ msgid "Al-Anbya"
+#~ msgstr "Al-Anbya"
 
-msgid "Al-Hajj"
-msgstr "Al-Hajj"
+#~ msgid "Al-Hajj"
+#~ msgstr "Al-Hajj"
 
-msgid "Al-Mu'minun"
-msgstr "Al-Mu'minun"
+#~ msgid "Al-Mu'minun"
+#~ msgstr "Al-Mu'minun"
 
-msgid "An-Nur"
-msgstr "An-Nur"
+#~ msgid "An-Nur"
+#~ msgstr "An-Nur"
 
-msgid "Al-Furqan"
-msgstr "Al-Furqan"
+#~ msgid "Al-Furqan"
+#~ msgstr "Al-Furqan"
 
-msgid "Ash-Shu'ara"
-msgstr "Ash-Shu'ara"
+#~ msgid "Ash-Shu'ara"
+#~ msgstr "Ash-Shu'ara"
 
-msgid "An-Naml"
-msgstr "An-Naml"
+#~ msgid "An-Naml"
+#~ msgstr "An-Naml"
 
-msgid "Al-Qasas"
-msgstr "Al-Qasas"
+#~ msgid "Al-Qasas"
+#~ msgstr "Al-Qasas"
 
-msgid "Al-'Ankabut"
-msgstr "Al-'Ankabut"
+#~ msgid "Al-'Ankabut"
+#~ msgstr "Al-'Ankabut"
 
-msgid "Ar-Rum"
-msgstr "Ar-Rum"
+#~ msgid "Ar-Rum"
+#~ msgstr "Ar-Rum"
 
-msgid "Luqman"
-msgstr "Luqman"
+#~ msgid "Luqman"
+#~ msgstr "Luqman"
 
-msgid "As-Sajdah"
-msgstr "As-Sajdah"
+#~ msgid "As-Sajdah"
+#~ msgstr "As-Sajdah"
 
-msgid "Al-Ahzab"
-msgstr "Al-Ahzab"
+#~ msgid "Al-Ahzab"
+#~ msgstr "Al-Ahzab"
 
-msgid "Saba"
-msgstr "Saba"
+#~ msgid "Saba"
+#~ msgstr "Saba"
 
-msgid "Fatir"
-msgstr "Fatir"
+#~ msgid "Fatir"
+#~ msgstr "Fatir"
 
-msgid "Ya-Sin"
-msgstr "Ya-Sin"
+#~ msgid "Ya-Sin"
+#~ msgstr "Ya-Sin"
 
-msgid "As-Saffat"
-msgstr "As-Saffat"
+#~ msgid "As-Saffat"
+#~ msgstr "As-Saffat"
 
-msgid "Sad"
-msgstr "Sad"
+#~ msgid "Sad"
+#~ msgstr "Sad"
 
-msgid "Az-Zumar"
-msgstr "Az-Zumar"
+#~ msgid "Az-Zumar"
+#~ msgstr "Az-Zumar"
 
-msgid "Ghafir"
-msgstr "Ghafir"
+#~ msgid "Ghafir"
+#~ msgstr "Ghafir"
 
-msgid "Fussilat"
-msgstr "Fussilat"
+#~ msgid "Fussilat"
+#~ msgstr "Fussilat"
 
-msgid "Ash-Shura"
-msgstr "Ash-Shura"
+#~ msgid "Ash-Shura"
+#~ msgstr "Ash-Shura"
 
-msgid "Az-Zukhruf"
-msgstr "Az-Zukhruf"
+#~ msgid "Az-Zukhruf"
+#~ msgstr "Az-Zukhruf"
 
-msgid "Ad-Dukhan"
-msgstr "Ad-Dukhan"
+#~ msgid "Ad-Dukhan"
+#~ msgstr "Ad-Dukhan"
 
-msgid "Al-Jathiyah"
-msgstr "Al-Jathiyah"
+#~ msgid "Al-Jathiyah"
+#~ msgstr "Al-Jathiyah"
 
-msgid "Al-Ahqaf"
-msgstr "Al-Ahqaf"
+#~ msgid "Al-Ahqaf"
+#~ msgstr "Al-Ahqaf"
 
-msgid "Muhammad"
-msgstr "Muhammad"
+#~ msgid "Muhammad"
+#~ msgstr "Muhammad"
 
-msgid "Al-Fath"
-msgstr "Al-Fath"
+#~ msgid "Al-Fath"
+#~ msgstr "Al-Fath"
 
-msgid "Al-Hujurat"
-msgstr "Al-Hujurat"
+#~ msgid "Al-Hujurat"
+#~ msgstr "Al-Hujurat"
 
-msgid "Qaf"
-msgstr "Qaf"
+#~ msgid "Qaf"
+#~ msgstr "Qaf"
 
-msgid "Adh-Dhariyat"
-msgstr "Adh-Dhariyat"
+#~ msgid "Adh-Dhariyat"
+#~ msgstr "Adh-Dhariyat"
 
-msgid "At-Tur"
-msgstr "At-Tur"
+#~ msgid "At-Tur"
+#~ msgstr "At-Tur"
 
-msgid "An-Najm"
-msgstr "An-Najm"
+#~ msgid "An-Najm"
+#~ msgstr "An-Najm"
 
-msgid "Al-Qamar"
-msgstr "Al-Qamar"
+#~ msgid "Al-Qamar"
+#~ msgstr "Al-Qamar"
 
-msgid "Ar-Rahman"
-msgstr "Ar-Rahman"
+#~ msgid "Ar-Rahman"
+#~ msgstr "Ar-Rahman"
 
-msgid "Al-Waqi'ah"
-msgstr "Al-Waqi'ah"
+#~ msgid "Al-Waqi'ah"
+#~ msgstr "Al-Waqi'ah"
 
-msgid "Al-Hadid"
-msgstr "Al-Hadid"
+#~ msgid "Al-Hadid"
+#~ msgstr "Al-Hadid"
 
-msgid "Al-Mujadilah"
-msgstr "Al-Mujadilah"
+#~ msgid "Al-Mujadilah"
+#~ msgstr "Al-Mujadilah"
 
-msgid "Al-Hashr"
-msgstr "Al-Hashr"
+#~ msgid "Al-Hashr"
+#~ msgstr "Al-Hashr"
 
-msgid "Al-Mumtahanah"
-msgstr "Al-Mumtahanah"
+#~ msgid "Al-Mumtahanah"
+#~ msgstr "Al-Mumtahanah"
 
-msgid "As-Saff"
-msgstr "As-Saff"
+#~ msgid "As-Saff"
+#~ msgstr "As-Saff"
 
-msgid "Al-Jumu'ah"
-msgstr "Al-Jumu'ah"
+#~ msgid "Al-Jumu'ah"
+#~ msgstr "Al-Jumu'ah"
 
-msgid "Al-Munafiqun"
-msgstr "Al-Munafiqun"
+#~ msgid "Al-Munafiqun"
+#~ msgstr "Al-Munafiqun"
 
-msgid "At-Taghabun"
-msgstr "At-Taghabun"
+#~ msgid "At-Taghabun"
+#~ msgstr "At-Taghabun"
 
-msgid "At-Talaq"
-msgstr "At-Talaq"
+#~ msgid "At-Talaq"
+#~ msgstr "At-Talaq"
 
-msgid "At-Tahrim"
-msgstr "At-Tahrim"
+#~ msgid "At-Tahrim"
+#~ msgstr "At-Tahrim"
 
-msgid "Al-Mulk"
-msgstr "Al-Mulk"
+#~ msgid "Al-Mulk"
+#~ msgstr "Al-Mulk"
 
-msgid "Al-Qalam"
-msgstr "Al-Qalam"
+#~ msgid "Al-Qalam"
+#~ msgstr "Al-Qalam"
 
-msgid "Al-Haqqah"
-msgstr "Al-Haqqah"
+#~ msgid "Al-Haqqah"
+#~ msgstr "Al-Haqqah"
 
-msgid "Al-Ma'arij"
-msgstr "Al-Ma'arij"
+#~ msgid "Al-Ma'arij"
+#~ msgstr "Al-Ma'arij"
 
-msgid "Nuh"
-msgstr "Nuh"
+#~ msgid "Nuh"
+#~ msgstr "Nuh"
 
-msgid "Al-Jinn"
-msgstr "Al-Jinn"
+#~ msgid "Al-Jinn"
+#~ msgstr "Al-Jinn"
 
-msgid "Al-Muzzammil"
-msgstr "Al-Muzzammil"
+#~ msgid "Al-Muzzammil"
+#~ msgstr "Al-Muzzammil"
 
-msgid "Al-Muddathir"
-msgstr "Al-Muddathir"
+#~ msgid "Al-Muddathir"
+#~ msgstr "Al-Muddathir"
 
-msgid "Al-Qiyamah"
-msgstr "Al-Qiyamah"
+#~ msgid "Al-Qiyamah"
+#~ msgstr "Al-Qiyamah"
 
-msgid "Al-Insan"
-msgstr "Al-Insan"
+#~ msgid "Al-Insan"
+#~ msgstr "Al-Insan"
 
-msgid "Al-Mursalat"
-msgstr "Al-Mursalat"
+#~ msgid "Al-Mursalat"
+#~ msgstr "Al-Mursalat"
 
-msgid "An-Naba"
-msgstr "An-Naba"
+#~ msgid "An-Naba"
+#~ msgstr "An-Naba"
 
-msgid "An-Nazi'at"
-msgstr "An-Nazi'at"
+#~ msgid "An-Nazi'at"
+#~ msgstr "An-Nazi'at"
 
-msgid "Abasa"
-msgstr "Abasa"
+#~ msgid "Abasa"
+#~ msgstr "Abasa"
 
-msgid "At-Takwir"
-msgstr "At-Takwir"
+#~ msgid "At-Takwir"
+#~ msgstr "At-Takwir"
 
-msgid "Al-Infitar"
-msgstr "Al-Infitar"
+#~ msgid "Al-Infitar"
+#~ msgstr "Al-Infitar"
 
-msgid "Al-Mutaffifin"
-msgstr "Al-Mutaffifin"
+#~ msgid "Al-Mutaffifin"
+#~ msgstr "Al-Mutaffifin"
 
-msgid "Al-Inshiqaq"
-msgstr "Al-Inshiqaq"
+#~ msgid "Al-Inshiqaq"
+#~ msgstr "Al-Inshiqaq"
 
-msgid "Al-Buruj"
-msgstr "Al-Buruj"
+#~ msgid "Al-Buruj"
+#~ msgstr "Al-Buruj"
 
-msgid "At-Tariq"
-msgstr "At-Tariq"
+#~ msgid "At-Tariq"
+#~ msgstr "At-Tariq"
 
-msgid "Al-A'la"
-msgstr "Al-A'la"
+#~ msgid "Al-A'la"
+#~ msgstr "Al-A'la"
 
-msgid "Al-Ghashiyah"
-msgstr "Al-Ghashiyah"
+#~ msgid "Al-Ghashiyah"
+#~ msgstr "Al-Ghashiyah"
 
-msgid "Al-Fajr"
-msgstr "Al-Fajr"
+#~ msgid "Al-Fajr"
+#~ msgstr "Al-Fajr"
 
-msgid "Al-Balad"
-msgstr "Al-Balad"
+#~ msgid "Al-Balad"
+#~ msgstr "Al-Balad"
 
-msgid "Ash-Shams"
-msgstr "Ash-Shams"
+#~ msgid "Ash-Shams"
+#~ msgstr "Ash-Shams"
 
-msgid "Al-Layl"
-msgstr "Al-Layl"
+#~ msgid "Al-Layl"
+#~ msgstr "Al-Layl"
 
-msgid "Ad-Duha"
-msgstr "Ad-Duha"
+#~ msgid "Ad-Duha"
+#~ msgstr "Ad-Duha"
 
-msgid "Ash-Sharh"
-msgstr "Ash-Sharh"
+#~ msgid "Ash-Sharh"
+#~ msgstr "Ash-Sharh"
 
-msgid "At-Tin"
-msgstr "At-Tin"
+#~ msgid "At-Tin"
+#~ msgstr "At-Tin"
 
-msgid "Al-Alaq"
-msgstr "Al-Alaq"
+#~ msgid "Al-Alaq"
+#~ msgstr "Al-Alaq"
 
-msgid "Al-Qadr"
-msgstr "Al-Qadr"
+#~ msgid "Al-Qadr"
+#~ msgstr "Al-Qadr"
 
-msgid "Al-Bayyinah"
-msgstr "Al-Bayyinah"
+#~ msgid "Al-Bayyinah"
+#~ msgstr "Al-Bayyinah"
 
-msgid "Az-Zalzalah"
-msgstr "Az-Zalzalah"
+#~ msgid "Az-Zalzalah"
+#~ msgstr "Az-Zalzalah"
 
-msgid "Al-Adiyat"
-msgstr "Al-Adiyat"
+#~ msgid "Al-Adiyat"
+#~ msgstr "Al-Adiyat"
 
-msgid "Al-Qari'ah"
-msgstr "Al-Qari'ah"
+#~ msgid "Al-Qari'ah"
+#~ msgstr "Al-Qari'ah"
 
-msgid "At-Takathur"
-msgstr "At-Takathur"
+#~ msgid "At-Takathur"
+#~ msgstr "At-Takathur"
 
-msgid "Al-Asr"
-msgstr "Al-Asr"
+#~ msgid "Al-Asr"
+#~ msgstr "Al-Asr"
 
-msgid "Al-Humazah"
-msgstr "Al-Humazah"
+#~ msgid "Al-Humazah"
+#~ msgstr "Al-Humazah"
 
-msgid "Al-Fil"
-msgstr "Al-Fil"
+#~ msgid "Al-Fil"
+#~ msgstr "Al-Fil"
 
-msgid "Quraysh"
-msgstr "Quraysh"
+#~ msgid "Quraysh"
+#~ msgstr "Quraysh"
 
-msgid "Al-Ma'un"
-msgstr "Al-Ma'un"
+#~ msgid "Al-Ma'un"
+#~ msgstr "Al-Ma'un"
 
-msgid "Al-Kawthar"
-msgstr "Al-Kawthar"
+#~ msgid "Al-Kawthar"
+#~ msgstr "Al-Kawthar"
 
-msgid "Al-Kafirun"
-msgstr "Al-Kafirun"
+#~ msgid "Al-Kafirun"
+#~ msgstr "Al-Kafirun"
 
-msgid "An-Nasr"
-msgstr "An-Nasr"
+#~ msgid "An-Nasr"
+#~ msgstr "An-Nasr"
 
-msgid "Al-Masad"
-msgstr "Al-Masad"
+#~ msgid "Al-Masad"
+#~ msgstr "Al-Masad"
 
-msgid "Al-Ikhlas"
-msgstr "Al-Ikhlas"
+#~ msgid "Al-Ikhlas"
+#~ msgstr "Al-Ikhlas"
 
-msgid "Al-Falaq"
-msgstr "Al-Falaq"
+#~ msgid "Al-Falaq"
+#~ msgstr "Al-Falaq"
 
-msgid "An-Nas"
-msgstr "An-Nas"
-
-msgid "Juz"
-msgstr "Juz"
+#~ msgid "An-Nas"
+#~ msgstr "An-Nas"

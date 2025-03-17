@@ -1,423 +1,159 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: quran-player\n"
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-14 12:00+0300\n"
-"PO-Revision-Date: 2025-03-14 12:00+0300\n"
-"Last-Translator: \n"
-"Language-Team: English\n"
-"Language: en\n"
+"POT-Creation-Date: 2025-03-17 23:52+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-# Interface terms
+#: extension.js:516 extension.js:557 extension.js:682 extension.js:1511
+#: extension.js:1512
 msgid "Quran Player"
 msgstr ""
 
-msgid "Settings"
+#: extension.js:656
+msgid "Juz Selection"
 msgstr ""
 
-msgid "Reciter"
+#: extension.js:657
+msgid "Surah Selection"
 msgstr ""
 
-msgid "Now playing"
+#: extension.js:794 extension.js:854 extension.js:1622
+msgid "Language Changed"
 msgstr ""
 
+#: extension.js:795 extension.js:855 extension.js:1623
+msgid "Please restart GNOME Shell for the language change to take effect"
+msgstr ""
+
+#: extension.js:903
 msgid "No Juz data available"
 msgstr ""
 
-msgid "Repeat current item"
+#: extension.js:922 extension.js:958
+msgid "Juz"
 msgstr ""
 
-msgid "Repeatedly play the current surah/juz until stopped"
+#: extension.js:947 extension.js:1039
+msgid "Reciter"
 msgstr ""
 
-msgid "Interface Language"
+#: extension.js:1002
+msgid "No reciters available"
 msgstr ""
 
-msgid "Select language for the interface (changes take effect after restart)"
+#: extension.js:1010 extension.js:1647
+msgid "Settings"
 msgstr ""
 
-msgid "System Default"
+#: prefs.js:270
+msgid "Quran Player Settings"
 msgstr ""
 
-msgid "Autoplay next item"
-msgstr ""
-
-msgid "Automatically play the next surah/juz when current one finishes"
-msgstr ""
-
-msgid "Show notifications"
-msgstr ""
-
-msgid "Display notifications when playback starts/stops"
-msgstr ""
-
-msgid "Custom surah list file path"
-msgstr ""
-
-msgid "Custom juz list file path"
-msgstr ""
-
-msgid "Enable debug logs"
-msgstr ""
-
-msgid "Enable debug logging for troubleshooting"
-msgstr ""
-
-msgid "Language Settings"
-msgstr ""
-
+#: prefs.js:280
 msgid "General Settings"
 msgstr ""
 
+#: prefs.js:297
+msgid "Quran Reciter"
+msgstr ""
+
+#: prefs.js:298
+msgid "Select a reciter for audio playback"
+msgstr ""
+
+#: prefs.js:321
+msgid "Autoplay next item"
+msgstr ""
+
+#: prefs.js:322
+msgid "Automatically play the next surah/juz when current one finishes"
+msgstr ""
+
+#: prefs.js:334
+msgid "Show notifications"
+msgstr ""
+
+#: prefs.js:335
+msgid "Display notifications when playback starts/stops"
+msgstr ""
+
+#: prefs.js:347
+msgid "Repeat current item"
+msgstr ""
+
+#: prefs.js:348
+msgid "Repeatedly play the current surah/juz until stopped"
+msgstr ""
+
+#: prefs.js:359
+msgid "Language Settings"
+msgstr ""
+
+#: prefs.js:365
+msgid "Interface Language"
+msgstr ""
+
+#: prefs.js:366
+msgid "Select language for the interface (changes take effect after restart)"
+msgstr ""
+
+#: prefs.js:371
+msgid "System Default"
+msgstr ""
+
+#: prefs.js:400
 msgid "Advanced Settings"
 msgstr ""
 
-# Surah names
-msgid "Al-Fatihah"
+#: prefs.js:406
+msgid "Custom juz list file path"
 msgstr ""
 
-msgid "Al-Baqarah"
+#: prefs.js:418
+msgid "Select Juz File"
 msgstr ""
 
-msgid "Ali 'Imran"
+#: prefs.js:425
+msgid "Select custom juz list JSON file"
 msgstr ""
 
-msgid "An-Nisa"
+#: prefs.js:431 prefs.js:481
+msgid "Cancel"
 msgstr ""
 
-msgid "Al-Ma'idah"
+#: prefs.js:432 prefs.js:482
+msgid "Select"
 msgstr ""
 
-msgid "Al-An'am"
+#: prefs.js:456
+msgid "Custom surah list file path"
 msgstr ""
 
-msgid "Al-A'raf"
+#: prefs.js:468
+msgid "Select Surah File"
 msgstr ""
 
-msgid "Al-Anfal"
+#: prefs.js:475
+msgid "Select custom surah list JSON file"
 msgstr ""
 
-msgid "At-Tawbah"
+#: prefs.js:506
+msgid "Enable debug logs"
 msgstr ""
 
-msgid "Yunus"
-msgstr ""
-
-msgid "Hud"
-msgstr ""
-
-msgid "Yusuf"
-msgstr ""
-
-msgid "Ar-Ra'd"
-msgstr ""
-
-msgid "Ibrahim"
-msgstr ""
-
-msgid "Al-Hijr"
-msgstr ""
-
-msgid "An-Nahl"
-msgstr ""
-
-msgid "Al-Isra"
-msgstr ""
-
-msgid "Al-Kahf"
-msgstr ""
-
-msgid "Maryam"
-msgstr ""
-
-msgid "Ta-Ha"
-msgstr ""
-
-msgid "Al-Anbya"
-msgstr ""
-
-msgid "Al-Hajj"
-msgstr ""
-
-msgid "Al-Mu'minun"
-msgstr ""
-
-msgid "An-Nur"
-msgstr ""
-
-msgid "Al-Furqan"
-msgstr ""
-
-msgid "Ash-Shu'ara"
-msgstr ""
-
-msgid "An-Naml"
-msgstr ""
-
-msgid "Al-Qasas"
-msgstr ""
-
-msgid "Al-'Ankabut"
-msgstr ""
-
-msgid "Ar-Rum"
-msgstr ""
-
-msgid "Luqman"
-msgstr ""
-
-msgid "As-Sajdah"
-msgstr ""
-
-msgid "Al-Ahzab"
-msgstr ""
-
-msgid "Saba"
-msgstr ""
-
-msgid "Fatir"
-msgstr ""
-
-msgid "Ya-Sin"
-msgstr ""
-
-msgid "As-Saffat"
-msgstr ""
-
-msgid "Sad"
-msgstr ""
-
-msgid "Az-Zumar"
-msgstr ""
-
-msgid "Ghafir"
-msgstr ""
-
-msgid "Fussilat"
-msgstr ""
-
-msgid "Ash-Shura"
-msgstr ""
-
-msgid "Az-Zukhruf"
-msgstr ""
-
-msgid "Ad-Dukhan"
-msgstr ""
-
-msgid "Al-Jathiyah"
-msgstr ""
-
-msgid "Al-Ahqaf"
-msgstr ""
-
-msgid "Muhammad"
-msgstr ""
-
-msgid "Al-Fath"
-msgstr ""
-
-msgid "Al-Hujurat"
-msgstr ""
-
-msgid "Qaf"
-msgstr ""
-
-msgid "Adh-Dhariyat"
-msgstr ""
-
-msgid "At-Tur"
-msgstr ""
-
-msgid "An-Najm"
-msgstr ""
-
-msgid "Al-Qamar"
-msgstr ""
-
-msgid "Ar-Rahman"
-msgstr ""
-
-msgid "Al-Waqi'ah"
-msgstr ""
-
-msgid "Al-Hadid"
-msgstr ""
-
-msgid "Al-Mujadilah"
-msgstr ""
-
-msgid "Al-Hashr"
-msgstr ""
-
-msgid "Al-Mumtahanah"
-msgstr ""
-
-msgid "As-Saff"
-msgstr ""
-
-msgid "Al-Jumu'ah"
-msgstr ""
-
-msgid "Al-Munafiqun"
-msgstr ""
-
-msgid "At-Taghabun"
-msgstr ""
-
-msgid "At-Talaq"
-msgstr ""
-
-msgid "At-Tahrim"
-msgstr ""
-
-msgid "Al-Mulk"
-msgstr ""
-
-msgid "Al-Qalam"
-msgstr ""
-
-msgid "Al-Haqqah"
-msgstr ""
-
-msgid "Al-Ma'arij"
-msgstr ""
-
-msgid "Nuh"
-msgstr ""
-
-msgid "Al-Jinn"
-msgstr ""
-
-msgid "Al-Muzzammil"
-msgstr ""
-
-msgid "Al-Muddathir"
-msgstr ""
-
-msgid "Al-Qiyamah"
-msgstr ""
-
-msgid "Al-Insan"
-msgstr ""
-
-msgid "Al-Mursalat"
-msgstr ""
-
-msgid "An-Naba"
-msgstr ""
-
-msgid "An-Nazi'at"
-msgstr ""
-
-msgid "Abasa"
-msgstr ""
-
-msgid "At-Takwir"
-msgstr ""
-
-msgid "Al-Infitar"
-msgstr ""
-
-msgid "Al-Mutaffifin"
-msgstr ""
-
-msgid "Al-Inshiqaq"
-msgstr ""
-
-msgid "Al-Buruj"
-msgstr ""
-
-msgid "At-Tariq"
-msgstr ""
-
-msgid "Al-A'la"
-msgstr ""
-
-msgid "Al-Ghashiyah"
-msgstr ""
-
-msgid "Al-Fajr"
-msgstr ""
-
-msgid "Al-Balad"
-msgstr ""
-
-msgid "Ash-Shams"
-msgstr ""
-
-msgid "Al-Layl"
-msgstr ""
-
-msgid "Ad-Duha"
-msgstr ""
-
-msgid "Ash-Sharh"
-msgstr ""
-
-msgid "At-Tin"
-msgstr ""
-
-msgid "Al-Alaq"
-msgstr ""
-
-msgid "Al-Qadr"
-msgstr ""
-
-msgid "Al-Bayyinah"
-msgstr ""
-
-msgid "Az-Zalzalah"
-msgstr ""
-
-msgid "Al-Adiyat"
-msgstr ""
-
-msgid "Al-Qari'ah"
-msgstr ""
-
-msgid "At-Takathur"
-msgstr ""
-
-msgid "Al-Asr"
-msgstr ""
-
-msgid "Al-Humazah"
-msgstr ""
-
-msgid "Al-Fil"
-msgstr ""
-
-msgid "Quraysh"
-msgstr ""
-
-msgid "Al-Ma'un"
-msgstr ""
-
-msgid "Al-Kawthar"
-msgstr ""
-
-msgid "Al-Kafirun"
-msgstr ""
-
-msgid "An-Nasr"
-msgstr ""
-
-msgid "Al-Masad"
-msgstr ""
-
-msgid "Al-Ikhlas"
-msgstr ""
-
-msgid "Al-Falaq"
-msgstr ""
-
-msgid "An-Nas"
-msgstr ""
-
-msgid "Juz"
+#: prefs.js:507
+msgid "Enable debug logging for troubleshooting"
 msgstr ""

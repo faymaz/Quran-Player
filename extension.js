@@ -918,9 +918,9 @@ class QuranPlayerIndicator extends PanelMenu.Button {
            
             const firstId = this._juzData[startIdx].id;
             const lastId = this._juzData[endIdx-1].id;
-            const groupLabel = `Juz ${firstId}-${lastId}`;
-            
-           
+            //const groupLabel = `Juz ${firstId}-${lastId}`;
+           const groupLabel = `${_("Juz")} ${firstId}-${lastId}`;
+
             let subMenu = new PopupMenu.PopupSubMenuMenuItem(groupLabel);
             
            
@@ -955,7 +955,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
                 const isJuzReciter = isJuzBasedReciter(reciter);
                 let displayName = reciter.name;
                 if (isJuzReciter) {
-                    displayName = `${displayName} [Juz]`;
+                    displayName = `${displayName} [${_("Juz")}]`;
                 }
                 
                 let item = new PopupMenu.PopupMenuItem(displayName);

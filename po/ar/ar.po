@@ -420,4 +420,4 @@ msgid "An-Nas"
 msgstr "الناس"
 
 msgid "Juz"
-msgstr "الجزء"
+msgstr "جزء"
