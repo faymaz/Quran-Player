@@ -554,7 +554,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
         
        
         this._panelLabel = new St.Label({
-            text: '',
+            text: _('Quran Player'), 
             y_align: Clutter.ActorAlign.CENTER,
             style_class: 'quran-panel-label'
         });
@@ -1468,7 +1468,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
         } else {
            
             this._nowPlayingLabel.text = _('Quran Player');
-            this._panelLabel.text = '';
+            this._panelLabel.text = _('Quran Player');
             this._playButton.get_child().icon_name = 'media-playback-start-symbolic';
         }
     }
