@@ -22,6 +22,9 @@ msgstr "الإعدادات"
 msgid "Reciter"
 msgstr "القارئ"
 
+msgid "Reciters"
+msgstr "القراء"
+
 msgid "Now playing"
 msgstr "يشتغل الآن"
 

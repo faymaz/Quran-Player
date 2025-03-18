@@ -294,7 +294,7 @@ const QuranPlayerPrefsPage = GObject.registerClass(
             });
 
             const reciterRow = new Adw.ComboRow({
-                title: _('Quran Reciter'),
+                title: _('Quran Reciters'),
                 subtitle: _('Select a reciter for audio playback'),
                 model: reciterModel,
             });

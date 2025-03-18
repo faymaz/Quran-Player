@@ -44,6 +44,10 @@ msgid "Juz"
 msgstr "Cüz"
 
 #: extension.js:947 extension.js:1039
+msgid "Reciters"
+msgstr "Hafızlar"
+
+#: extension.js:947 extension.js:1039
 msgid "Reciter"
 msgstr "Hafız"
 
@@ -68,7 +72,7 @@ msgstr "Genel Ayarlar"
 
 #: prefs.js:297
 #, fuzzy
-msgid "Quran Reciter"
+msgid "Quran Reciters"
 msgstr "Hafız"
 
 #: prefs.js:298

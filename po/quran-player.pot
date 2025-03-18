@@ -50,6 +50,10 @@ msgstr ""
 msgid "Reciter"
 msgstr ""
 
+#: extension.js:947 extension.js:1039
+msgid "Reciters"
+msgstr ""
+
 #: extension.js:1002
 msgid "No reciters available"
 msgstr ""
@@ -67,7 +71,7 @@ msgid "General Settings"
 msgstr ""
 
 #: prefs.js:297
-msgid "Quran Reciter"
+msgid "Quran Reciters"
 msgstr ""
 
 #: prefs.js:298

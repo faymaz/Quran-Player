@@ -24,7 +24,7 @@ msgstr "Juz Selection"
 
 #: extension.js:657
 msgid "Surah Selection"
-msgstr "urah Selection"
+msgstr "Surah Selection"
 
 #: extension.js:794 extension.js:854 extension.js:1622
 #, fuzzy
@@ -47,6 +47,10 @@ msgstr "Juz"
 msgid "Reciter"
 msgstr "Reciter"
 
+#: extension.js:947 extension.js:1039
+msgid "Reciters"
+msgstr "Reciters"
+
 #: extension.js:1002
 #, fuzzy
 msgid "No reciters available"
@@ -60,7 +64,7 @@ msgstr "Settings"
 #: prefs.js:270
 #, fuzzy
 msgid "Quran Player Settings"
-msgstr "Quran Player"
+msgstr "Quran Player Settings"
 
 #: prefs.js:280
 msgid "General Settings"
@@ -68,12 +72,17 @@ msgstr "General Settings"
 
 #: prefs.js:297
 #, fuzzy
+msgid "Quran Reciters"
+msgstr "Quran Reciters"
+
+#: prefs.js:297
+#, fuzzy
 msgid "Quran Reciter"
-msgstr "Reciter"
+msgstr "Quran Reciter"
 
 #: prefs.js:298
 msgid "Select a reciter for audio playback"
-msgstr ""
+msgstr "Select a reciter for audio playback"
 
 #: prefs.js:321
 msgid "Autoplay next item"
@@ -125,7 +134,7 @@ msgstr "Custom juz list file path"
 
 #: prefs.js:418
 msgid "Select Juz File"
-msgstr ""
+msgstr "Select Juz File"
 
 #: prefs.js:425
 #, fuzzy
@@ -134,11 +143,11 @@ msgstr "Custom juz list file path"
 
 #: prefs.js:431 prefs.js:481
 msgid "Cancel"
-msgstr ""
+msgstr "Cancel"
 
 #: prefs.js:432 prefs.js:482
 msgid "Select"
-msgstr ""
+msgstr "Select"
 
 #: prefs.js:456
 msgid "Custom surah list file path"

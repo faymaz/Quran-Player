@@ -19,6 +19,9 @@ msgstr "Koran-Player"
 msgid "Settings"
 msgstr "Einstellungen"
 
+msgid "Reciters"
+msgstr "Rezitatoren"
+
 msgid "Reciter"
 msgstr "Rezitator"
 

@@ -3,7 +3,7 @@
   <schema id="org.gnome.shell.extensions.quran-player" path="/org/gnome/shell/extensions/quran-player/">
     <key name="selected-reciter" type="s">
       <default>'Mustafa Ismail'</default>
-      <summary>Selected Quran reciter</summary>
+      <summary>Selected Quran Reciters</summary>
       <description>The name of the reciter to use for Quran audio</description>
     </key>
 

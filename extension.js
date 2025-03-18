@@ -73,8 +73,8 @@ function loadSurahs(extension) {
     
    
     return [
-        {"name": "Fatiha", "id": 1, "audioId": "001"},
-        {"name": "Bakara", "id": 2, "audioId": "002"},
+        {"name": "Al-Fatihah", "id": 1, "audioId": "001"},
+        {"name": "Al-Baqarah", "id": 2, "audioId": "002"},
        
     ];
 }
@@ -944,7 +944,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
         this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
         
        
-        let reciterMenu = new PopupMenu.PopupSubMenuMenuItem(_('Reciter'));
+        let reciterMenu = new PopupMenu.PopupSubMenuMenuItem(_('Reciters'));
         
        
         if (this._reciters && this._reciters.length > 0) {
