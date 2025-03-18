@@ -26,6 +26,10 @@ msgstr "Cüz Seçimi"
 msgid "Surah Selection"
 msgstr "Sure Seçimi"
 
+#: extension.js:658
+msgid "Juz Selection"
+msgstr "Cüz Seçimi"
+
 #: extension.js:794 extension.js:854 extension.js:1622
 #, fuzzy
 msgid "Language Changed"

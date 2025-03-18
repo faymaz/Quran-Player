@@ -79,6 +79,14 @@ msgstr "Allgemeine Einstellungen"
 msgid "Advanced Settings"
 msgstr "Erweiterte Einstellungen"
 
+#: extension.js:657
+msgid "Surah Selection"
+msgstr "Sure Auswahl"
+
+#: extension.js:658
+msgid "Juz Selection"
+msgstr "Juz Auswahl"
+
 # Sure isimleri
 msgid "Al-Fatihah"
 msgstr "Al-Fatiha"
