@@ -18,10 +18,6 @@ msgstr ""
 msgid "Quran Player"
 msgstr "Kuran Tilaveti"
 
-#: extension.js:656
-msgid "Juz Selection"
-msgstr "Cüz Seçimi"
-
 #: extension.js:657
 msgid "Surah Selection"
 msgstr "Sure Seçimi"
