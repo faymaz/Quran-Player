@@ -640,14 +640,14 @@ class QuranPlayerIndicator extends PanelMenu.Button {
     _rebuildContentMenu() {
         this._log("Completely rebuilding menu");
         
-        // Disconnect any control signals before destroying UI elements
+       
         if (this._controlSignalHandlers) {
             this._controlSignalHandlers.forEach(handler => {
                 if (handler.obj && handler.id) {
                     try {
                         handler.obj.disconnect(handler.id);
                     } catch (e) {
-                        // Just log and continue
+                       
                         this._log(`Error disconnecting control signal: ${e.message}`);
                     }
                 }
@@ -655,29 +655,29 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             this._controlSignalHandlers = [];
         }
         
-        // Clear existing UI elements
+       
         if (this._controlsBox) {
             this._controlsBox.destroy();
             this._controlsBox = null;
         }
         
-        // Clear menu items
+       
         const items = this.menu._getMenuItems();
         for (let i = items.length - 1; i >= 0; i--) {
             items[i].destroy();
         }
         
-        // Recreate the player UI
+       
         this._createPlayerUI(true);
         
-        // Add category title
+       
         const categoryTitle = this._isJuzMode ? 
             new PopupMenu.PopupMenuItem(_("Juz Selection"), { reactive: false, style_class: 'category-title' }) :
             new PopupMenu.PopupMenuItem(_("Surah Selection"), { reactive: false, style_class: 'category-title' });
         
         this.menu.addMenuItem(categoryTitle);
         
-        // Add content groups
+       
         if (this._isJuzMode) {
             this._log("Juz mode active, showing juz groups only");
             this._addJuzGroups();
@@ -726,19 +726,19 @@ class QuranPlayerIndicator extends PanelMenu.Button {
         }
     
     _resetPlayerControls() {
-        // Clean up existing controls properly
+       
         if (this._controlsBox) {
-            // Clean up children first
+           
             this._controlsBox.destroy();
             this._controlsBox = null;
         }
         
-        // Create new controls only after old ones are fully destroyed
+       
         this._controlsBox = new St.BoxLayout({
             style_class: 'quran-controls-box'
         });
         
-        // Create new buttons
+       
         this._prevButton = new St.Button({
             style_class: 'quran-control-button',
             can_focus: true,
@@ -779,20 +779,20 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             })
         });
         
-        // Add buttons to controls box
+       
         this._controlsBox.add_child(this._prevButton);
         this._controlsBox.add_child(this._playButton);
         this._controlsBox.add_child(this._stopButton);
         this._controlsBox.add_child(this._nextButton);
         
-        // Connect signals AFTER all elements are created and added
+       
         this._connectControlSignals();
         
         return this._controlsBox;
     }
 
     _connectControlSignals() {
-        // Clear any previous control signal handlers
+       
         if (this._controlSignalHandlers) {
             this._controlSignalHandlers.forEach(handler => {
                 if (handler.obj && handler.id) {
@@ -807,7 +807,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
         
         this._controlSignalHandlers = [];
         
-        // Helper function to safely connect signals
+       
         const safeConnect = (obj, signal, callback) => {
             if (obj) {
                 try {
@@ -821,7 +821,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             return 0;
         };
         
-        // Connect signals for player controls
+       
         safeConnect(this._playButton, 'clicked', () => {
             this._log("Play button clicked");
             this._togglePlay();
@@ -848,7 +848,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
     }
 
     _connectSignals() {
-        // Disconnect any previous signal handlers
+       
         if (this._signalHandlers) {
             this._signalHandlers.forEach(handler => {
                 if (handler.obj && handler.id) {
@@ -863,7 +863,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
         
         this._signalHandlers = [];
         
-        // Helper function to safely connect signals
+       
         const safeConnect = (obj, signal, callback) => {
             if (obj) {
                 try {
@@ -877,7 +877,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             return 0;
         };
         
-        // Connect settings signal
+       
         if (this._settings) {
             safeConnect(this._settings, 'changed::interface-language', () => {
                 this._log('Language setting changed');
@@ -1577,7 +1577,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
     }
     
     destroy() {
-        // Disconnect signal handlers
+       
         if (this._signalHandlers) {
             this._signalHandlers.forEach(handler => {
                 if (handler.obj && handler.id) {
@@ -1591,7 +1591,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             this._signalHandlers = [];
         }
         
-        // Disconnect control signal handlers
+       
         if (this._controlSignalHandlers) {
             this._controlSignalHandlers.forEach(handler => {
                 if (handler.obj && handler.id) {
@@ -1605,7 +1605,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             this._controlSignalHandlers = [];
         }
         
-        // Clean up timeout sources
+       
         if (this._timeoutSources) {
             this._timeoutSources.forEach(sourceId => {
                 if (sourceId > 0) {
@@ -1615,16 +1615,16 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             this._timeoutSources = [];
         }
         
-        // Stop playback
+       
         this._stopPlayback();
         
-        // Properly clean up UI elements
+       
         if (this._controlsBox) {
             this._controlsBox.destroy();
             this._controlsBox = null;
         }
         
-        // Call parent destroy
+       
         super.destroy();
     }
 });

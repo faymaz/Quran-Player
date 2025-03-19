@@ -610,7 +610,7 @@ export default class QuranPlayerPreferences extends ExtensionPreferences {
     fillPreferencesWindow(window) {
         this._prefsWindow = window;
         
-        // Load current language
+       
         const settings = this.getSettings();
         const currentLanguage = settings.get_string('interface-language');
         if (currentLanguage) {
