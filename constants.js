@@ -19,8 +19,8 @@
 
 import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
-import * as ExtensionUtils from 'resource:///org/gnome/shell/misc/extensionUtils.js';
 
+//console.log('Constants file loaded from:', import.meta.url);
 
 export const DEFAULT_RECITERS = [
   {
@@ -254,10 +254,10 @@ export function loadReciters(extension) {
       if (success) {
           let reciters = JSON.parse(new TextDecoder().decode(contents));
           
-         
+          // Ensure reciter types are properly set
           reciters = reciters.map(reciter => {
               if (!reciter.type) {
-                 
+                  // Determine type based on name or format
                   if (reciter.name.toLowerCase().includes('cüz') || 
                       reciter.name.toLowerCase().includes('juz') ||
                       reciter.audioFormat.includes('cuz') ||
@@ -272,43 +272,45 @@ export function loadReciters(extension) {
           
           return reciters;
       } else {
-          log("Quran Player: Failed to load reciters file, using defaults");
+          console.log("Quran Player: Failed to load reciters file, using defaults");
           return DEFAULT_RECITERS;
       }
   } catch (e) {
-      logError(e, "Quran Player: Error loading reciters");
+      console.error("Quran Player: Error loading reciters", e);
       return DEFAULT_RECITERS;
   }
 }
 
 
+
 export function loadSurahs(extension) {
-    try {
-        const settings = extension.getSettings();
-        
-       
-        const customPath = settings.get_string('custom-surahs-list-path');
-        if (customPath && customPath.trim() !== '') {
-            try {
-                const customFile = Gio.File.new_for_path(customPath);
-                const [success, contents] = customFile.load_contents(null);
-                if (success) {
-                    return JSON.parse(new TextDecoder().decode(contents));
-                }
-            } catch (customErr) {
-                logError(customErr,"Quran Player: Error loading custom surahs file, falling back to default");
-            }
-        }
-        
-       
-        const surahsFile = Gio.File.new_for_path(GLib.build_filenamev([extension.path, 'surahs.json']));
-        const [success, contents] = surahsFile.load_contents(null);
-        
-        if (success) {
-            return JSON.parse(new TextDecoder().decode(contents));
-        } else {
-            log("Quran Player: Failed to load surahs file, using defaults");
-            return [
+  try {
+      const settings = extension.getSettings();
+      
+     
+      const customPath = settings.get_string('custom-surahs-list-path');
+      if (customPath && customPath.trim() !== '') {
+          try {
+              const customFile = Gio.File.new_for_path(customPath);
+              const [success, contents] = customFile.load_contents(null);
+              if (success) {
+                  return JSON.parse(new TextDecoder().decode(contents));
+              }
+          } catch (customErr) {
+              console.error("Quran Player: Error loading custom surahs file, falling back to default", customErr);
+          }
+      }
+      
+     
+      const surahsFile = Gio.File.new_for_path(GLib.build_filenamev([extension.path, 'surahs.json']));
+      const [success, contents] = surahsFile.load_contents(null);
+      
+      if (success) {
+          return JSON.parse(new TextDecoder().decode(contents));
+      } else {
+          console.log("Quran Player: Failed to load surahs file, using defaults");
+         
+          return [
                 {"name": "Al-Fatihah", "id": 1, "audioId": "001"},
                 {"name": "Al-Baqarah", "id": 2, "audioId": "002"},
                 {"name": "Ali 'Imran", "id": 3, "audioId": "003"},
@@ -426,7 +428,7 @@ export function loadSurahs(extension) {
               ];
             }
         } catch (e) {
-            logError(e,"Quran Player: Error loading surahs");
+          console.error(e,"Quran Player: Error loading surahs");
             return [
               [
                 {"name": "Al-Fatihah", "id": 1, "audioId": "001"},
@@ -549,53 +551,54 @@ export function loadSurahs(extension) {
     }
 
 
-export function loadJuz(extension) {
-  try {
-      const settings = extension.getSettings();
-      
-     
-      const customPath = settings.get_string('custom-juz-list-path');
-      if (customPath && customPath.trim() !== '') {
-          try {
-              const customFile = Gio.File.new_for_path(customPath);
-              const [success, contents] = customFile.load_contents(null);
-              if (success) {
-                  return JSON.parse(new TextDecoder().decode(contents));
-              }
-          } catch (customErr) {
-              logError(customErr,"Quran Player: Error loading custom juz file, falling back to default");
-          }
-      }
-      
-     
-      const juzFile = Gio.File.new_for_path(GLib.build_filenamev([extension.path, 'juz.json']));
-      const [success, contents] = juzFile.load_contents(null);
-      
-      if (success) {
-          return JSON.parse(new TextDecoder().decode(contents));
-      } else {
-          log("Quran Player: Failed to load juz file");
-          return [];
-      }
-  } catch (e) {
-      logError(e,"Quran Player: Error loading juz data");
-      return [];
+  export function loadJuz(extension) {
+    try {
+        const settings = extension.getSettings();
+        
+       
+        const customPath = settings.get_string('custom-juz-list-path');
+        if (customPath && customPath.trim() !== '') {
+            try {
+                const customFile = Gio.File.new_for_path(customPath);
+                const [success, contents] = customFile.load_contents(null);
+                if (success) {
+                    return JSON.parse(new TextDecoder().decode(contents));
+                }
+            } catch (customErr) {
+                console.error("Quran Player: Error loading custom juz file, falling back to default", customErr);
+            }
+        }
+        
+       
+        const juzFile = Gio.File.new_for_path(GLib.build_filenamev([extension.path, 'juz.json']));
+        const [success, contents] = juzFile.load_contents(null);
+        
+        if (success) {
+            return JSON.parse(new TextDecoder().decode(contents));
+        } else {
+            console.log("Quran Player: Failed to load juz file");
+            return [];
+        }
+    } catch (e) {
+        console.error("Quran Player: Error loading juz data", e);
+        return [];
+    }
   }
-}
+    
 
 
-export function isJuzBasedReciter(reciter) {
-  if (!reciter) return false;
-  
- 
-  if (reciter.type === 'juz') return true;
-  
- 
-  const nameIndicatesJuz = reciter.name.toLowerCase().includes('cüz') || 
+  export function isJuzBasedReciter(reciter) {
+    if (!reciter) return false;
+    
+   
+    if (reciter.type === 'juz') return true;
+    
+   
+    const nameIndicatesJuz = reciter.name.toLowerCase().includes('cüz') || 
                             reciter.name.toLowerCase().includes('juz');
                             
-  const formatIndicatesJuz = reciter.audioFormat.includes('cuz') || 
+    const formatIndicatesJuz = reciter.audioFormat.includes('cuz') || 
                              reciter.audioFormat.includes('juz');
                              
-  return nameIndicatesJuz || formatIndicatesJuz;
-}
+    return nameIndicatesJuz || formatIndicatesJuz;
+  }
