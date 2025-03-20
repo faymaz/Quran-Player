@@ -23,7 +23,7 @@ import Gtk from 'gi://Gtk';
 import GLib from 'gi://GLib';
 import GObject from 'gi://GObject';
 
-// Import constants for reciters
+
 import { DEFAULT_RECITERS, isJuzBasedReciter } from './constants.js';
 
 const QuranPlayerPrefsPage = GObject.registerClass(

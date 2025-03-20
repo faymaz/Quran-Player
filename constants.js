@@ -254,10 +254,10 @@ export function loadReciters(extension) {
       if (success) {
           let reciters = JSON.parse(new TextDecoder().decode(contents));
           
-          // Ensure reciter types are properly set
+         
           reciters = reciters.map(reciter => {
               if (!reciter.type) {
-                  // Determine type based on name or format
+                 
                   if (reciter.name.toLowerCase().includes('cüz') || 
                       reciter.name.toLowerCase().includes('juz') ||
                       reciter.audioFormat.includes('cuz') ||
