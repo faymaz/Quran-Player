@@ -1529,7 +1529,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
                     try {
                         GLib.Source.remove(sourceId);
                     } catch (e) {
-                        // Ignore errors when removing sources
+                       
                         this._log(`Error removing source ${sourceId}: ${e.message}`);
                     }
                 }
