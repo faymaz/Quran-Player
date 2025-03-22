@@ -30,7 +30,7 @@ export const DEFAULT_RECITERS = [
     "type": "surah"
   },
   {
-    "name": "Abdullah Basfar Quran Mp3 With English Translation",
+    "name": "Abdullah Basfar Quran With English Translation",
     "baseUrl": "https://archive.org/download/abdullah-basfar-quran-mp3-with-english-translation/",
     "audioFormat": "%specialFormat%",
     "type": "surah",
@@ -146,7 +146,7 @@ export const DEFAULT_RECITERS = [
     "type": "surah"
   },
   {
-    "name": "Der edle Koran - Meal - Deutsch übersetzung",
+    "name": "Der edle Koran - Deutsch Übersetzung",
     "baseUrl": "https://archive.org/download/Der_edle_Koran/",
     "audioFormat": "%id%.mp3",
     "type": "surah"
@@ -164,7 +164,7 @@ export const DEFAULT_RECITERS = [
     "type": "surah"
   },
   {
-    "name": "Hayri Küçükdeniz-Suat Yıldırım Meali",
+    "name": "Hayri Küçükdeniz-Suat Yıldırım Türkçe Meali",
     "baseUrl": "https://archive.org/download/Kurani.Kerim.Meali.30.cuz.Prof.Dr.SuatYildirim/",
     "audioFormat": "%specialFormat%",
     "type": "juz",
@@ -272,7 +272,7 @@ export const DEFAULT_RECITERS = [
     "type": "surah"
   },
   {
-    "name": "Quran with english translation - Basfar",
+    "name": "Quran with English Translation - Basfar",
     "baseUrl": "https://archive.org/download/Basfar/",
     "audioFormat": "%id%.mp3",
     "type": "surah"
@@ -425,7 +425,7 @@ export const DEFAULT_RECITERS = [
     "type": "surah"
   },
   {
-    "name": "Yusuf Ziya Özkan-Elmalı Meali",
+    "name": "Yusuf Ziya Özkan-Elmalı Türkçe Meali",
     "baseUrl": "https://archive.org/download/dinimizislam_003/",
     "audioFormat": "%specialFormat%",
     "type": "juz",

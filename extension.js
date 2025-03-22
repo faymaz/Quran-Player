@@ -1313,7 +1313,6 @@ class QuranPlayerIndicator extends PanelMenu.Button {
         this._log(`Toggle play called. Player exists: ${!!this._player}, Using fallback: ${this._usingFallback}, Is playing: ${this._isPlaying}`);
        
         if (!this._player || this._usingFallback) {
-           
             if (this._isPlaying) {
                 this._stopPlayback();
                 return;
@@ -1331,12 +1330,16 @@ class QuranPlayerIndicator extends PanelMenu.Button {
         try {
             if (this._isPlaying) {
                
-                let position = 0;
                 let format = Gst.Format.TIME;
-                let querySuccess = this._player.query_position(format, null);
                 
-                if (querySuccess) {
-                    [, position] = this._player.query_position(format);
+               
+                let query = Gst.Query.new_position(format);
+                
+               
+                if (this._player.query(query)) {
+                   
+                    let [, position] = query.parse_position();
+                    
                    
                     this._lastPosition = position;
                     this._log(`Storing position: ${position / Gst.SECOND} seconds`);
@@ -1352,6 +1355,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
                
                 if (this._lastPosition > 0) {
                     this._log(`Seeking to position: ${this._lastPosition / Gst.SECOND} seconds`);
+                   
                     this._player.seek_simple(
                         Gst.Format.TIME,
                         Gst.SeekFlags.FLUSH | Gst.SeekFlags.KEY_UNIT,
@@ -1369,7 +1373,6 @@ class QuranPlayerIndicator extends PanelMenu.Button {
         } catch (e) {
             this._log(`Error toggling playback: ${e.message}`);
             
-           
             try {
                 this._stopPlayback();
                 if (this._currentItem) {
