@@ -37,7 +37,7 @@ You can install the extension in two ways:
 
 #### From GNOME Extensions Website
 
-1. Visit [Quran Player on GNOME Extensions](https://extensions.gnome.org/extension/quran-player)
+1. Visit [Quran Player on GNOME Extensions](https://extensions.gnome.org/extension/7991/quran-player/)
 2. Toggle the switch to ON to install the extension
 3. Follow any additional prompts to complete installation
 
@@ -169,7 +169,7 @@ Uzantıyı iki şekilde kurabilirsiniz:
 
 #### GNOME Uzantılar Web Sitesinden
 
-1. [GNOME Uzantılar'daki Kuran Tilaveti](https://extensions.gnome.org/extension/quran-player) sayfasını ziyaret edin
+1. [GNOME Uzantılar'daki Kuran Tilaveti](https://extensions.gnome.org/extension/7991/quran-player/) sayfasını ziyaret edin
 2. Uzantıyı kurmak için anahtarı AÇIK konumuna getirin
 3. Kurulumu tamamlamak için ek yönergeleri izleyin
 
