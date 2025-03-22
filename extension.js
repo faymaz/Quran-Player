@@ -1059,7 +1059,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             this._log(`Error creating audio URL: ${urlError.message}`);
             return;
         }
-        
+        this._lastPosition = 0;
         this._playAudio(audioUrl, `Now playing: ${surah.name}`, `Reciter: ${this._selectedReciter ? this._selectedReciter.name : "Unknown"}`);
     }
     _playJuz(juz) {
@@ -1133,7 +1133,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             this._log(`Error creating audio URL: ${urlError.message}`);
             return;
         }
-        
+        this._lastPosition = 0;
         this._playAudio(audioUrl, `Now playing: ${juz.name}`, `Reciter: ${this._selectedReciter ? this._selectedReciter.name : "Unknown"}`);
     }
     
@@ -1308,17 +1308,16 @@ class QuranPlayerIndicator extends PanelMenu.Button {
        
        
     }
-    
+
     _togglePlay() {
         this._log(`Toggle play called. Player exists: ${!!this._player}, Using fallback: ${this._usingFallback}, Is playing: ${this._isPlaying}`);
        
         if (!this._player || this._usingFallback) {
+           
             if (this._isPlaying) {
-               
                 this._stopPlayback();
                 return;
             } else if (this._currentItem) {
-               
                 if (this._currentItem.type === 'surah') {
                     this._playSurah(this._currentItem);
                 } else if (this._currentItem.type === 'juz') {
@@ -1329,32 +1328,41 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             return;
         }
         
-       
         try {
             if (this._isPlaying) {
                
-                let state;
-                const stateQuery = this._player.query_state(Gst.Format.TIME, false);
-                if (stateQuery) {
-                    state = stateQuery[1]; 
-                } else {
+                let position = 0;
+                let format = Gst.Format.TIME;
+                let querySuccess = this._player.query_position(format, null);
+                
+                if (querySuccess) {
+                    [, position] = this._player.query_position(format);
                    
-                    state = Gst.State.PLAYING;
+                    this._lastPosition = position;
+                    this._log(`Storing position: ${position / Gst.SECOND} seconds`);
+                } else {
+                    this._log("Failed to query position");
                 }
                 
-                if (state === Gst.State.PLAYING) {
-                    this._player.set_state(Gst.State.PAUSED);
-                    this._isPlaying = false;
-                    this._log("Paused playback");
-                } else {
-                    this._player.set_state(Gst.State.PLAYING);
-                    this._isPlaying = true;
-                    this._log("Resumed playback");
-                }
+               
+                this._player.set_state(Gst.State.PAUSED);
+                this._isPlaying = false;
+                this._log("Paused playback");
             } else {
+               
+                if (this._lastPosition > 0) {
+                    this._log(`Seeking to position: ${this._lastPosition / Gst.SECOND} seconds`);
+                    this._player.seek_simple(
+                        Gst.Format.TIME,
+                        Gst.SeekFlags.FLUSH | Gst.SeekFlags.KEY_UNIT,
+                        this._lastPosition
+                    );
+                }
+                
+               
                 this._player.set_state(Gst.State.PLAYING);
                 this._isPlaying = true;
-                this._log("Started playback");
+                this._log("Resumed playback");
             }
             
             this._updatePlayerUI();
@@ -1376,7 +1384,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             }
         }
     }
-    
+
     _playPrevious() {
         if (!this._currentItem) return;
         this._log("Play previous");
@@ -1433,7 +1441,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             }
             this._usingFallback = false;
         }
-        
+        this._lastPosition = 0;
         this._isPlaying = false;
         this._updatePlayerUI();
         //this._log("Stopped playback");
