@@ -991,10 +991,10 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             return;
         }
         
-       
+        // Set current item
         this._currentItem = { ...surah, type: 'surah' };
         
-       
+        // Clean up existing player
         if (this._player) {
             try {
                 this._player.set_state(Gst.State.NULL);
@@ -1004,11 +1004,11 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             }
         }
         
-       
+        // Ensure we have a reciter
         if (!this._selectedReciter && this._reciters.length > 0) {
             this._selectedReciter = this._reciters[0];
         } else if (!this._selectedReciter) {
-           
+            // Fallback reciter
             this._selectedReciter = {
                 "name": "Mustafa Ismail",
                 "baseUrl": "https://download.quranicaudio.com/quran/mostafa_ismaeel/",
@@ -1017,22 +1017,43 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             };
         }
         
-       
+        // Generate audio URL
         let audioUrl;
         
-       
+        // Format surah ID with padding
         const paddedId = surah.id.toString().padStart(3, '0');
         
-       
+        // Use audioId if available, otherwise use padded ID
         const audioId = surah.audioId || paddedId;
         
         try {
-           
-            audioUrl = `${this._selectedReciter.baseUrl}${this._selectedReciter.audioFormat}`
-                .replace(/%id%/g, paddedId)
-                .replace(/%audioId%/g, audioId)
-                .replace(/%name%/g, surah.name);
+            // Check if the reciter uses special format
+            if (this._selectedReciter.hasSpecialFormat && this._selectedReciter.formatMap) {
+                // Get the actual filename from the formatMap
+                const twoDigitId = surah.id.toString().padStart(2, '0');
                 
+                if (this._selectedReciter.formatMap[twoDigitId]) {
+                    const specialFormat = this._selectedReciter.formatMap[twoDigitId];
+                    audioUrl = `${this._selectedReciter.baseUrl}${specialFormat}`;
+                    this._log(`Using special format for surah ${surah.id}: ${audioUrl}`);
+                } else {
+                    // If no special format found, try using the standard format
+                    audioUrl = `${this._selectedReciter.baseUrl}${this._selectedReciter.audioFormat}`
+                        .replace(/%id%/g, paddedId)
+                        .replace(/%audioId%/g, audioId)
+                        .replace(/%name%/g, surah.name);
+                    this._log(`No special format found for surah ${surah.id}, using standard format: ${audioUrl}`);
+                }
+            } else {
+                // Standard format
+                audioUrl = `${this._selectedReciter.baseUrl}${this._selectedReciter.audioFormat}`
+                    .replace(/%id%/g, paddedId)
+                    .replace(/%audioId%/g, audioId)
+                    .replace(/%name%/g, surah.name);
+            }
+            
+            // Log the full URL for testing in browser
+            console.log(`🎧 AUDIO URL (Surah): ${audioUrl}`);
             this._log(`Playing surah: ${surah.name}, URL: ${audioUrl}`);
         } catch (urlError) {
             this._log(`Error creating audio URL: ${urlError.message}`);
@@ -1047,10 +1068,10 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             return;
         }
         
-       
+        // Set current item
         this._currentItem = { ...juz, type: 'juz' };
         
-       
+        // Clean up existing player
         if (this._player) {
             try {
                 this._player.set_state(Gst.State.NULL);
@@ -1060,11 +1081,11 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             }
         }
         
-       
+        // Ensure we have a reciter
         if (!this._selectedReciter && this._reciters.length > 0) {
             this._selectedReciter = this._reciters.find(r => isJuzBasedReciter(r)) || this._reciters[0];
         } else if (!this._selectedReciter) {
-           
+            // Fallback reciter
             this._selectedReciter = {
                 "name": "Hayri Küçükdeniz-Suat Yıldırım Meali",
                 "baseUrl": "https://archive.org/download/Kurani.Kerim.Meali.30.cuz.Prof.Dr.SuatYildirim/",
@@ -1080,15 +1101,15 @@ class QuranPlayerIndicator extends PanelMenu.Button {
         const audioId = juz.audioId || paddedId;
         
         try {
-           
+            // Handle special format for some reciters
             if (this._selectedReciter.hasSpecialFormat && this._selectedReciter.formatMap) {
-               
+                // Use specific format from map if available
                 if (this._selectedReciter.formatMap[audioId]) {
                     const specialFormat = this._selectedReciter.formatMap[audioId];
                     audioUrl = `${this._selectedReciter.baseUrl}${specialFormat}`;
                     this._log(`Using special format for juz ${juz.id}: ${audioUrl}`);
                 } else {
-                   
+                    // Fallback format
                     audioUrl = `${this._selectedReciter.baseUrl}${this._selectedReciter.audioFormat}`
                         .replace(/%id%/g, paddedId)
                         .replace(/%audioId%/g, audioId)
@@ -1097,7 +1118,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
                     this._log(`Using fallback format for juz ${juz.id}: ${audioUrl}`);
                 }
             } else {
-               
+                // Standard format
                 audioUrl = `${this._selectedReciter.baseUrl}${this._selectedReciter.audioFormat}`
                     .replace(/%id%/g, paddedId)
                     .replace(/%audioId%/g, audioId)
@@ -1105,6 +1126,8 @@ class QuranPlayerIndicator extends PanelMenu.Button {
                 this._log(`Using standard format for juz ${juz.id}: ${audioUrl}`);
             }
             
+            // Log the full URL for testing in browser
+            console.log(`🎧 AUDIO URL (Juz): ${audioUrl}`);
             this._log(`Playing juz: ${juz.name}, URL: ${audioUrl}`);
         } catch (urlError) {
             this._log(`Error creating audio URL: ${urlError.message}`);
@@ -1280,9 +1303,10 @@ class QuranPlayerIndicator extends PanelMenu.Button {
     }
 
     _log(message) {
-        if (this._settings && this._settings.get_boolean('enable-debug-log')) {
-            console.log(`[Quran Player] ${message}`);
-        }
+        console.log(`[Quran Player] ${message}`);
+        // if (this._settings && this._settings.get_boolean('enable-debug-log')) {
+        //     console.log(`[Quran Player] ${message}`);
+        // }
     }
     
     _togglePlay() {
