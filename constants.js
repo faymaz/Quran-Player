@@ -272,69 +272,6 @@ export const DEFAULT_RECITERS = [
     "type": "surah"
   },
   {
-    "name": "Saad El-Ghamidi",
-    "baseUrl": "https://podcasts.qurancentral.com/saad-al-ghamdi/saad-al-ghamdi-surah-",
-    "audioFormat": "%id%.mp3",
-    "type": "surah"
-  },
-  {
-    "name": "Saud Al-Shuraim",
-    "baseUrl": "https://podcasts.qurancentral.com/saud-al-shuraim/saud-al-shuraim-",
-    "audioFormat": "%id%.mp3",
-    "type": "surah"
-  },
-  {
-    "name": "Wadee Hammadi Al Yamani",
-    "baseUrl": "https://download.quranicaudio.com/quran/wadee_hammadi_al-yamani/",
-    "audioFormat": "%id%.mp3",
-    "type": "surah"
-  },
-  {
-    "name": "Yasser Al-Dosari",
-    "baseUrl": "https://podcasts.qurancentral.com/yasser-al-dossari/yasser-al-dossari-",
-    "audioFormat": "%id%.mp3",
-    "type": "surah"
-  },
-  {
-    "name": "Yusuf Ziya Özkan-Elmalı Meali",
-    "baseUrl": "https://archive.org/download/dinimizislam_003/",
-    "audioFormat": "%specialFormat%",
-    "type": "juz",
-    "hasSpecialFormat": true,
-    "formatMap": {
-      "01": "01Cuz-Fatiha1-Bakara141.mp3",
-      "02": "02Cuz-Bakara142-Bakara252.mp3",
-      "03": "03Cuz-Bakara253-AliImran91.mp3",
-      "04": "04Cuz-AliImran92-Nisa23.mp3",
-      "05": "05Cuz-Nisa24-Nisa147.mp3",
-      "06": "06Cuz-Nisa148-Maide82.mp3",
-      "07": "07Cuz-Maide83-Enam110.mp3",
-      "08": "08Cuz-Enam111-Araf87.mp3",
-      "09": "09Cuz-Araf88-Enfal40.mp3",
-      "10": "10Cuz-Enfal41-Tevbe93.mp3",
-      "11": "11Cuz-Tevbe94-Hud5.mp3",
-      "12": "12Cuz-Hud6-Yusuf52.mp3",
-      "13": "13Cuz-Yusuf53-Ibrahim52.mp3",
-      "14": "14Cuz-Hicr1-Nahl128.mp3",
-      "15": "15Cuz-Isra1-Kehf74.mp3",
-      "16": "16Cuz-Kehf75-TaHa135.mp3",
-      "17": "17Cuz-Enbiya1-Hac78.mp3",
-      "18": "18Cuz-Muminun1-Furkan20.mp3",
-      "19": "19Cuz-Furkan21-Nelm55.mp3",
-      "20": "20Cuz-Nelm56-Ankebut45.mp3",
-      "21": "21Cuz-Ankebut46-Ahzab30.mp3",
-      "22": "22Cuz-Ahzab31-YaSin27.mp3",
-      "23": "23Cuz-YaSin28-Zumer31.mp3",
-      "24": "24Cuz-Zumer32-Fussilet46.mp3",
-      "25": "25Cuz-Fussilet47-Casiye32.mp3",
-      "26": "26Cuz-Casiye33-Zariyat30.mp3",
-      "27": "27Cuz-Zariyat31-Hadid29.mp3",
-      "28": "28Cuz-Mucadele1-Tahrim12.mp3",
-      "29": "29Cuz-Mulk1-Murselat50.mp3",
-      "30": "30Cuz-Nebe1-Nas6.mp3"
-    }
-  },
-  {
     "name": "Quran with english translation - Basfar",
     "baseUrl": "https://archive.org/download/Basfar/",
     "audioFormat": "%id%.mp3",
@@ -461,7 +398,70 @@ export const DEFAULT_RECITERS = [
         "112": "112Surah_al_ikhlas.mp3",
         "113": "113Surah_al_falaq.mp3",
         "114": "114Surah_an_nas.mp3"
-      }
+  }
+  },
+  {
+    "name": "Saad El-Ghamidi",
+    "baseUrl": "https://podcasts.qurancentral.com/saad-al-ghamdi/saad-al-ghamdi-surah-",
+    "audioFormat": "%id%.mp3",
+    "type": "surah"
+  },
+  {
+    "name": "Saud Al-Shuraim",
+    "baseUrl": "https://podcasts.qurancentral.com/saud-al-shuraim/saud-al-shuraim-",
+    "audioFormat": "%id%.mp3",
+    "type": "surah"
+  },
+  {
+    "name": "Wadee Hammadi Al Yamani",
+    "baseUrl": "https://download.quranicaudio.com/quran/wadee_hammadi_al-yamani/",
+    "audioFormat": "%id%.mp3",
+    "type": "surah"
+  },
+  {
+    "name": "Yasser Al-Dosari",
+    "baseUrl": "https://podcasts.qurancentral.com/yasser-al-dossari/yasser-al-dossari-",
+    "audioFormat": "%id%.mp3",
+    "type": "surah"
+  },
+  {
+    "name": "Yusuf Ziya Özkan-Elmalı Meali",
+    "baseUrl": "https://archive.org/download/dinimizislam_003/",
+    "audioFormat": "%specialFormat%",
+    "type": "juz",
+    "hasSpecialFormat": true,
+    "formatMap": {
+      "01": "01Cuz-Fatiha1-Bakara141.mp3",
+      "02": "02Cuz-Bakara142-Bakara252.mp3",
+      "03": "03Cuz-Bakara253-AliImran91.mp3",
+      "04": "04Cuz-AliImran92-Nisa23.mp3",
+      "05": "05Cuz-Nisa24-Nisa147.mp3",
+      "06": "06Cuz-Nisa148-Maide82.mp3",
+      "07": "07Cuz-Maide83-Enam110.mp3",
+      "08": "08Cuz-Enam111-Araf87.mp3",
+      "09": "09Cuz-Araf88-Enfal40.mp3",
+      "10": "10Cuz-Enfal41-Tevbe93.mp3",
+      "11": "11Cuz-Tevbe94-Hud5.mp3",
+      "12": "12Cuz-Hud6-Yusuf52.mp3",
+      "13": "13Cuz-Yusuf53-Ibrahim52.mp3",
+      "14": "14Cuz-Hicr1-Nahl128.mp3",
+      "15": "15Cuz-Isra1-Kehf74.mp3",
+      "16": "16Cuz-Kehf75-TaHa135.mp3",
+      "17": "17Cuz-Enbiya1-Hac78.mp3",
+      "18": "18Cuz-Muminun1-Furkan20.mp3",
+      "19": "19Cuz-Furkan21-Nelm55.mp3",
+      "20": "20Cuz-Nelm56-Ankebut45.mp3",
+      "21": "21Cuz-Ankebut46-Ahzab30.mp3",
+      "22": "22Cuz-Ahzab31-YaSin27.mp3",
+      "23": "23Cuz-YaSin28-Zumer31.mp3",
+      "24": "24Cuz-Zumer32-Fussilet46.mp3",
+      "25": "25Cuz-Fussilet47-Casiye32.mp3",
+      "26": "26Cuz-Casiye33-Zariyat30.mp3",
+      "27": "27Cuz-Zariyat31-Hadid29.mp3",
+      "28": "28Cuz-Mucadele1-Tahrim12.mp3",
+      "29": "29Cuz-Mulk1-Murselat50.mp3",
+      "30": "30Cuz-Nebe1-Nas6.mp3"
+    }
   }
   ];
 
