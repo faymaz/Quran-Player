@@ -64,7 +64,7 @@ You can install the extension in two ways:
 
 ### Usage
 
-After installation, you'll see a headphones icon in the GNOME top bar. Click it to open the Quran Player menu.
+After installation, you'll see a Quran icon in the GNOME top bar. Click it to open the Quran Player menu.
 
 #### Main Features
 
@@ -196,7 +196,7 @@ Uzantıyı iki şekilde kurabilirsiniz:
 
 ### Kullanım
 
-Kurulumdan sonra, GNOME üst çubuğunda bir kulaklık simgesi göreceksiniz. Kur'an Oynatıcı menüsünü açmak için tıklayın.
+Kurulumdan sonra, GNOME üst çubuğunda bir Kur'an simgesi göreceksiniz. Kur'an Oynatıcı menüsünü açmak için tıklayın.
 
 #### Ana Özellikler
 
