@@ -260,7 +260,7 @@ Kari eklemek veya düzenlemek için `custom-reciters.json` dosyasını düzenley
 - `%audioId%`: surahs.json'daki audioId
 - `%name%`: Sure adı
 
-**Yeni Hafız/Kari Ekleme:**  
+**Yeni Hafız Ekleme:**  
 Listeye eklemek istediğiniz Hafız varsa, GitHub'daki issue altına ismi ve tüm cüzleri veya tüm sureleri için internet bağlantıları ile bana iletin, inşallah ekliyeyim.
 
 
