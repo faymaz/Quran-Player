@@ -151,13 +151,13 @@ Masaüstünüzden doğrudan Kur'an-ı Kerim tilavetlerini dinlemenizi sağlayan 
 ### Özellikler
 
 - Gruplar halinde düzenlenmiş tüm 114 Kur'an suresinin tam listesi
-- Mustafa İsmail ve Abdulbasit Abdussamed dahil birçok kari seçeneği
+- Mustafa İsmail ve Abdulbasit Abdussamed dahil birçok Hafız seçeneği
 - İngilizce ve Almanca meal seçenekleri mevcut
 - Oynatma kontrolleri (oynat/duraklat, sonraki, önceki, durdur)
 - Duraklatıldıktan sonra tam kaldığı yerden devam etme
 - Özelleştirilebilir ayarlar
 - Oynatma durumu bildirimleri
-- Özel kari listesi desteği
+- Özel Hafız listesi desteği
 - Çoklu dil arayüzü (İngilizce, Türkçe, Almanca, Arapça)
 - Cüz bazlı oynatma desteği
 
@@ -210,7 +210,7 @@ Kurulumdan sonra, GNOME üst çubuğunda bir Kur'an simgesi göreceksiniz. Kur'a
   - Durdur
   - Önceki sure/cüze geç
   - Sonraki sure/cüze geç
-- Kariler alt menüsünden farklı karileri seçin
+- Hafızlar alt menüsünden farklı Hafızları seçin
 - Menüden ayarlara erişin
 
 #### Ayarlar
@@ -220,7 +220,7 @@ Uzantı ayarlarına şu şekilde erişin:
 - Veya GNOME Uzantılar uygulamasını kullanarak uzantının yanındaki dişli simgesine tıklayarak
 
 Ayarlar panelinde şunları yapabilirsiniz:
-- Tercih ettiğiniz kariyi seçin
+- Tercih ettiğiniz Hafızı seçin
 - Sonraki sure/cüz için otomatik oynatmayı açın/kapatın
 - Bildirimleri etkinleştirin/devre dışı bırakın
 - Özel bir sure veya cüz listesi dosyası ayarlayın
@@ -229,20 +229,20 @@ Ayarlar panelinde şunları yapabilirsiniz:
 
 ### Özelleştirme
 
-#### Özel Kariler
+#### Özel Hafızlar
 
-Kari eklemek veya düzenlemek için `custom-reciters.json` dosyasını düzenleyebilirsiniz. Format şu şekildedir:
+Hafız eklemek veya düzenlemek için `custom-reciters.json` dosyasını düzenleyebilirsiniz. Format şu şekildedir:
 
 ```json
 [
   {
-    "name": "Kari Adı",
+    "name": "Hafız Adı",
     "baseUrl": "https://example.com/path/to/audio/",
     "audioFormat": "%id%.mp3",
     "type": "surah"
   },
   {
-    "name": "Özel Formatlı Kari",
+    "name": "Özel Formatlı Hafız",
     "baseUrl": "https://example.com/path/to/audio/",
     "audioFormat": "%specialFormat%",
     "type": "surah",
