@@ -125,6 +125,9 @@ The `audioFormat` field supports these placeholders:
 - `%audioId%`: The audioId from surahs.json
 - `%name%`: Surah name
 
+**Adding New Reciters:**  
+If you would like to add a new reciter to the list, please open an issue on GitHub with the reciter's name and the internet links for all surahs or juz. I will add them to the extension.
+
 ### Troubleshooting
 
 If the extension doesn't work:
@@ -256,6 +259,10 @@ Kari eklemek veya düzenlemek için `custom-reciters.json` dosyasını düzenley
 - `%id%`: 3 basamaklı sure numarası (001, 002, vb.)
 - `%audioId%`: surahs.json'daki audioId
 - `%name%`: Sure adı
+
+**Yeni Hafız/Kari Ekleme:**  
+Listeye eklemek istediğiniz Hafız/Kari varsa, GitHub'daki issue altına ismi ve tüm cüzleri veya tüm sureleri için internet bağlantıları ile bana iletin, inşallah ekliyeyim.
+
 
 ### Sorun Giderme
 
