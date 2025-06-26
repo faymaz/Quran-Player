@@ -179,6 +179,18 @@
     }
   },
   {
+    "name": "QURAN IN KURDiSH (Kurdi Kürtçe)",
+    "baseUrl": "https://archive.org/download/quraninkurdishmp3cuzvideonewtranslation/",
+    "audioFormat": "CUZ%id%.mp3",
+    "type": "juz"
+  },
+  {
+    "name": "QURAN IN KURDiSH (Kurdi Kürtçe) Saad Al Ghamedi",
+    "baseUrl": "https://archive.org/download/quraninkurdish/Saad_Al_Ghamedi_with_Kurdish_Translation_",
+    "audioFormat": "%id%.mp3",
+    "type": "surah"
+  },
+  {
     "name": "Maher Al-Muaiqly",
     "baseUrl": "https://podcasts.qurancentral.com/ali-abdur-rahman-al-huthaify/ali-abdur-rahman-al-huthaify-",
     "audioFormat": "%id%.mp3",
