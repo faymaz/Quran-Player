@@ -1154,10 +1154,45 @@ class QuranPlayerIndicator extends PanelMenu.Button {
                 throw new Error("Could not create GStreamer playbin element");
             }
             
-           
+            // Set the URI
             this._player.set_property("uri", audioUrl);
             
-           
+            // Configure HTTP headers for souphttpsrc to avoid 403 Forbidden errors
+            this._player.connect('source-setup', (playbin, source) => {
+                if (source.get_factory().get_name() === 'souphttpsrc') {
+                    // Determine domain-specific header strategy
+                    const url = audioUrl.toLowerCase();
+                    
+                    if (url.includes('podcasts.qurancentral.com/raad-mohammad-al-kurdi')) {
+                        // Raad Mohammad Al-Kurdi needs specific headers
+                        source.set_property('user-agent', 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
+                        try {
+                            source.set_property('referer', 'https://podcasts.qurancentral.com/');
+                        } catch (e) {
+                            this._log(`Could not set referer: ${e.message}`);
+                        }
+                        this._log(`Configured headers for Raad Mohammad Al-Kurdi: User-Agent and Referer set`);
+                    } else if (url.includes('podcasts.qurancentral.com')) {
+                        // All QuranCentral reciters need browser-like headers to avoid 403 errors
+                        source.set_property('user-agent', 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
+                        try {
+                            source.set_property('referer', 'https://podcasts.qurancentral.com/');
+                        } catch (e) {
+                            this._log(`Could not set referer: ${e.message}`);
+                        }
+                        this._log(`Configured browser headers for QuranCentral reciter`);
+                    } else if (url.includes('download.quranicaudio.com')) {
+                        // QuranicAudio.com doesn't need special headers
+                        this._log(`Using default headers for QuranicAudio.com`);
+                    } else {
+                        // Default browser-like headers for unknown domains
+                        source.set_property('user-agent', 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
+                        this._log(`Using default browser headers for unknown domain`);
+                    }
+                }
+            });
+            
+            // Get the bus for messages
             const bus = this._player.get_bus();
             bus.add_signal_watch();
             
