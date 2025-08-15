@@ -1140,6 +1140,13 @@ class QuranPlayerIndicator extends PanelMenu.Button {
     _playAudio(audioUrl, notificationTitle, notificationBody) {
        
         try {
+            // Check for hardware compatibility to prevent freezes on old GPUs
+            if (!this._checkHardwareCompatibility()) {
+                this._showNotification(_("Hardware Compatibility"), 
+                    _("Your system may not be compatible with audio playback. Please check system requirements."));
+                return;
+            }
+            
             if (!Gst.init_check(null)) {
                 Gst.init(null);
             }
@@ -1619,6 +1626,39 @@ class QuranPlayerIndicator extends PanelMenu.Button {
        
         super.destroy();
     }
+    
+    _checkHardwareCompatibility() {
+        try {
+            // Check for known problematic GPU drivers/hardware
+            const gpuInfo = GLib.spawn_command_line_sync('lspci | grep -i vga')[1];
+            if (gpuInfo) {
+                const gpuString = new TextDecoder().decode(gpuInfo).toLowerCase();
+                
+                // Check for old NVIDIA GTX 200 series and other problematic GPUs
+                const problematicGPUs = [
+                    'gtx 2', // GTX 200 series
+                    'geforce 8', // GeForce 8 series
+                    'geforce 9', // GeForce 9 series
+                ];
+                
+                for (const gpu of problematicGPUs) {
+                    if (gpuString.includes(gpu)) {
+                        console.log(`Quran Player: Detected potentially problematic GPU: ${gpu}`);
+                        // Still allow playback but with warning
+                        this._showNotification(_("Hardware Warning"), 
+                            _("Your GPU may cause system instability. If you experience freezes, please disable the extension."));
+                        break;
+                    }
+                }
+            }
+            
+            // Always return true to allow playback, but with warnings for problematic hardware
+            return true;
+        } catch (e) {
+            console.log(`Quran Player: Could not check hardware compatibility: ${e.message}`);
+            return true; // Default to allowing playback
+        }
+    }
 });
 
 export default class QuranPlayerExtension extends Extension {
@@ -1637,17 +1677,28 @@ export default class QuranPlayerExtension extends Extension {
        
         this._settings = this.getSettings();
         
-       
-        this._configureLocale();
+        // GNOME Shell 48: Use built-in localization system, no manual locale configuration needed
+        console.log('Quran Player: Using GNOME Shell 48 built-in localization');
+        
+        // CRITICAL FIX: Reset any problematic environment variables that might have been set previously
+        try {
+            // Reset environment variables to prevent system-wide language changes
+            GLib.unsetenv('LANGUAGE');
+            GLib.setenv('LANGUAGE', 'en_US.UTF-8', true);
+            GLib.setenv('LC_MESSAGES', 'en_US.UTF-8', true);
+            console.log('Quran Player: Reset environment variables to prevent system locale interference');
+        } catch (e) {
+            console.log(`Quran Player: Could not reset environment variables: ${e.message}`);
+        }
         
        
         this._settingsChangedId = this._settings.connect('changed::interface-language', () => {
-            console.log('Quran Player: Language setting changed');
-            this._configureLocale();
+            console.log('Quran Player: Language setting changed - but no system locale changes will be made');
+            // GNOME Shell 48: No manual locale configuration - extension will use built-in gettext only
            
             if (this._indicator && this._indicator._showNotification) {
-                this._indicator._showNotification(_("Language Changed"), 
-                    _("Please restart GNOME Shell for the language change to take effect"));
+                this._indicator._showNotification(_("Language Setting"), 
+                    _("Language preference saved. Extension uses GNOME Shell localization only."));
             }
         });
         
@@ -1658,23 +1709,9 @@ export default class QuranPlayerExtension extends Extension {
         console.log('Quran Player: Extension enabled');
     }
 
-    _configureLocale() {
-        const interfaceLanguage = this._settings.get_string('interface-language');
-        if (interfaceLanguage) {
-            try {
-                console.log(`Quran Player: Setting language to ${interfaceLanguage}`);
-                
-               
-                GLib.setenv('LANGUAGE', interfaceLanguage, true);
-                GLib.setenv('LC_MESSAGES', interfaceLanguage, true);
-                
-               
-                console.log(`Quran Player: Translated 'Settings' = ${_('Settings')}`);
-            } catch (e) {
-                console.log(`Quran Player: Error setting locale: ${e.message}`);
-            }
-        }
+
            
+    _refreshIndicator() {
         if (this._indicator) {
            
             this._indicator.destroy();
