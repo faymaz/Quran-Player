@@ -179,6 +179,12 @@
     }
   },
   {
+    "name": "Kur’an-ı Kerim Türkçe Meali",
+    "baseUrl": "https://archive.org/download/Quran_Recitations_with_Translation_Turkish/",
+    "audioFormat": "%id%.mp3",
+    "type": "surah"
+  },
+  {
     "name": "Maher Al-Muaiqly",
     "baseUrl": "https://podcasts.qurancentral.com/ali-abdur-rahman-al-huthaify/ali-abdur-rahman-al-huthaify-",
     "audioFormat": "%id%.mp3",
