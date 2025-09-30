@@ -478,6 +478,8 @@ class QuranPlayerIndicator extends PanelMenu.Button {
         this._playerPid = 0;
         this._selectedReciter = this._reciters.length > 0 ? this._reciters[0] : null;
         this._isJuzMode = false;
+        this._isMuted = false;
+        this._volume = 1.0;
         
        
         this._loadSettings();
@@ -609,6 +611,10 @@ class QuranPlayerIndicator extends PanelMenu.Button {
         this._playerBox.add_child(this._controlsBox);
         
        
+        this._createStatusBar();
+        this._playerBox.add_child(this._statusBar);
+        
+       
         let playerItem = new PopupMenu.PopupBaseMenuItem({
             reactive: false,
             can_focus: false
@@ -674,15 +680,218 @@ class QuranPlayerIndicator extends PanelMenu.Button {
         });
         
        
+        this._volumeButton = new St.Button({
+            style_class: 'quran-control-button',
+            can_focus: true,
+            track_hover: true,
+            child: new St.Icon({
+                icon_name: 'audio-volume-high-symbolic',
+                icon_size: 16
+            })
+        });
+        
+        
+       
+        this._seekBackButton = new St.Button({
+            style_class: 'quran-control-button',
+            can_focus: true,
+            track_hover: true,
+            child: new St.Icon({
+                icon_name: 'media-seek-backward-symbolic',
+                icon_size: 16
+            })
+        });
+        
+        this._seekForwardButton = new St.Button({
+            style_class: 'quran-control-button',
+            can_focus: true,
+            track_hover: true,
+            child: new St.Icon({
+                icon_name: 'media-seek-forward-symbolic',
+                icon_size: 16
+            })
+        });
+        
+       
+        this._controlsBox.add_child(this._seekBackButton);
         this._controlsBox.add_child(this._prevButton);
         this._controlsBox.add_child(this._playButton);
         this._controlsBox.add_child(this._stopButton);
         this._controlsBox.add_child(this._nextButton);
+        this._controlsBox.add_child(this._seekForwardButton);
+        this._controlsBox.add_child(this._volumeButton);
         
        
         this._connectControlSignals();
         
         return this._controlsBox;
+    }
+
+    _createStatusBar() {
+       
+        this._statusBar = new St.BoxLayout({
+            vertical: true,
+            style_class: 'quran-status-bar'
+        });
+        
+       
+        this._progressBox = new St.BoxLayout({
+            style_class: 'quran-progress-box'
+        });
+        
+       
+        this._progressBar = new St.BoxLayout({
+            width: 300,
+            height: 16,
+            style_class: 'quran-progress-bar'
+        });
+        
+        // Progress bar'a click özelliği ekle
+        this._progressBar.reactive = true;
+        this._progressBar.can_focus = true;
+        
+       
+        this._progressBackground = new St.BoxLayout({
+            width: 300,
+            height: 16,
+            style_class: 'quran-progress-background'
+        });
+        
+        this._progressFill = new St.BoxLayout({
+            width: 0,
+            height: 16,
+            style_class: 'quran-progress-fill'
+        });
+        
+        this._progressBackground.add_child(this._progressFill);
+        this._progressBar.add_child(this._progressBackground);
+        
+       
+        this._timeBox = new St.BoxLayout({
+            style_class: 'quran-time-box'
+        });
+        
+       
+        this._currentTimeLabel = new St.Label({
+            text: '00:00',
+            style_class: 'quran-time-label'
+        });
+        
+        this._totalTimeLabel = new St.Label({
+            text: '00:00',
+            style_class: 'quran-time-label'
+        });
+        
+       
+        this._timeBox.add_child(this._currentTimeLabel);
+        this._timeBox.add_child(this._totalTimeLabel);
+        
+       
+        this._progressBox.add_child(this._progressBar);
+        this._statusBar.add_child(this._progressBox);
+        this._statusBar.add_child(this._timeBox);
+        
+       
+        this._progressPosition = 0;
+        this._totalDuration = 0;
+        this._currentPosition = 0;
+        this._progressUpdateId = 0;
+    }
+
+    _updateProgressBar() {
+        if (!this._progressFill || !this._progressBackground) {
+            this._log("Progress bar elements not found");
+            return;
+        }
+        
+        if (this._totalDuration > 0) {
+            const progress = this._currentPosition / this._totalDuration;
+            const progressWidth = Math.floor(300 * progress);
+            
+            this._progressFill.width = progressWidth;
+            this._log(`Progress bar updated: ${progressWidth}px (${Math.round(progress * 100)}%)`);
+        } else {
+            this._progressFill.width = 0;
+        }
+    }
+
+    _updateProgress() {
+        if (!this._player) {
+            this._log("Player not available, skipping progress update");
+            return;
+        }
+        
+        if (!this._isPlaying) {
+            this._log("Player not playing, skipping progress update");
+            return;
+        }
+        
+        try {
+            let format = Gst.Format.TIME;
+            let query = Gst.Query.new_position(format);
+            
+            if (this._player.query(query)) {
+                let [, position] = query.parse_position();
+                this._currentPosition = position;
+                
+               
+                if (this._totalDuration === 0) {
+                    let durationQuery = Gst.Query.new_duration(format);
+                    if (this._player.query(durationQuery)) {
+                        let [, duration] = durationQuery.parse_duration();
+                        this._totalDuration = duration;
+                        this._log(`Total duration: ${duration / Gst.SECOND} seconds`);
+                    }
+                }
+                
+               
+                this._updateTimeDisplay();
+                this._updateProgressBar();
+                
+                this._log(`Progress: ${this._currentPosition / Gst.SECOND}s / ${this._totalDuration / Gst.SECOND}s`);
+            } else {
+                this._log("Failed to query position");
+            }
+        } catch (e) {
+            this._log(`Error updating progress: ${e.message}`);
+        }
+    }
+
+    _updateTimeDisplay() {
+        if (this._currentTimeLabel && this._totalTimeLabel) {
+            this._currentTimeLabel.text = this._formatTime(this._currentPosition);
+            this._totalTimeLabel.text = this._formatTime(this._totalDuration);
+        }
+    }
+
+    _formatTime(nanoseconds) {
+        if (!nanoseconds || nanoseconds === 0) {
+            return '00:00';
+        }
+        
+        const seconds = Math.floor(nanoseconds / Gst.SECOND);
+        const minutes = Math.floor(seconds / 60);
+        const remainingSeconds = seconds % 60;
+        
+        return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+    }
+
+    _startProgressUpdates() {
+        if (this._progressUpdateId) {
+            GLib.Source.remove(this._progressUpdateId);
+        }
+        
+        this._progressUpdateId = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 1000, () => {
+            this._updateProgress();
+            return GLib.SOURCE_CONTINUE;
+        });
+    }
+
+    _stopProgressUpdates() {
+        if (this._progressUpdateId) {
+            GLib.Source.remove(this._progressUpdateId);
+            this._progressUpdateId = 0;
+        }
     }
 
     _connectControlSignals() {
@@ -737,6 +946,32 @@ class QuranPlayerIndicator extends PanelMenu.Button {
         safeConnect(this._nextButton, 'clicked', () => {
             this._log("Next button clicked");
             this._playNext();
+            return Clutter.EVENT_PROPAGATE;
+        });
+        
+        safeConnect(this._seekBackButton, 'clicked', () => {
+            this._log("Seek back button clicked");
+            this._seekBackward();
+            return Clutter.EVENT_PROPAGATE;
+        });
+        
+        safeConnect(this._seekForwardButton, 'clicked', () => {
+            this._log("Seek forward button clicked");
+            this._seekForward();
+            return Clutter.EVENT_PROPAGATE;
+        });
+        
+        safeConnect(this._volumeButton, 'clicked', () => {
+            this._log("Volume button clicked");
+            this._toggleMute();
+            return Clutter.EVENT_PROPAGATE;
+        });
+        
+        
+        // Progress bar click handler
+        safeConnect(this._progressBar, 'button-press-event', (actor, event) => {
+            this._log("Progress bar clicked");
+            this._seekToPosition(event);
             return Clutter.EVENT_PROPAGATE;
         });
     }
@@ -1059,7 +1294,10 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             this._log(`Error creating audio URL: ${urlError.message}`);
             return;
         }
-        this._lastPosition = 0;
+        // Check for saved position
+        const savedPosition = this._getSavedPosition(surah.id, this._selectedReciter.name);
+        this._lastPosition = savedPosition || 0;
+        
         this._playAudio(audioUrl, `Now playing: ${surah.name}`, `Reciter: ${this._selectedReciter ? this._selectedReciter.name : "Unknown"}`);
     }
     _playJuz(juz) {
@@ -1069,7 +1307,12 @@ class QuranPlayerIndicator extends PanelMenu.Button {
         }
         
        
-        this._currentItem = { ...juz, type: 'juz' };
+        // Juz description bilgisini de ekle
+        this._currentItem = { 
+            ...juz, 
+            type: 'juz',
+            description: juz.description || ''
+        };
         
        
         if (this._player) {
@@ -1133,7 +1376,10 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             this._log(`Error creating audio URL: ${urlError.message}`);
             return;
         }
-        this._lastPosition = 0;
+        // Check for saved position
+        const savedPosition = this._getSavedPosition(juz.id, this._selectedReciter.name);
+        this._lastPosition = savedPosition || 0;
+        
         this._playAudio(audioUrl, `Now playing: ${juz.name}`, `Reciter: ${this._selectedReciter ? this._selectedReciter.name : "Unknown"}`);
     }
     
@@ -1246,6 +1492,9 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             }
             
             this._isPlaying = true;
+            
+            // Start progress updates
+            this._startProgressUpdates();
             
         } catch (gstError) {
             this._log(`GStreamer error: ${gstError.message}`);
@@ -1371,50 +1620,82 @@ class QuranPlayerIndicator extends PanelMenu.Button {
         
         try {
             if (this._isPlaying) {
-               
-                let format = Gst.Format.TIME;
+                // PAUSE LOGIC
+                this._log("Pausing playback...");
                 
-               
-                let query = Gst.Query.new_position(format);
-                
-               
-                if (this._player.query(query)) {
-                   
-                    let [, position] = query.parse_position();
+                // Get current position before pausing
+                let currentPosition = 0;
+                try {
+                    let format = Gst.Format.TIME;
+                    let query = Gst.Query.new_position(format);
                     
-                   
-                    this._lastPosition = position;
-                    this._log(`Storing position: ${position / Gst.SECOND} seconds`);
-                } else {
-                    this._log("Failed to query position");
+                    if (this._player.query(query)) {
+                        let [, position] = query.parse_position();
+                        currentPosition = position;
+                        this._lastPosition = position;
+                        this._log(`Current position: ${position / Gst.SECOND} seconds`);
+                    }
+                } catch (posError) {
+                    this._log(`Error getting position: ${posError.message}`);
                 }
                 
-               
-                this._player.set_state(Gst.State.PAUSED);
+                // Pause the player
+                const stateResult = this._player.set_state(Gst.State.PAUSED);
+                this._log(`Pause state result: ${stateResult}`);
+                
+                // Update flags
                 this._isPlaying = false;
-                this._log("Paused playback");
-            } else {
-               
-                if (this._lastPosition > 0) {
-                    this._log(`Seeking to position: ${this._lastPosition / Gst.SECOND} seconds`);
-                   
-                    this._player.seek_simple(
-                        Gst.Format.TIME,
-                        Gst.SeekFlags.FLUSH | Gst.SeekFlags.KEY_UNIT,
-                        this._lastPosition
-                    );
+                
+                // Stop progress updates
+                this._stopProgressUpdates();
+                
+                // Save position
+                if (this._currentItem && this._selectedReciter && currentPosition > 0) {
+                    const itemId = this._currentItem.id;
+                    const reciterName = this._selectedReciter.name;
+                    this._savePosition(itemId, reciterName, currentPosition);
                 }
                 
-               
-                this._player.set_state(Gst.State.PLAYING);
+                this._log("Playback paused successfully");
+                
+            } else {
+                // PLAY/RESUME LOGIC
+                this._log("Starting/resuming playback...");
+                
+                // Seek to saved position if available
+                if (this._lastPosition > 0) {
+                    this._log(`Seeking to saved position: ${this._lastPosition / Gst.SECOND} seconds`);
+                    try {
+                        this._player.seek_simple(
+                            Gst.Format.TIME,
+                            Gst.SeekFlags.FLUSH | Gst.SeekFlags.KEY_UNIT,
+                            this._lastPosition
+                        );
+                    } catch (seekError) {
+                        this._log(`Seek error: ${seekError.message}`);
+                    }
+                }
+                
+                // Start playing
+                const stateResult = this._player.set_state(Gst.State.PLAYING);
+                this._log(`Play state result: ${stateResult}`);
+                
+                // Update flags
                 this._isPlaying = true;
-                this._log("Resumed playback");
+                
+                // Start progress updates
+                this._startProgressUpdates();
+                
+                this._log("Playback started/resumed successfully");
             }
             
+            // Update UI
             this._updatePlayerUI();
-        } catch (e) {
-            this._log(`Error toggling playback: ${e.message}`);
             
+        } catch (e) {
+            this._log(`Error in toggle play: ${e.message}`);
+            
+            // Reset everything on error
             try {
                 this._stopPlayback();
                 if (this._currentItem) {
@@ -1486,6 +1767,10 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             }
             this._usingFallback = false;
         }
+        
+        // Stop progress updates
+        this._stopProgressUpdates();
+        
         this._lastPosition = 0;
         this._isPlaying = false;
         this._updatePlayerUI();
@@ -1509,6 +1794,155 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             }
         }
     }
+
+    _seekBackward() {
+        if (!this._player || this._usingFallback) return;
+        
+        try {
+            const seekAmount = 10 * Gst.SECOND; // 10 seconds back
+            const newPosition = Math.max(0, this._currentPosition - seekAmount);
+            
+            this._player.seek_simple(
+                Gst.Format.TIME,
+                Gst.SeekFlags.FLUSH | Gst.SeekFlags.KEY_UNIT,
+                newPosition
+            );
+            
+            this._log(`Seeked backward to ${newPosition / Gst.SECOND} seconds`);
+        } catch (e) {
+            this._log(`Error seeking backward: ${e.message}`);
+        }
+    }
+
+    _seekForward() {
+        if (!this._player || this._usingFallback) return;
+        
+        try {
+            const seekAmount = 10 * Gst.SECOND; // 10 seconds forward
+            const newPosition = Math.min(this._totalDuration, this._currentPosition + seekAmount);
+            
+            this._player.seek_simple(
+                Gst.Format.TIME,
+                Gst.SeekFlags.FLUSH | Gst.SeekFlags.KEY_UNIT,
+                newPosition
+            );
+            
+            this._log(`Seeked forward to ${newPosition / Gst.SECOND} seconds`);
+        } catch (e) {
+            this._log(`Error seeking forward: ${e.message}`);
+        }
+    }
+
+    _toggleMute() {
+        if (!this._player || this._usingFallback) return;
+        
+        try {
+            this._isMuted = !this._isMuted;
+            const volume = this._isMuted ? 0.0 : this._volume;
+            
+            this._player.set_property('volume', volume);
+            
+            // Update volume button icon
+            const volumeIcon = this._volumeButton.get_child();
+            if (this._isMuted) {
+                volumeIcon.icon_name = 'audio-volume-muted-symbolic';
+            } else {
+                volumeIcon.icon_name = 'audio-volume-high-symbolic';
+            }
+            
+            this._log(`Volume ${this._isMuted ? 'muted' : 'unmuted'}`);
+        } catch (e) {
+            this._log(`Error toggling mute: ${e.message}`);
+        }
+    }
+
+    _setVolume(volume) {
+        if (!this._player || this._usingFallback) return;
+        
+        try {
+            this._volume = Math.max(0.0, Math.min(1.0, volume));
+            
+            if (!this._isMuted) {
+                this._player.set_property('volume', this._volume);
+            }
+            
+            // Update volume button icon based on level
+            const volumeIcon = this._volumeButton.get_child();
+            if (this._volume === 0) {
+                volumeIcon.icon_name = 'audio-volume-muted-symbolic';
+            } else if (this._volume < 0.5) {
+                volumeIcon.icon_name = 'audio-volume-low-symbolic';
+            } else {
+                volumeIcon.icon_name = 'audio-volume-high-symbolic';
+            }
+            
+            this._log(`Volume set to ${Math.round(this._volume * 100)}%`);
+        } catch (e) {
+            this._log(`Error setting volume: ${e.message}`);
+        }
+    }
+
+
+    _seekToPosition(event) {
+        if (!this._player || this._usingFallback || this._totalDuration === 0) return;
+        
+        try {
+            // Mouse pozisyonunu al
+            const [x, y] = event.get_coords();
+            const progressBarX = this._progressBar.get_allocation_box().x1;
+            const progressBarWidth = this._progressBar.width;
+            
+            // Click pozisyonunu hesapla
+            const clickX = x - progressBarX;
+            const progress = Math.max(0, Math.min(1, clickX / progressBarWidth));
+            const newPosition = Math.floor(this._totalDuration * progress);
+            
+            // Seek to position
+            this._player.seek_simple(
+                Gst.Format.TIME,
+                Gst.SeekFlags.FLUSH | Gst.SeekFlags.KEY_UNIT,
+                newPosition
+            );
+            
+            this._log(`Seeked to ${newPosition / Gst.SECOND} seconds (${Math.round(progress * 100)}%)`);
+        } catch (e) {
+            this._log(`Error seeking to position: ${e.message}`);
+        }
+    }
+
+    _getSavedPosition(itemId, reciterName) {
+        try {
+            const key = `position_${itemId}_${reciterName}`;
+            const savedPosition = this._settings.get_int(key);
+            if (savedPosition > 0) {
+                this._log(`Found saved position for ${itemId}: ${savedPosition / Gst.SECOND} seconds`);
+                return savedPosition;
+            }
+        } catch (e) {
+            this._log(`Error loading saved position: ${e.message}`);
+        }
+        return 0;
+    }
+
+    _savePosition(itemId, reciterName, position) {
+        try {
+            const key = `position_${itemId}_${reciterName}`;
+            this._settings.set_int(key, position);
+            this._log(`Saved position for ${itemId}: ${position / Gst.SECOND} seconds`);
+        } catch (e) {
+            this._log(`Error saving position: ${e.message}`);
+        }
+    }
+
+    _clearSavedPosition(itemId, reciterName) {
+        try {
+            const key = `position_${itemId}_${reciterName}`;
+            this._settings.reset(key);
+            this._log(`Cleared saved position for ${itemId}`);
+        } catch (e) {
+            this._log(`Error clearing saved position: ${e.message}`);
+        }
+    }
     
     _updatePlayerUI() {
         if (this._currentItem) {
@@ -1516,7 +1950,13 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             if (this._currentItem.type === 'surah') {
                 this._nowPlayingLabel.text = `${this._currentItem.id}. ${this._currentItem.name}`;
             } else if (this._currentItem.type === 'juz') {
-                this._nowPlayingLabel.text = this._currentItem.name;
+                // Juz için description bilgisini ekle
+                const juzDescription = this._currentItem.description || '';
+                if (juzDescription) {
+                    this._nowPlayingLabel.text = `${this._currentItem.name} - ${juzDescription}`;
+                } else {
+                    this._nowPlayingLabel.text = this._currentItem.name;
+                }
             }
             //this._log("Update player UI");
            

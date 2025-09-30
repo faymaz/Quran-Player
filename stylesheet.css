@@ -14,26 +14,70 @@
 }
 
 .quran-controls-box {
-  spacing: 15px;
-  padding: 5px;
-  border-radius: 5px;
+  spacing: 8px;
+  padding: 8px;
+  border-radius: 8px;
   background-color: rgba(0, 0, 0, 0.1);
 }
 
 .quran-control-button {
-  width: 30px;
-  height: 30px;
-  border-radius: 15px;
-  padding: 5px;
+  width: 28px;
+  height: 28px;
+  border-radius: 14px;
+  padding: 4px;
 }
 
 .quran-control-button:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.15);
 }
 
 .quran-control-button:active {
   background-color: rgba(255, 255, 255, 0.3);
 }
+
+.quran-status-bar {
+  padding: 8px;
+  spacing: 6px;
+}
+
+.quran-progress-box {
+  spacing: 8px;
+  padding: 4px;
+}
+
+.quran-progress-bar {
+  border-radius: 4px;
+  background-color: rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+}
+
+.quran-progress-background {
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.3);
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  min-height: 16px;
+  padding: 2px;
+}
+
+.quran-progress-fill {
+  border-radius: 6px;
+  background-color: rgba(52, 144, 220, 1.0);
+  border: none;
+  min-height: 12px;
+  min-width: 2px;
+}
+
+.quran-time-box {
+  spacing: 8px;
+  padding: 2px;
+}
+
+.quran-time-label {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: normal;
+}
+
 .category-title {
   font-weight: bold;
   background-color: rgba(120, 120, 120, 0.15);

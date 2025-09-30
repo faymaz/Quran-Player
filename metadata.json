@@ -1,6 +1,6 @@
 {
   "name": "Quran Player",
-  "description": "Listen to Quran recitations directly from your GNOME Shell. Features multiple reciters with audio from QuranCentral.com and Archive.org servers.",
+  "description": "Advanced Quran Player with MP3 controls, progress bar, time display, and resume functionality. Features multiple reciters with audio from QuranCentral.com and Archive.org servers.",
   "uuid": "quran-player@faymaz.github.com",
   "donations": {
       "github": "https://github.com/faymaz"
@@ -12,7 +12,7 @@
       "47",
       "48"
   ],
-  "version": 1,
+  "version": 15,
   "url": "https://github.com/faymaz/quran-player",
   "gettext-domain": "quran-player"
 }
