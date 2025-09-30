@@ -49,6 +49,12 @@ msgstr "الإعداد الافتراضي للنظام"
 msgid "Autoplay next item"
 msgstr "تشغيل العنصر التالي تلقائيًا"
 
+msgid "Hardware Compatibility"
+msgstr "توافق الأجهزة"
+
+msgid "Your system may not be compatible with audio playback. Please check system requirements."
+msgstr "قد لا يكون نظامك متوافقًا مع تشغيل الصوت. يرجى التحقق من متطلبات النظام."
+
 msgid "Automatically play the next surah/juz when current one finishes"
 msgstr "تشغيل السورة/الجزء التالي تلقائيًا عند انتهاء الحالي"
 

@@ -49,6 +49,12 @@ msgstr "Systemstandard"
 msgid "Autoplay next item"
 msgstr "Nächstes Element automatisch abspielen"
 
+msgid "Hardware Compatibility"
+msgstr "Hardware-Kompatibilität"
+
+msgid "Your system may not be compatible with audio playback. Please check system requirements."
+msgstr "Ihr System ist möglicherweise nicht mit der Audio-Wiedergabe kompatibel. Bitte überprüfen Sie die Systemanforderungen."
+
 msgid "Automatically play the next surah/juz when current one finishes"
 msgstr "Die nächste Sure/Juz automatisch abspielen, wenn die aktuelle beendet ist"
 

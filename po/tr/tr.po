@@ -39,6 +39,14 @@ msgstr "Dil değişikliğinin geçerli olması için lütfen GNOME Shell'i yenid
 msgid "No Juz data available"
 msgstr "Cüz verisi bulunamadı"
 
+#: extension.js:1397
+msgid "Hardware Compatibility"
+msgstr "Donanım Uyumluluğu"
+
+#: extension.js:1398
+msgid "Your system may not be compatible with audio playback. Please check system requirements."
+msgstr "Sisteminiz ses oynatma ile uyumlu olmayabilir. Lütfen sistem gereksinimlerini kontrol edin."
+
 #: extension.js:922 extension.js:958
 msgid "Juz"
 msgstr "Cüz"

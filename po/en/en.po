@@ -39,6 +39,14 @@ msgstr "Please restart GNOME Shell for the language change to take effect"
 msgid "No Juz data available"
 msgstr "No Juz data available"
 
+#: extension.js:1397
+msgid "Hardware Compatibility"
+msgstr "Hardware Compatibility"
+
+#: extension.js:1398
+msgid "Your system may not be compatible with audio playback. Please check system requirements."
+msgstr "Your system may not be compatible with audio playback. Please check system requirements."
+
 #: extension.js:922
 msgid "Juz"
 msgstr "Juz"
