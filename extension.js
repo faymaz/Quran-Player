@@ -804,9 +804,9 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             return;
         }
         
-        if (this._totalDuration > 0) {
-            const progress = this._currentPosition / this._totalDuration;
-            const progressWidth = Math.floor(300 * progress);
+        if (this._totalDuration > 0 && this._currentPosition >= 0) {
+            const progress = Math.min(this._currentPosition / this._totalDuration, 1.0);
+            const progressWidth = Math.floor(250 * progress);
             
             this._progressFill.width = progressWidth;
             this._log(`Progress bar updated: ${progressWidth}px (${Math.round(progress * 100)}%)`);
@@ -828,30 +828,36 @@ class QuranPlayerIndicator extends PanelMenu.Button {
         
         try {
             let format = Gst.Format.TIME;
-            let query = Gst.Query.new_position(format);
             
-            if (this._player.query(query)) {
-                let [, position] = query.parse_position();
+            // Get current position
+            let positionQuery = Gst.Query.new_position(format);
+            if (this._player.query(positionQuery)) {
+                let [, position] = positionQuery.parse_position();
                 this._currentPosition = position;
-                
-               
-                if (this._totalDuration === 0) {
-                    let durationQuery = Gst.Query.new_duration(format);
-                    if (this._player.query(durationQuery)) {
-                        let [, duration] = durationQuery.parse_duration();
-                        this._totalDuration = duration;
-                        this._log(`Total duration: ${duration / Gst.SECOND} seconds`);
-                    }
-                }
-                
-               
-                this._updateTimeDisplay();
-                this._updateProgressBar();
-                
-                this._log(`Progress: ${this._currentPosition / Gst.SECOND}s / ${this._totalDuration / Gst.SECOND}s`);
-            } else {
-                this._log("Failed to query position");
             }
+            
+            // Get duration if not already set
+            if (this._totalDuration === 0) {
+                let durationQuery = Gst.Query.new_duration(format);
+                if (this._player.query(durationQuery)) {
+                    let [, duration] = durationQuery.parse_duration();
+                    this._totalDuration = duration;
+                    this._log(`Total duration: ${duration / Gst.SECOND} seconds`);
+                }
+            }
+            
+            // Ensure position doesn't exceed duration
+            if (this._totalDuration > 0 && this._currentPosition > this._totalDuration) {
+                this._currentPosition = this._totalDuration;
+                this._log("Position capped to duration");
+            }
+            
+            // Update UI
+            this._updateTimeDisplay();
+            this._updateProgressBar();
+            
+            this._log(`Progress: ${this._currentPosition / Gst.SECOND}s / ${this._totalDuration / Gst.SECOND}s`);
+            
         } catch (e) {
             this._log(`Error updating progress: ${e.message}`);
         }
@@ -1400,6 +1406,10 @@ class QuranPlayerIndicator extends PanelMenu.Button {
            
             this._stopPlayback();
             
+            // Reset progress values
+            this._currentPosition = 0;
+            this._totalDuration = 0;
+            
            
             this._player = Gst.ElementFactory.make("playbin", "player");
             
@@ -1943,12 +1953,29 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             this._log(`Error clearing saved position: ${e.message}`);
         }
     }
+
+    _getJuzForSurah(surahId) {
+        if (!this._juzData || this._juzData.length === 0) {
+            return null;
+        }
+        
+        for (const juz of this._juzData) {
+            if (surahId >= juz.startSurah && surahId <= juz.endSurah) {
+                return juz.id;
+            }
+        }
+        
+        return null;
+    }
     
     _updatePlayerUI() {
         if (this._currentItem) {
            
             if (this._currentItem.type === 'surah') {
-                this._nowPlayingLabel.text = `${this._currentItem.id}. ${this._currentItem.name}`;
+                // Surah için Juz bilgisini ekle
+                const juzId = this._getJuzForSurah(this._currentItem.id);
+                const juzText = juzId ? ` - Juz ${juzId}` : '';
+                this._nowPlayingLabel.text = `${this._currentItem.id}. ${this._currentItem.name}${juzText}`;
             } else if (this._currentItem.type === 'juz') {
                 // Juz için description bilgisini ekle
                 const juzDescription = this._currentItem.description || '';
