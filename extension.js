@@ -757,6 +757,9 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             style_class: 'quran-progress-background'
         });
         
+        // Store the background width for progress calculations
+        this._progressBarWidth = 300;
+        
         this._progressFill = new St.BoxLayout({
             width: 0,
             height: 16,
@@ -804,13 +807,66 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             return;
         }
         
-        if (this._totalDuration > 0 && this._currentPosition >= 0) {
-            const progress = Math.min(this._currentPosition / this._totalDuration, 1.0);
-            const progressWidth = Math.floor(250 * progress);
+        try {
+            // Validate duration and position
+            if (this._totalDuration <= 0 || this._currentPosition < 0) {
+                this._progressFill.width = 0;
+                this._log("Progress bar reset: invalid duration or position");
+                return;
+            }
             
+            // Calculate progress with safety checks
+            let progress = this._currentPosition / this._totalDuration;
+            
+            // Ensure progress is between 0 and 1
+            progress = Math.max(0, Math.min(progress, 1.0));
+            
+            // Get the actual background width for more accurate calculation
+            const backgroundWidth = this._progressBarWidth || 300;
+            
+            // Calculate progress width with padding compensation
+            // Account for CSS padding (1px on each side = 2px total)
+            const paddingCompensation = 2;
+            const availableWidth = backgroundWidth - paddingCompensation;
+            let progressWidth = Math.floor(availableWidth * progress);
+            
+            // Ensure width is within bounds
+            progressWidth = Math.max(0, Math.min(progressWidth, availableWidth));
+            
+            // Special handling for near-completion - be more aggressive
+            if (progress >= 0.85) {
+                // When very close to end, fill the entire available width
+                progressWidth = availableWidth;
+                this._log("Progress bar: Near completion, filling entire available width");
+            }
+            
+            // Force full width when position equals or exceeds duration
+            if (this._currentPosition >= this._totalDuration) {
+                progressWidth = availableWidth;
+                this._log("Progress bar: Position equals duration, forcing full available width");
+            }
+            
+            // Apply width with error handling
             this._progressFill.width = progressWidth;
-            this._log(`Progress bar updated: ${progressWidth}px (${Math.round(progress * 100)}%)`);
-        } else {
+            
+            // Final check - if we're at the end, force maximum width
+            if (this._currentPosition >= this._totalDuration && this._totalDuration > 0) {
+                this._progressFill.width = availableWidth;
+                this._log("Final check: Forced full available width due to end condition");
+            }
+            
+            // Update progress bar style for better visibility
+            if (progressWidth > 0) {
+                this._progressFill.style = 'background-color: #3584e4; border-radius: 8px;';
+            } else {
+                this._progressFill.style = 'background-color: transparent;';
+            }
+            
+            this._log(`Progress bar updated: ${progressWidth}px/${backgroundWidth}px (${Math.round(progress * 100)}%) - Duration: ${this._totalDuration / Gst.SECOND}s, Position: ${this._currentPosition / Gst.SECOND}s`);
+            
+        } catch (e) {
+            this._log(`Error updating progress bar: ${e.message}`);
+            // Fallback: reset progress bar
             this._progressFill.width = 0;
         }
     }
@@ -828,38 +884,86 @@ class QuranPlayerIndicator extends PanelMenu.Button {
         
         try {
             let format = Gst.Format.TIME;
+            let positionUpdated = false;
+            let durationUpdated = false;
             
-            // Get current position
+            // Get current position with retry mechanism
             let positionQuery = Gst.Query.new_position(format);
             if (this._player.query(positionQuery)) {
                 let [, position] = positionQuery.parse_position();
-                this._currentPosition = position;
+                if (position !== undefined && position >= 0) {
+                    this._currentPosition = position;
+                    positionUpdated = true;
+                }
             }
             
-            // Get duration if not already set
+            // Get duration if not already set, with retry mechanism
             if (this._totalDuration === 0) {
                 let durationQuery = Gst.Query.new_duration(format);
                 if (this._player.query(durationQuery)) {
                     let [, duration] = durationQuery.parse_duration();
-                    this._totalDuration = duration;
-                    this._log(`Total duration: ${duration / Gst.SECOND} seconds`);
+                    if (duration !== undefined && duration > 0) {
+                        this._totalDuration = duration;
+                        durationUpdated = true;
+                        this._log(`Total duration: ${duration / Gst.SECOND} seconds`);
+                    }
                 }
             }
             
-            // Ensure position doesn't exceed duration
-            if (this._totalDuration > 0 && this._currentPosition > this._totalDuration) {
-                this._currentPosition = this._totalDuration;
-                this._log("Position capped to duration");
+            // Different handling for Surah vs Juz
+            if (this._currentItem) {
+                if (this._currentItem.type === 'surah') {
+                    // For Surahs: More precise calculation, shorter duration
+                    this._handleSurahProgress();
+                } else if (this._currentItem.type === 'juz') {
+                    // For Juz: More tolerant calculation, longer duration
+                    this._handleJuzProgress();
+                }
             }
             
-            // Update UI
-            this._updateTimeDisplay();
-            this._updateProgressBar();
+            // Validate and cap position
+            if (this._totalDuration > 0) {
+                if (this._currentPosition > this._totalDuration) {
+                    this._currentPosition = this._totalDuration;
+                    this._log("Position capped to duration");
+                }
+            }
             
-            this._log(`Progress: ${this._currentPosition / Gst.SECOND}s / ${this._totalDuration / Gst.SECOND}s`);
+            // Only update UI if we have valid data
+            if (positionUpdated || durationUpdated) {
+                this._updateTimeDisplay();
+                this._updateProgressBar();
+                
+                this._log(`Progress: ${this._currentPosition / Gst.SECOND}s / ${this._totalDuration / Gst.SECOND}s (${Math.round((this._currentPosition / this._totalDuration) * 100)}%)`);
+            }
             
         } catch (e) {
             this._log(`Error updating progress: ${e.message}`);
+            // Try to recover by resetting progress
+            this._currentPosition = 0;
+            this._updateProgressBar();
+        }
+    }
+    
+    _handleSurahProgress() {
+        // Surah-specific progress handling
+        if (this._totalDuration > 0) {
+            // For Surahs: Check if we're very close to the end (within 0.5 seconds)
+            if (this._currentPosition >= this._totalDuration - 500000000) { // 0.5 second tolerance
+                this._log("Surah: Reached end of track");
+                this._currentPosition = this._totalDuration;
+            }
+        }
+    }
+    
+    _handleJuzProgress() {
+        // Juz-specific progress handling
+        if (this._totalDuration > 0) {
+            // For Juz: More tolerant end detection (within 2 seconds)
+            if (this._currentPosition >= this._totalDuration - 2000000000) { // 2 second tolerance
+                this._log("Juz: Reached end of track");
+                this._currentPosition = this._totalDuration;
+            }
         }
     }
 
@@ -887,10 +991,23 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             GLib.Source.remove(this._progressUpdateId);
         }
         
-        this._progressUpdateId = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 1000, () => {
+        // Different update intervals for Surah vs Juz
+        let updateInterval = 1000; // Default 1 second
+        
+        if (this._currentItem) {
+            if (this._currentItem.type === 'surah') {
+                updateInterval = 500; // Surah: Update every 0.5 seconds (more responsive)
+            } else if (this._currentItem.type === 'juz') {
+                updateInterval = 2000; // Juz: Update every 2 seconds (less CPU intensive)
+            }
+        }
+        
+        this._progressUpdateId = GLib.timeout_add(GLib.PRIORITY_DEFAULT, updateInterval, () => {
             this._updateProgress();
             return GLib.SOURCE_CONTINUE;
         });
+        
+        this._log(`Progress updates started with ${updateInterval}ms interval for ${this._currentItem ? this._currentItem.type : 'unknown'} type`);
     }
 
     _stopProgressUpdates() {
