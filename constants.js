@@ -493,11 +493,11 @@ export function loadReciters(extension) {
           
           return reciters;
       } else {
-          console.log("Quran Player: Failed to load reciters file, using defaults");
+         log("Quran Player: Failed to load reciters file, using defaults");
           return DEFAULT_RECITERS;
       }
   } catch (e) {
-      console.error("Quran Player: Error loading reciters", e);
+      logError(e4, "Quran Player: Error loading reciters", e);
       return DEFAULT_RECITERS;
   }
 }
@@ -518,7 +518,7 @@ export function loadSurahs(extension) {
                   return JSON.parse(new TextDecoder().decode(contents));
               }
           } catch (customErr) {
-              console.error("Quran Player: Error loading custom surahs file, falling back to default", customErr);
+              logError(e4, "Quran Player: Error loading custom surahs file, falling back to default", customErr);
           }
       }
       
@@ -529,7 +529,7 @@ export function loadSurahs(extension) {
       if (success) {
           return JSON.parse(new TextDecoder().decode(contents));
       } else {
-          console.log("Quran Player: Failed to load surahs file, using defaults");
+         log("Quran Player: Failed to load surahs file, using defaults");
          
           return [
                 {"name": "Al-Fatihah", "id": 1, "audioId": "001"},
@@ -786,7 +786,7 @@ export function loadSurahs(extension) {
                     return JSON.parse(new TextDecoder().decode(contents));
                 }
             } catch (customErr) {
-                console.error("Quran Player: Error loading custom juz file, falling back to default", customErr);
+                logError(e4, "Quran Player: Error loading custom juz file, falling back to default", customErr);
             }
         }
         
@@ -797,11 +797,11 @@ export function loadSurahs(extension) {
         if (success) {
             return JSON.parse(new TextDecoder().decode(contents));
         } else {
-            console.log("Quran Player: Failed to load juz file");
+           log("Quran Player: Failed to load juz file");
             return [];
         }
     } catch (e) {
-        console.error("Quran Player: Error loading juz data", e);
+        logError(e4, "Quran Player: Error loading juz data", e);
         return [];
     }
   }

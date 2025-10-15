@@ -309,11 +309,11 @@ export default class QuranPlayerPreferences extends ExtensionPreferences {
                 
                 return reciters;
             } else {
-                console.log("Quran Player: Failed to load reciters file, using defaults");
+                logError(e, "Quran Player: Failed to load reciters file, using defaults");
                 return DEFAULT_RECITERS;
             }
         } catch (e) {
-            console.error("Quran Player: Error loading reciters", e);
+            logError(e4, "Quran Player: Error loading reciters", e);
             return DEFAULT_RECITERS;
         }
     }

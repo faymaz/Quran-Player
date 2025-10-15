@@ -28,8 +28,6 @@ import {Extension, gettext as _} from 'resource:///org/gnome/shell/extensions/ex
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
-import * as ExtensionUtils from 'resource:///org/gnome/shell/extensions/extension.js';
-import * as MessageTray from 'resource:///org/gnome/shell/ui/messageTray.js';
 
 import { loadSurahs, loadReciters, loadJuz, isJuzBasedReciter } from './constants.js';
 
@@ -40,7 +38,7 @@ function initializeJuzData(extension) {
         const juzFile = Gio.File.new_for_path(juzFilePath);
         
         if (!juzFile.query_exists(null)) {
-            console.log('Quran Player: juz.json not found at path: ' + juzFilePath);
+           log('Quran Player: juz.json not found at path: ' + juzFilePath);
             return [];
         }
         
@@ -48,32 +46,32 @@ function initializeJuzData(extension) {
         
         if (success && contents && contents.length > 0) {
             const jsonData = JSON.parse(new TextDecoder().decode(contents));
-            console.log('Quran Player: Successfully loaded Juz data with ' + jsonData.length + ' entries');
+           log('Quran Player: Successfully loaded Juz data with ' + jsonData.length + ' entries');
             return jsonData;
         } else {
-            console.log('Quran Player: Failed to parse Juz data');
+           log('Quran Player: Failed to parse Juz data');
             return [];
         }
     } catch (e) {
-        console.log('Quran Player: Error loading Juz data: ' + e.message);
+       log('Quran Player: Error loading Juz data: ' + e.message);
         return [];
     }
 }
 
 function debugJuzLoading(extension) {
     try {
-        console.log('Quran Player: Extension path: ' + extension.path);
+       log('Quran Player: Extension path: ' + extension.path);
         
         const juzFilePath = GLib.build_filenamev([extension.path, 'juz.json']);
-        console.log('Quran Player: Checking for juz.json at: ' + juzFilePath);
+       log('Quran Player: Checking for juz.json at: ' + juzFilePath);
         
         const juzFile = Gio.File.new_for_path(juzFilePath);
         const exists = juzFile.query_exists(null);
         
-        console.log('Quran Player: juz.json exists: ' + exists);
+       log('Quran Player: juz.json exists: ' + exists);
         
         if (!exists) {
-            console.log('Quran Player: File not found. Creating juz.json with default data...');
+           log('Quran Player: File not found. Creating juz.json with default data...');
             
             const juzData = [
                 {
@@ -384,10 +382,10 @@ function debugJuzLoading(extension) {
                 const outputStream = juzFile.replace(null, false, Gio.FileCreateFlags.NONE, null);
                 outputStream.write_all(bytes, null);
                 outputStream.close(null);
-                console.log('Quran Player: Successfully created juz.json with default data');
+               log('Quran Player: Successfully created juz.json with default data');
                 return juzData;
             } catch (writeError) {
-                console.log('Quran Player: Error writing juz.json: ' + writeError.message);
+               log('Quran Player: Error writing juz.json: ' + writeError.message);
                 return [];
             }
         }
@@ -397,18 +395,18 @@ function debugJuzLoading(extension) {
             
             if (success && contents && contents.length > 0) {
                 const jsonData = JSON.parse(new TextDecoder().decode(contents));
-                console.log('Quran Player: Successfully loaded Juz data with ' + jsonData.length + ' entries');
+               log('Quran Player: Successfully loaded Juz data with ' + jsonData.length + ' entries');
                 return jsonData;
             } else {
-                console.log('Quran Player: Failed to read juz.json contents');
+               log('Quran Player: Failed to read juz.json contents');
                 return [];
             }
         } catch (readError) {
-            console.log('Quran Player: Error reading juz.json: ' + readError.message);
+           log('Quran Player: Error reading juz.json: ' + readError.message);
             return [];
         }
     } catch (e) {
-        console.log('Quran Player: Debug error: ' + e.message);
+       log('Quran Player: Debug error: ' + e.message);
         return [];
     }
 }
@@ -1411,7 +1409,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             }
             
            
-            console.log(`🎧 AUDIO URL (Surah): ${audioUrl}`);
+           log(`🎧 AUDIO URL (Surah): ${audioUrl}`);
             this._log(`Playing surah: ${surah.name}, URL: ${audioUrl}`);
         } catch (urlError) {
             this._log(`Error creating audio URL: ${urlError.message}`);
@@ -1493,7 +1491,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             }
             
            
-            console.log(`🎧 AUDIO URL (Juz): ${audioUrl}`);
+           log(`🎧 AUDIO URL (Juz): ${audioUrl}`);
             this._log(`Playing juz: ${juz.name}, URL: ${audioUrl}`);
         } catch (urlError) {
             this._log(`Error creating audio URL: ${urlError.message}`);
@@ -1509,13 +1507,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
     _playAudio(audioUrl, notificationTitle, notificationBody) {
        
         try {
-            // Check for hardware compatibility to prevent freezes on old GPUs
-            if (!this._checkHardwareCompatibility()) {
-                this._showNotification(_("Hardware Compatibility"), 
-                    _("Your system may not be compatible with audio playback. Please check system requirements."));
-                return;
-            }
-            
+
             if (!Gst.init_check(null)) {
                 Gst.init(null);
             }
@@ -1688,7 +1680,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
                         this._usingFallback = true;
                     } catch (e4) {
                         this._log(`xdg-open fallback failed: ${e4.message}`);
-                        console.error("Quran Player: Could not play audio file", e4);
+                        logError(e4, "Quran Player: Could not play audio file");
                         
                        
                         try {
@@ -1721,7 +1713,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
     }
 
     _log(message) {
-        console.log(`[Quran Player] ${message}`);
+       log(`[Quran Player] ${message}`);
        
        
        
@@ -2210,87 +2202,37 @@ class QuranPlayerIndicator extends PanelMenu.Button {
        
         super.destroy();
     }
-    
-    _checkHardwareCompatibility() {
-        try {
-            // Check for known problematic GPU drivers/hardware
-            const gpuInfo = GLib.spawn_command_line_sync('lspci | grep -i vga')[1];
-            if (gpuInfo) {
-                const gpuString = new TextDecoder().decode(gpuInfo).toLowerCase();
-                
-                // Check for old NVIDIA GTX 200 series and other problematic GPUs
-                const problematicGPUs = [
-                    'gtx 2', // GTX 200 series
-                    'geforce 8', // GeForce 8 series
-                    'geforce 9', // GeForce 9 series
-                ];
-                
-                for (const gpu of problematicGPUs) {
-                    if (gpuString.includes(gpu)) {
-                        console.log(`Quran Player: Detected potentially problematic GPU: ${gpu}`);
-                        // Still allow playback but with warning
-                        this._showNotification(_("Hardware Warning"), 
-                            _("Your GPU may cause system instability. If you experience freezes, please disable the extension."));
-                        break;
-                    }
-                }
-            }
-            
-            // Always return true to allow playback, but with warnings for problematic hardware
-            return true;
-        } catch (e) {
-            console.log(`Quran Player: Could not check hardware compatibility: ${e.message}`);
-            return true; // Default to allowing playback
-        }
-    }
 });
 
 export default class QuranPlayerExtension extends Extension {
     enable() {
-        console.log('Quran Player: Enabling extension');
+        log('Quran Player: Enabling extension');
         
-       
         try {
             if (!Gst.init_check(null)) {
                 Gst.init(null);
             }
         } catch (e) {
-            console.error('Quran Player: Failed to initialize GStreamer', e);
+            logError(e, 'Quran Player: Failed to initialize GStreamer');
         }
         
-       
         this._settings = this.getSettings();
         
-        // GNOME Shell 48: Use built-in localization system, no manual locale configuration needed
-        console.log('Quran Player: Using GNOME Shell 48 built-in localization');
+        // Localization is handled automatically by GNOME Shell
+        log('Quran Player: Using GNOME Shell built-in localization');
         
-        // CRITICAL FIX: Reset any problematic environment variables that might have been set previously
-        try {
-            // Reset environment variables to prevent system-wide language changes
-            GLib.unsetenv('LANGUAGE');
-            GLib.setenv('LANGUAGE', 'en_US.UTF-8', true);
-            GLib.setenv('LC_MESSAGES', 'en_US.UTF-8', true);
-            console.log('Quran Player: Reset environment variables to prevent system locale interference');
-        } catch (e) {
-            console.log(`Quran Player: Could not reset environment variables: ${e.message}`);
-        }
-        
-       
         this._settingsChangedId = this._settings.connect('changed::interface-language', () => {
-            console.log('Quran Player: Language setting changed - but no system locale changes will be made');
-            // GNOME Shell 48: No manual locale configuration - extension will use built-in gettext only
-           
+            log('Quran Player: Language setting changed');
             if (this._indicator && this._indicator._showNotification) {
-                this._indicator._showNotification(_("Language Setting"), 
-                    _("Language preference saved. Extension uses GNOME Shell localization only."));
+                this._indicator._showNotification(_("Language Changed"), 
+                    _("Please restart GNOME Shell for the language change to take effect"));
             }
         });
         
-       
         this._indicator = new QuranPlayerIndicator(this);
         Main.panel.addToStatusArea('quran-player', this._indicator);
         
-        console.log('Quran Player: Extension enabled');
+        log('Quran Player: Extension enabled');
     }
 
 
@@ -2307,7 +2249,7 @@ export default class QuranPlayerExtension extends Extension {
     }
     
     disable() {
-        console.log('Quran Player: Disabling extension');
+       log('Quran Player: Disabling extension');
         
        
         if (this._settingsChangedId) {
@@ -2322,7 +2264,7 @@ export default class QuranPlayerExtension extends Extension {
                     this._indicator._stopPlayback();
                 }
             } catch (e) {
-                console.log(`Quran Player: Error stopping playback during disable: ${e.message}`);
+               log(`Quran Player: Error stopping playback during disable: ${e.message}`);
             }
         }
         
@@ -2334,6 +2276,6 @@ export default class QuranPlayerExtension extends Extension {
         
         this._settings = null;
         
-        console.log('Quran Player: Extension disabled');
+       log('Quran Player: Extension disabled');
     }
 }
