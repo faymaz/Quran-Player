@@ -834,27 +834,15 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             // Ensure width is within bounds
             progressWidth = Math.max(0, Math.min(progressWidth, availableWidth));
             
-            // Special handling for near-completion - be more aggressive
-            if (progress >= 0.85) {
-                // When very close to end, fill the entire available width
-                progressWidth = availableWidth;
-                this._log("Progress bar: Near completion, filling entire available width");
-            }
-            
-            // Force full width when position equals or exceeds duration
-            if (this._currentPosition >= this._totalDuration) {
-                progressWidth = availableWidth;
-                this._log("Progress bar: Position equals duration, forcing full available width");
-            }
-            
-            // Apply width with error handling
+			// Only force full width when truly at the end
+			if (progress >= 0.999 || this._currentPosition >= this._totalDuration) {
+				progressWidth = availableWidth;
+				this._log("Progress bar: Reached end, setting full width");
+			}
+			
+			// Apply width with error handling
             this._progressFill.width = progressWidth;
-            
-            // Final check - if we're at the end, force maximum width
-            if (this._currentPosition >= this._totalDuration && this._totalDuration > 0) {
-                this._progressFill.width = availableWidth;
-                this._log("Final check: Forced full available width due to end condition");
-            }
+			
             
             // Update progress bar style for better visibility
             if (progressWidth > 0) {
