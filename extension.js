@@ -1704,10 +1704,20 @@ class QuranPlayerIndicator extends PanelMenu.Button {
     }
 
     _log(message) {
-       log(`[Quran Player] ${message}`);
-       
-       
-       
+        // Sadece debug aktifse log yazdır
+        if (this._settings && this._settings.get_boolean('enable-debug-log')) {
+            log(`[Quran Player] ${message}`);
+        }
+    }
+
+    _logError(message, error = null) {
+        // Hata log'ları her zaman gösterilmeli mi yoksa sadece debug modda mı?
+        // Kritik hatalar her zaman gösterilmeli
+        if (error) {
+            logError(error, `Quran Player: ${message}`);
+        } else if (this._settings && this._settings.get_boolean('enable-debug-log')) {
+            log(`[Quran Player ERROR] ${message}`);
+        }
     }
 
     _togglePlay() {
@@ -2200,7 +2210,12 @@ class QuranPlayerIndicator extends PanelMenu.Button {
 
 export default class QuranPlayerExtension extends Extension {
     enable() {
-        log('Quran Player: Enabling extension');
+        this._settings = this.getSettings();
+        
+        // Her zaman gösterilmesi gereken kritik log
+        if (this._settings.get_boolean('enable-debug-log')) {
+            log('Quran Player: Enabling extension');
+        }
         
         try {
             if (!Gst.init_check(null)) {
@@ -2210,13 +2225,15 @@ export default class QuranPlayerExtension extends Extension {
             logError(e, 'Quran Player: Failed to initialize GStreamer');
         }
         
-        this._settings = this.getSettings();
-        
-        // Localization is handled automatically by GNOME Shell
-        log('Quran Player: Using GNOME Shell built-in localization');
+        // Diğer debug log'ları
+        if (this._settings.get_boolean('enable-debug-log')) {
+            log('Quran Player: Using GNOME Shell built-in localization');
+        }
         
         this._settingsChangedId = this._settings.connect('changed::interface-language', () => {
-            log('Quran Player: Language setting changed');
+            if (this._settings.get_boolean('enable-debug-log')) {
+                log('Quran Player: Language setting changed');
+            }
             if (this._indicator && this._indicator._showNotification) {
                 this._indicator._showNotification(_("Language Changed"), 
                     _("Please restart GNOME Shell for the language change to take effect"));
@@ -2226,12 +2243,16 @@ export default class QuranPlayerExtension extends Extension {
         this._indicator = new QuranPlayerIndicator(this);
         Main.panel.addToStatusArea('quran-player', this._indicator);
         
-        log('Quran Player: Extension enabled');
+        if (this._settings.get_boolean('enable-debug-log')) {
+            log('Quran Player: Extension enabled');
+        }
     }
 
     
     disable() {
-       log('Quran Player: Disabling extension');
+        if (this._settings && this._settings.get_boolean('enable-debug-log')) {
+            log('Quran Player: Disabling extension');
+        }
         
        
         if (this._settingsChangedId) {
@@ -2246,7 +2267,9 @@ export default class QuranPlayerExtension extends Extension {
                     this._indicator._stopPlayback();
                 }
             } catch (e) {
-               log(`Quran Player: Error stopping playback during disable: ${e.message}`);
+                if (this._settings && this._settings.get_boolean('enable-debug-log')) {
+                    log(`Quran Player: Error stopping playback during disable: ${e.message}`);
+                }
             }
         }
         
