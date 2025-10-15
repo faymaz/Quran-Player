@@ -418,6 +418,9 @@ class QuranPlayerIndicator extends PanelMenu.Button {
         
         this._extension = extension;
         this._settings = extension.getSettings();
+		
+		// In-memory storage for saved positions to avoid GSettings dynamic key issues
+		this._savedPositions = {};
         
        
         this._surahs = loadSurahs(extension);
@@ -1848,9 +1851,26 @@ class QuranPlayerIndicator extends PanelMenu.Button {
         }
     }
     
-    _stopPlayback() {
-       
-        if (this._player) {
+	_stopPlayback() {
+		// Save current position BEFORE stopping (if available)
+		if (this._player && this._currentItem && this._selectedReciter) {
+			try {
+				let format = Gst.Format.TIME;
+				let query = Gst.Query.new_position(format);
+				if (this._player.query(query)) {
+					let [, position] = query.parse_position();
+					if (position > 0) {
+						this._lastPosition = position;
+						this._savePosition(this._currentItem.id, this._selectedReciter.name, position);
+						this._log(`Saved position on stop: ${position / Gst.SECOND} seconds`);
+					}
+				}
+			} catch (e) {
+				this._log(`Error saving position on stop: ${e.message}`);
+			}
+		}
+	   
+		if (this._player) {
             try {
                 const bus = this._player.get_bus();
                 if (bus) {
@@ -1890,7 +1910,6 @@ class QuranPlayerIndicator extends PanelMenu.Button {
         // Stop progress updates
         this._stopProgressUpdates();
         
-        this._lastPosition = 0;
         this._isPlaying = false;
         this._updatePlayerUI();
         //this._log("Stopped playback");
@@ -2029,39 +2048,26 @@ class QuranPlayerIndicator extends PanelMenu.Button {
         }
     }
 
-    _getSavedPosition(itemId, reciterName) {
-        try {
-            const key = `position_${itemId}_${reciterName}`;
-            const savedPosition = this._settings.get_int(key);
-            if (savedPosition > 0) {
-                this._log(`Found saved position for ${itemId}: ${savedPosition / Gst.SECOND} seconds`);
-                return savedPosition;
-            }
-        } catch (e) {
-            this._log(`Error loading saved position: ${e.message}`);
-        }
-        return 0;
-    }
+	_getSavedPosition(itemId, reciterName) {
+		const key = `${itemId}_${reciterName}`;
+		const savedPosition = this._savedPositions[key] || 0;
+		if (savedPosition > 0) {
+			this._log(`Found saved position for ${itemId}: ${savedPosition / Gst.SECOND} seconds`);
+		}
+		return savedPosition;
+	}
 
-    _savePosition(itemId, reciterName, position) {
-        try {
-            const key = `position_${itemId}_${reciterName}`;
-            this._settings.set_int(key, position);
-            this._log(`Saved position for ${itemId}: ${position / Gst.SECOND} seconds`);
-        } catch (e) {
-            this._log(`Error saving position: ${e.message}`);
-        }
-    }
+	_savePosition(itemId, reciterName, position) {
+		const key = `${itemId}_${reciterName}`;
+		this._savedPositions[key] = position;
+		this._log(`Saved position for ${itemId}: ${position / Gst.SECOND} seconds`);
+	}
 
-    _clearSavedPosition(itemId, reciterName) {
-        try {
-            const key = `position_${itemId}_${reciterName}`;
-            this._settings.reset(key);
-            this._log(`Cleared saved position for ${itemId}`);
-        } catch (e) {
-            this._log(`Error clearing saved position: ${e.message}`);
-        }
-    }
+	_clearSavedPosition(itemId, reciterName) {
+		const key = `${itemId}_${reciterName}`;
+		delete this._savedPositions[key];
+		this._log(`Cleared saved position for ${itemId}`);
+	}
 
     _getJuzForSurah(surahId) {
         if (!this._juzData || this._juzData.length === 0) {
@@ -2235,18 +2241,6 @@ export default class QuranPlayerExtension extends Extension {
         log('Quran Player: Extension enabled');
     }
 
-
-           
-    _refreshIndicator() {
-        if (this._indicator) {
-           
-            this._indicator.destroy();
-            
-           
-            this._indicator = new QuranPlayerIndicator(this);
-            Main.panel.addToStatusArea('quran-player', this._indicator);
-        }
-    }
     
     disable() {
        log('Quran Player: Disabling extension');
