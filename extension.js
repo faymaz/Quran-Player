@@ -747,7 +747,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             style_class: 'quran-progress-bar'
         });
         
-        // Progress bar'a click özelliği ekle
+      
         this._progressBar.reactive = true;
         this._progressBar.can_focus = true;
         
@@ -758,7 +758,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             style_class: 'quran-progress-background'
         });
         
-        // Store the background width for progress calculations
+      
         this._progressBarWidth = 300;
         
         this._progressFill = new St.BoxLayout({
@@ -809,29 +809,29 @@ class QuranPlayerIndicator extends PanelMenu.Button {
         }
         
         try {
-            // Validate duration and position
+          
             if (this._totalDuration <= 0 || this._currentPosition < 0) {
                 this._progressFill.width = 0;
                 this._log("Progress bar reset: invalid duration or position");
                 return;
             }
             
-            // Calculate progress with safety checks
+          
             let progress = this._currentPosition / this._totalDuration;
             
-            // Ensure progress is between 0 and 1
+          
             progress = Math.max(0, Math.min(progress, 1.0));
             
-            // Get the actual background width for more accurate calculation
+          
             const backgroundWidth = this._progressBarWidth || 300;
             
-            // Calculate progress width with padding compensation
-            // Account for CSS padding (1px on each side = 2px total)
+          
+          
             const paddingCompensation = 2;
             const availableWidth = backgroundWidth - paddingCompensation;
             let progressWidth = Math.floor(availableWidth * progress);
             
-            // Ensure width is within bounds
+          
             progressWidth = Math.max(0, Math.min(progressWidth, availableWidth));
             
 			// Only force full width when truly at the end
@@ -844,7 +844,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             this._progressFill.width = progressWidth;
 			
             
-            // Update progress bar style for better visibility
+          
             if (progressWidth > 0) {
                 this._progressFill.style = 'background-color: #3584e4; border-radius: 8px;';
             } else {
@@ -855,7 +855,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             
         } catch (e) {
             this._log(`Error updating progress bar: ${e.message}`);
-            // Fallback: reset progress bar
+          
             this._progressFill.width = 0;
         }
     }
@@ -876,7 +876,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             let positionUpdated = false;
             let durationUpdated = false;
             
-            // Get current position with retry mechanism
+          
             let positionQuery = Gst.Query.new_position(format);
             if (this._player.query(positionQuery)) {
                 let [, position] = positionQuery.parse_position();
@@ -886,7 +886,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
                 }
             }
             
-            // Get duration if not already set, with retry mechanism
+          
             if (this._totalDuration === 0) {
                 let durationQuery = Gst.Query.new_duration(format);
                 if (this._player.query(durationQuery)) {
@@ -899,18 +899,18 @@ class QuranPlayerIndicator extends PanelMenu.Button {
                 }
             }
             
-            // Different handling for Surah vs Juz
+          
             if (this._currentItem) {
                 if (this._currentItem.type === 'surah') {
-                    // For Surahs: More precise calculation, shorter duration
+                  
                     this._handleSurahProgress();
                 } else if (this._currentItem.type === 'juz') {
-                    // For Juz: More tolerant calculation, longer duration
+                  
                     this._handleJuzProgress();
                 }
             }
             
-            // Validate and cap position
+          
             if (this._totalDuration > 0) {
                 if (this._currentPosition > this._totalDuration) {
                     this._currentPosition = this._totalDuration;
@@ -918,7 +918,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
                 }
             }
             
-            // Only update UI if we have valid data
+          
             if (positionUpdated || durationUpdated) {
                 this._updateTimeDisplay();
                 this._updateProgressBar();
@@ -928,16 +928,16 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             
         } catch (e) {
             this._log(`Error updating progress: ${e.message}`);
-            // Try to recover by resetting progress
+          
             this._currentPosition = 0;
             this._updateProgressBar();
         }
     }
     
     _handleSurahProgress() {
-        // Surah-specific progress handling
+      
         if (this._totalDuration > 0) {
-            // For Surahs: Check if we're very close to the end (within 0.5 seconds)
+          
             if (this._currentPosition >= this._totalDuration - 500000000) { // 0.5 second tolerance
                 this._log("Surah: Reached end of track");
                 this._currentPosition = this._totalDuration;
@@ -946,9 +946,9 @@ class QuranPlayerIndicator extends PanelMenu.Button {
     }
     
     _handleJuzProgress() {
-        // Juz-specific progress handling
+      
         if (this._totalDuration > 0) {
-            // For Juz: More tolerant end detection (within 2 seconds)
+          
             if (this._currentPosition >= this._totalDuration - 2000000000) { // 2 second tolerance
                 this._log("Juz: Reached end of track");
                 this._currentPosition = this._totalDuration;
@@ -980,7 +980,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             GLib.Source.remove(this._progressUpdateId);
         }
         
-        // Different update intervals for Surah vs Juz
+      
         let updateInterval = 1000; // Default 1 second
         
         if (this._currentItem) {
@@ -1080,7 +1080,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
         });
         
         
-        // Progress bar click handler
+      
         safeConnect(this._progressBar, 'button-press-event', (actor, event) => {
             this._log("Progress bar clicked");
             this._seekToPosition(event);
@@ -1406,7 +1406,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             this._log(`Error creating audio URL: ${urlError.message}`);
             return;
         }
-        // Check for saved position
+      
         const savedPosition = this._getSavedPosition(surah.id, this._selectedReciter.name);
         this._lastPosition = savedPosition || 0;
         
@@ -1419,7 +1419,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
         }
         
        
-        // Juz description bilgisini de ekle
+      
         this._currentItem = { 
             ...juz, 
             type: 'juz',
@@ -1488,7 +1488,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             this._log(`Error creating audio URL: ${urlError.message}`);
             return;
         }
-        // Check for saved position
+      
         const savedPosition = this._getSavedPosition(juz.id, this._selectedReciter.name);
         this._lastPosition = savedPosition || 0;
         
@@ -1506,7 +1506,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
            
             this._stopPlayback();
             
-            // Reset progress values
+          
             this._currentPosition = 0;
             this._totalDuration = 0;
             
@@ -1517,17 +1517,17 @@ class QuranPlayerIndicator extends PanelMenu.Button {
                 throw new Error("Could not create GStreamer playbin element");
             }
             
-            // Set the URI
+          
             this._player.set_property("uri", audioUrl);
             
-            // Configure HTTP headers for souphttpsrc to avoid 403 Forbidden errors
+          
             this._player.connect('source-setup', (playbin, source) => {
                 if (source.get_factory().get_name() === 'souphttpsrc') {
-                    // Determine domain-specific header strategy
+                  
                     const url = audioUrl.toLowerCase();
                     
                     if (url.includes('podcasts.qurancentral.com/raad-mohammad-al-kurdi')) {
-                        // Raad Mohammad Al-Kurdi needs specific headers
+                      
                         source.set_property('user-agent', 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
                         try {
                             source.set_property('referer', 'https://podcasts.qurancentral.com/');
@@ -1536,7 +1536,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
                         }
                         this._log(`Configured headers for Raad Mohammad Al-Kurdi: User-Agent and Referer set`);
                     } else if (url.includes('podcasts.qurancentral.com')) {
-                        // All QuranCentral reciters need browser-like headers to avoid 403 errors
+                      
                         source.set_property('user-agent', 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
                         try {
                             source.set_property('referer', 'https://podcasts.qurancentral.com/');
@@ -1545,17 +1545,17 @@ class QuranPlayerIndicator extends PanelMenu.Button {
                         }
                         this._log(`Configured browser headers for QuranCentral reciter`);
                     } else if (url.includes('download.quranicaudio.com')) {
-                        // QuranicAudio.com doesn't need special headers
+                      
                         this._log(`Using default headers for QuranicAudio.com`);
                     } else {
-                        // Default browser-like headers for unknown domains
+                      
                         source.set_property('user-agent', 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
                         this._log(`Using default browser headers for unknown domain`);
                     }
                 }
             });
             
-            // Get the bus for messages
+          
             const bus = this._player.get_bus();
             bus.add_signal_watch();
             
@@ -1603,7 +1603,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             
             this._isPlaying = true;
             
-            // Start progress updates
+          
             this._startProgressUpdates();
             
         } catch (gstError) {
@@ -1704,15 +1704,15 @@ class QuranPlayerIndicator extends PanelMenu.Button {
     }
 
     _log(message) {
-        // Sadece debug aktifse log yazdır
+      
         if (this._settings && this._settings.get_boolean('enable-debug-log')) {
             log(`[Quran Player] ${message}`);
         }
     }
 
     _logError(message, error = null) {
-        // Hata log'ları her zaman gösterilmeli mi yoksa sadece debug modda mı?
-        // Kritik hatalar her zaman gösterilmeli
+      
+      
         if (error) {
             logError(error, `Quran Player: ${message}`);
         } else if (this._settings && this._settings.get_boolean('enable-debug-log')) {
@@ -1740,10 +1740,10 @@ class QuranPlayerIndicator extends PanelMenu.Button {
         
         try {
             if (this._isPlaying) {
-                // PAUSE LOGIC
+              
                 this._log("Pausing playback...");
                 
-                // Get current position before pausing
+              
                 let currentPosition = 0;
                 try {
                     let format = Gst.Format.TIME;
@@ -1759,17 +1759,17 @@ class QuranPlayerIndicator extends PanelMenu.Button {
                     this._log(`Error getting position: ${posError.message}`);
                 }
                 
-                // Pause the player
+              
                 const stateResult = this._player.set_state(Gst.State.PAUSED);
                 this._log(`Pause state result: ${stateResult}`);
                 
-                // Update flags
+              
                 this._isPlaying = false;
                 
-                // Stop progress updates
+              
                 this._stopProgressUpdates();
                 
-                // Save position
+              
                 if (this._currentItem && this._selectedReciter && currentPosition > 0) {
                     const itemId = this._currentItem.id;
                     const reciterName = this._selectedReciter.name;
@@ -1779,10 +1779,10 @@ class QuranPlayerIndicator extends PanelMenu.Button {
                 this._log("Playback paused successfully");
                 
             } else {
-                // PLAY/RESUME LOGIC
+              
                 this._log("Starting/resuming playback...");
                 
-                // Seek to saved position if available
+              
                 if (this._lastPosition > 0) {
                     this._log(`Seeking to saved position: ${this._lastPosition / Gst.SECOND} seconds`);
                     try {
@@ -1796,26 +1796,26 @@ class QuranPlayerIndicator extends PanelMenu.Button {
                     }
                 }
                 
-                // Start playing
+              
                 const stateResult = this._player.set_state(Gst.State.PLAYING);
                 this._log(`Play state result: ${stateResult}`);
                 
-                // Update flags
+              
                 this._isPlaying = true;
                 
-                // Start progress updates
+              
                 this._startProgressUpdates();
                 
                 this._log("Playback started/resumed successfully");
             }
             
-            // Update UI
+          
             this._updatePlayerUI();
             
         } catch (e) {
             this._log(`Error in toggle play: ${e.message}`);
             
-            // Reset everything on error
+          
             try {
                 this._stopPlayback();
                 if (this._currentItem) {
@@ -1905,7 +1905,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             this._usingFallback = false;
         }
         
-        // Stop progress updates
+      
         this._stopProgressUpdates();
         
         this._isPlaying = false;
@@ -1978,7 +1978,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             
             this._player.set_property('volume', volume);
             
-            // Update volume button icon
+          
             const volumeIcon = this._volumeButton.get_child();
             if (this._isMuted) {
                 volumeIcon.icon_name = 'audio-volume-muted-symbolic';
@@ -2002,7 +2002,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
                 this._player.set_property('volume', this._volume);
             }
             
-            // Update volume button icon based on level
+          
             const volumeIcon = this._volumeButton.get_child();
             if (this._volume === 0) {
                 volumeIcon.icon_name = 'audio-volume-muted-symbolic';
@@ -2023,17 +2023,17 @@ class QuranPlayerIndicator extends PanelMenu.Button {
         if (!this._player || this._usingFallback || this._totalDuration === 0) return;
         
         try {
-            // Mouse pozisyonunu al
+          
             const [x, y] = event.get_coords();
             const progressBarX = this._progressBar.get_allocation_box().x1;
             const progressBarWidth = this._progressBar.width;
             
-            // Click pozisyonunu hesapla
+          
             const clickX = x - progressBarX;
             const progress = Math.max(0, Math.min(1, clickX / progressBarWidth));
             const newPosition = Math.floor(this._totalDuration * progress);
             
-            // Seek to position
+          
             this._player.seek_simple(
                 Gst.Format.TIME,
                 Gst.SeekFlags.FLUSH | Gst.SeekFlags.KEY_UNIT,
@@ -2085,12 +2085,12 @@ class QuranPlayerIndicator extends PanelMenu.Button {
         if (this._currentItem) {
            
             if (this._currentItem.type === 'surah') {
-                // Surah için Juz bilgisini ekle
+              
                 const juzId = this._getJuzForSurah(this._currentItem.id);
                 const juzText = juzId ? ` - Juz ${juzId}` : '';
                 this._nowPlayingLabel.text = `${this._currentItem.id}. ${this._currentItem.name}${juzText}`;
             } else if (this._currentItem.type === 'juz') {
-                // Juz için description bilgisini ekle
+              
                 const juzDescription = this._currentItem.description || '';
                 if (juzDescription) {
                     this._nowPlayingLabel.text = `${this._currentItem.name} - ${juzDescription}`;
@@ -2212,7 +2212,7 @@ export default class QuranPlayerExtension extends Extension {
     enable() {
         this._settings = this.getSettings();
         
-        // Her zaman gösterilmesi gereken kritik log
+      
         if (this._settings.get_boolean('enable-debug-log')) {
             log('Quran Player: Enabling extension');
         }
@@ -2225,7 +2225,7 @@ export default class QuranPlayerExtension extends Extension {
             logError(e, 'Quran Player: Failed to initialize GStreamer');
         }
         
-        // Diğer debug log'ları
+      
         if (this._settings.get_boolean('enable-debug-log')) {
             log('Quran Player: Using GNOME Shell built-in localization');
         }
