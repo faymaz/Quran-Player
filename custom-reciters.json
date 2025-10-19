@@ -378,32 +378,26 @@
   },
   {
     "name": "QURAN Bosnian Audio Translation",
-    "baseUrl": "https://archive.org/details/Irgui82_BosnianAudioQuranTranslation/",
-    "audioFormat": "%id%.mp3",
-    "type": "surah"
-  },
-  {
-    "name": "QURAN Bosnian Audio Translation",
-    "baseUrl": "https://archive.org/details/Irgui82_BosnianAudioQuranTranslation/",
+    "baseUrl": "https://archive.org/download/Irgui82_BosnianAudioQuranTranslation/",
     "audioFormat": "%id%.mp3",
     "type": "surah"
   },
   {
     "name": "QURAN Chinese Audio Translation",
-    "baseUrl": "https://archive.org/details/benteleslam81_yahoo_002_20151104/",
+    "baseUrl": "https://archive.org/download/benteleslam81_yahoo_002_20151104/",
     "audioFormat": "%id%.mp3",
     "type": "surah"
   },
   {
     "name": "QURAN Greek Audio Translation",
-    "baseUrl": "https://archive.org/details/HolyQuranInGreekSuraChapter1AlFatiha/Holy+Quran+in+Greek_Sura+(Chapter)+1_+Al-Fatiha.mp3",
-    "audioFormat": "%Juzid%.mp3",
-    "type": "juz"
+    "baseUrl": "https://archive.org/download/HolyQuranInGreekSuraChapter1AlFatiha/Holy+Quran+in+Greek_Sura+(Chapter)+1_+Al-Fatiha.mp3",
+    "audioFormat": "%id%.mp3",
+    "type": "surah"
   },
   {
     "name": "QURAN IN KURDiSH",
-    "baseUrl": "https://archive.org/download/quraninkurdishmp3cuzvideonewtranslation/",
-    "audioFormat": "CUZ%id%.mp3",
+    "baseUrl": "https://archive.org/download/quraninkurdishmp3cuzvideonewtranslation/CUZ",
+    "audioFormat": "%id%.mp3",
     "type": "juz"
   },
   {
@@ -414,8 +408,8 @@
   },
   {
     "name": "QURAN Russian Audio Translation",
-    "baseUrl": "https://archive.org/details/Irgui82_RussianAudioQuranTranslation/Juz",
-    "audioFormat": "%Juzid%.mp3",
+    "baseUrl": "https://archive.org/download/Irgui82_RussianAudioQuranTranslation/Juz",
+    "audioFormat": "%id%.mp3",
     "type": "juz"
   },
   {
