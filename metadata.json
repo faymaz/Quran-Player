@@ -2,9 +2,7 @@
   "name": "Quran Player",
   "description": "Advanced Quran Player with MP3 controls, progress bar, time display, and resume functionality. Features multiple reciters with audio from QuranCentral.com and Archive.org servers.",
   "uuid": "quran-player@faymaz.github.com",
-  "donations": {
-      "github": "https://github.com/faymaz"
-  },
+  "donation-url": "https://buymeacoffee.com/faymaz",
   "settings-schema": "org.gnome.shell.extensions.quran-player",
   "shell-version": [
       "45",
