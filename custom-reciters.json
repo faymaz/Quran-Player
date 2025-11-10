@@ -847,6 +847,12 @@
     "type": "surah"
   },
   {
+    "name": "The Holy Quran translated into Portuguese",
+    "baseUrl": "https://archive.org/download/QurantranslatedPortuguese/",
+    "audioFormat": "%id%.mp3",
+    "type": "surah"
+  },
+  {
     "name": "The Noble Quran with French Translation (Le Saint Coran)",
     "baseUrl": "https://archive.org/download/Le-Saint-Coran-Al-Quran-with-French-Translation-Audio-MP3-CD/",
     "audioFormat": "%specialFormat%",
