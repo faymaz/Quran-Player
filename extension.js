@@ -539,7 +539,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
     _rebuildContentMenu() {
         this._log("Completely rebuilding menu");
         
-       
+        // 1. FIRST: Disconnect ALL signal handlers
         if (this._controlSignalHandlers) {
             this._controlSignalHandlers.forEach(handler => {
                 if (handler.obj && handler.id) {
@@ -553,29 +553,46 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             this._controlSignalHandlers = [];
         }
         
-       
+        // 2. Clear button references
+        this._playButton = null;
+        this._stopButton = null;
+        this._prevButton = null;
+        this._nextButton = null;
+        this._seekBackButton = null;
+        this._seekForwardButton = null;
+        this._volumeButton = null;
+        
+        // 3. Destroy controls box
         if (this._controlsBox) {
-            this._controlsBox.destroy();
+            try {
+                this._controlsBox.destroy();
+            } catch (e) {
+                this._log(`Error destroying controls box: ${e.message}`);
+            }
             this._controlsBox = null;
         }
         
-       
+        // 4. Clear all menu items
         const items = this.menu._getMenuItems();
         for (let i = items.length - 1; i >= 0; i--) {
-            items[i].destroy();
+            try {
+                items[i].destroy();
+            } catch (e) {
+                this._log(`Error destroying menu item: ${e.message}`);
+            }
         }
         
-       
+        // 5. Rebuild player UI with NEW components
         this._createPlayerUI(true);
         
-       
+        // 6. Add category title
         const categoryTitle = this._isJuzMode ? 
             new PopupMenu.PopupMenuItem(_("Juz Selection"), { reactive: false, style_class: 'category-title' }) :
             new PopupMenu.PopupMenuItem(_("Surah Selection"), { reactive: false, style_class: 'category-title' });
         
         this.menu.addMenuItem(categoryTitle);
         
-       
+        // 7. Add content groups
         if (this._isJuzMode) {
             this._log("Juz mode active, showing juz groups only");
             this._addJuzGroups();
@@ -588,58 +605,102 @@ class QuranPlayerIndicator extends PanelMenu.Button {
     }
 
     _createPlayerUI(fullReset = false) {
-       
+        // Create player box
         this._playerBox = new St.BoxLayout({
             vertical: true,
             style_class: 'quran-player-box'
         });
         
-       
+        // Create now playing label
         this._nowPlayingLabel = new St.Label({
             text: _('Quran Player'),
             style_class: 'quran-now-playing',
             x_align: Clutter.ActorAlign.CENTER
         });
         
-       
+        // Add now playing label
         this._playerBox.add_child(this._nowPlayingLabel);
             
         if (fullReset || !this._controlsBox) {
-           
-            this._resetPlayerControls();
+            // Reset player controls
+            const newControlsBox = this._resetPlayerControls();
+            
+            if (!newControlsBox) {
+                this._log("Failed to create controls box");
+                return;
+            }
         }
         
-        this._playerBox.add_child(this._controlsBox);
+        // Verify controlsBox exists and is valid before adding
+        if (this._controlsBox && this._controlsBox.get_stage() !== null) {
+            try {
+                this._playerBox.add_child(this._controlsBox);
+            } catch (e) {
+                this._log(`Error adding controls box to player box: ${e.message}`);
+                return;
+            }
+        } else {
+            this._log("Controls box not valid, skipping");
+            return;
+        }
         
-       
+        // Create status bar
         this._createStatusBar();
-        this._playerBox.add_child(this._statusBar);
         
-       
+        // Verify statusBar exists before adding
+        if (this._statusBar) {
+            try {
+                this._playerBox.add_child(this._statusBar);
+            } catch (e) {
+                this._log(`Error adding status bar: ${e.message}`);
+                return;
+            }
+        }
+        
+        // Add player item to menu
         let playerItem = new PopupMenu.PopupBaseMenuItem({
             reactive: false,
             can_focus: false
         });
-        playerItem.add_child(this._playerBox);
-        this.menu.addMenuItem(playerItem);
         
-       
+        try {
+            playerItem.add_child(this._playerBox);
+            this.menu.addMenuItem(playerItem);
+        } catch (e) {
+            this._log(`Error adding player item to menu: ${e.message}`);
+            return;
+        }
+        
+        // Add separator
         this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
     }
     
     _resetPlayerControls() {
-       
+        // Destroy old controls box if it exists
         if (this._controlsBox) {
-            this._controlsBox.destroy();
+            try {
+                this._controlsBox.destroy();
+            } catch (e) {
+                this._log(`Error destroying old controls box: ${e.message}`);
+            }
             this._controlsBox = null;
         }
         
-       
+        // Clear button references
+        this._playButton = null;
+        this._stopButton = null;
+        this._prevButton = null;
+        this._nextButton = null;
+        this._seekBackButton = null;
+        this._seekForwardButton = null;
+        this._volumeButton = null;
+        
+        // Create NEW controls box
         this._controlsBox = new St.BoxLayout({
             style_class: 'quran-controls-box'
         });
         
-       
+        // Create all buttons
         this._prevButton = new St.Button({
             style_class: 'quran-control-button',
             can_focus: true,
@@ -680,7 +741,6 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             })
         });
         
-       
         this._volumeButton = new St.Button({
             style_class: 'quran-control-button',
             can_focus: true,
@@ -691,8 +751,6 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             })
         });
         
-        
-       
         this._seekBackButton = new St.Button({
             style_class: 'quran-control-button',
             can_focus: true,
@@ -713,16 +771,26 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             })
         });
         
-       
-        this._controlsBox.add_child(this._seekBackButton);
-        this._controlsBox.add_child(this._prevButton);
-        this._controlsBox.add_child(this._playButton);
-        this._controlsBox.add_child(this._stopButton);
-        this._controlsBox.add_child(this._nextButton);
-        this._controlsBox.add_child(this._seekForwardButton);
-        this._controlsBox.add_child(this._volumeButton);
+        // Add buttons to controls box - CHECK if controlsBox still exists before adding
+        try {
+            if (this._controlsBox && this._controlsBox.get_stage() !== null) {
+                this._controlsBox.add_child(this._seekBackButton);
+                this._controlsBox.add_child(this._prevButton);
+                this._controlsBox.add_child(this._playButton);
+                this._controlsBox.add_child(this._stopButton);
+                this._controlsBox.add_child(this._nextButton);
+                this._controlsBox.add_child(this._seekForwardButton);
+                this._controlsBox.add_child(this._volumeButton);
+            } else {
+                this._log("Controls box was disposed before adding children");
+                return null;
+            }
+        } catch (e) {
+            this._log(`Error adding children to controls box: ${e.message}`);
+            return null;
+        }
         
-       
+        // Connect control signals
         this._connectControlSignals();
         
         return this._controlsBox;
@@ -1024,16 +1092,25 @@ class QuranPlayerIndicator extends PanelMenu.Button {
         
        
         const safeConnect = (obj, signal, callback) => {
-            if (obj) {
-                try {
-                    const id = obj.connect(signal, callback);
-                    this._controlSignalHandlers.push({ obj, id });
-                    return id;
-                } catch (e) {
-                    this._log(`Error connecting control signal ${signal}: ${e.message}`);
-                }
+            if (!obj) {
+                this._log(`Cannot connect ${signal}: object is null`);
+                return 0;
             }
-            return 0;
+            
+            // Check if object is already disposed
+            if (obj.get_stage() === null && signal !== 'destroy') {
+                this._log(`Cannot connect ${signal}: object already disposed`);
+                return 0;
+            }
+            
+            try {
+                const id = obj.connect(signal, callback);
+                this._controlSignalHandlers.push({ obj, id });
+                return id;
+            } catch (e) {
+                this._log(`Error connecting control signal ${signal}: ${e.message}`);
+                return 0;
+            }
         };
         
        
@@ -1523,35 +1600,18 @@ class QuranPlayerIndicator extends PanelMenu.Button {
           
             this._player.connect('source-setup', (playbin, source) => {
                 if (source.get_factory().get_name() === 'souphttpsrc') {
-                  
-                    const url = audioUrl.toLowerCase();
-                    
-                    if (url.includes('podcasts.qurancentral.com/raad-mohammad-al-kurdi')) {
-                      
+                    // Just set a good user agent - this is usually enough
+                    try {
                         source.set_property('user-agent', 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
-                        try {
-                            source.set_property('referer', 'https://podcasts.qurancentral.com/');
-                        } catch (e) {
-                            this._log(`Could not set referer: ${e.message}`);
-                        }
-                        this._log(`Configured headers for Raad Mohammad Al-Kurdi: User-Agent and Referer set`);
-                    } else if (url.includes('podcasts.qurancentral.com')) {
-                      
-                        source.set_property('user-agent', 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
-                        try {
-                            source.set_property('referer', 'https://podcasts.qurancentral.com/');
-                        } catch (e) {
-                            this._log(`Could not set referer: ${e.message}`);
-                        }
-                        this._log(`Configured browser headers for QuranCentral reciter`);
-                    } else if (url.includes('download.quranicaudio.com')) {
-                      
-                        this._log(`Using default headers for QuranicAudio.com`);
-                    } else {
-                      
-                        source.set_property('user-agent', 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
-                        this._log(`Using default browser headers for unknown domain`);
+                        this._log('Configured souphttpsrc with user-agent');
+                    } catch (e) {
+                        this._log(`Could not configure souphttpsrc: ${e.message}`);
                     }
+                    
+                    // Additional settings
+                    try { source.set_property('automatic-redirect', true); } catch (e) {}
+                    try { source.set_property('keep-alive', true); } catch (e) {}
+                    try { source.set_property('timeout', 30); } catch (e) {}
                 }
             });
             
@@ -1613,10 +1673,10 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             let playbackSuccess = false;
             
             try {
-               
+                // Try curl + mpv with headers
                 let [success, pid] = GLib.spawn_async(
                     null,
-                    ['bash', '-c', `curl -s '${audioUrl}' | mpv --no-terminal --no-video -`],
+                    ['bash', '-c', `curl -s -A "Mozilla/5.0" -H "Referer: https://podcasts.qurancentral.com/" '${audioUrl}' | mpv --no-terminal --no-video -`],
                     null,
                     GLib.SpawnFlags.SEARCH_PATH | GLib.SpawnFlags.DO_NOT_REAP_CHILD,
                     null
@@ -1624,7 +1684,6 @@ class QuranPlayerIndicator extends PanelMenu.Button {
                 
                 if (success) {
                     this._playerPid = pid;
-                   
                     GLib.child_watch_add(GLib.PRIORITY_DEFAULT, pid, (pid, status) => {
                         this._log(`Fallback player exited with status: ${status}`);
                         this._playerPid = 0;
@@ -1638,11 +1697,14 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             } catch (e2) {
                 this._log(`curl+mpv fallback failed: ${e2.message}`);
                 
-               
                 try {
+                    // Try direct mpv with headers
                     let [success, pid] = GLib.spawn_async(
                         null,
-                        ['mpv', '--no-terminal', '--no-video', audioUrl],
+                        ['mpv', '--no-terminal', '--no-video', 
+                         '--user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36',
+                         '--referrer=https://podcasts.qurancentral.com/',
+                         audioUrl],
                         null,
                         GLib.SpawnFlags.SEARCH_PATH | GLib.SpawnFlags.DO_NOT_REAP_CHILD,
                         null
@@ -1650,7 +1712,6 @@ class QuranPlayerIndicator extends PanelMenu.Button {
                     
                     if (success) {
                         this._playerPid = pid;
-                       
                         GLib.child_watch_add(GLib.PRIORITY_DEFAULT, pid, (pid, status) => {
                             this._log(`Fallback player exited with status: ${status}`);
                             this._playerPid = 0;
@@ -1664,7 +1725,6 @@ class QuranPlayerIndicator extends PanelMenu.Button {
                 } catch (e3) {
                     this._log(`mpv fallback failed: ${e3.message}`);
                     
-                   
                     try {
                         GLib.spawn_command_line_async(`xdg-open "${audioUrl}"`);
                         playbackSuccess = true;
@@ -1673,11 +1733,10 @@ class QuranPlayerIndicator extends PanelMenu.Button {
                         this._log(`xdg-open fallback failed: ${e4.message}`);
                         logError(e4, "Quran Player: Could not play audio file");
                         
-                       
                         try {
                             this._showNotification("Error", "Could not play audio file");
                         } catch (notifyError) {
-                           
+                            // Ignore notification errors
                         }
                         return;
                     }
