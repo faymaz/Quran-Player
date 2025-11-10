@@ -100,7 +100,7 @@
   },
   {
     "name": "Maher Al-Muaiqly",
-    "baseUrl": "https://download.quranicaudio.com/quran/maher_almu_ayqly/",
+    "baseUrl": "https://podcasts.qurancentral.com/ali-abdur-rahman-al-huthaify/ali-abdur-rahman-al-huthaify-",
     "audioFormat": "%id%.mp3",
     "type": "surah"
   },
@@ -616,6 +616,12 @@
   {
     "name": "Quran Urdu Translation",
     "baseUrl": "https://podcasts.qurancentral.com/urdu-translation-only/",
+    "audioFormat": "%id%.mp3",
+    "type": "surah"
+  },
+  {
+    "name": "Quran with English Translation - Basfar",
+    "baseUrl": "https://archive.org/download/Basfar/",
     "audioFormat": "%id%.mp3",
     "type": "surah"
   },
