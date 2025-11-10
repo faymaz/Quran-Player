@@ -847,14 +847,20 @@
     "type": "surah"
   },
   {
+    "name": "The Holy Quran translated into Korean",
+    "baseUrl": "https://archive.org/download/korean-meal/",
+    "audioFormat": "%id%.mp3",
+    "type": "surah"
+  },
+  {
     "name": "The Holy Quran translated into Portuguese",
     "baseUrl": "https://archive.org/download/QurantranslatedPortuguese/",
     "audioFormat": "%id%.mp3",
     "type": "surah"
   },
   {
-    "name": "The Holy Quran translated into Korean",
-    "baseUrl": "https://archive.org/download/korean-meal/",
+    "name": "The Holy Quran translated into TAMIL",
+    "baseUrl": "https://archive.org/download/tamilquranmp3/tamilsura-",
     "audioFormat": "%id%.mp3",
     "type": "surah"
   },
