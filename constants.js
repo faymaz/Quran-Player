@@ -204,7 +204,7 @@ export const DEFAULT_RECITERS = [
   },
   {
     "name": "Maher Al-Muaiqly",
-    "baseUrl": "https://podcasts.qurancentral.com/ali-abdur-rahman-al-huthaify/ali-abdur-rahman-al-huthaify-",
+    "baseUrl": "https://download.quranicaudio.com/quran/maher_almu_ayqly/",
     "audioFormat": "%id%.mp3",
     "type": "surah"
   },
@@ -497,7 +497,7 @@ export function loadReciters(extension) {
           return DEFAULT_RECITERS;
       }
   } catch (e) {
-      logError(e4, "Quran Player: Error loading reciters", e);
+      logError(e, "Quran Player: Error loading reciters");
       return DEFAULT_RECITERS;
   }
 }
@@ -518,7 +518,7 @@ export function loadSurahs(extension) {
                   return JSON.parse(new TextDecoder().decode(contents));
               }
           } catch (customErr) {
-              logError(e4, "Quran Player: Error loading custom surahs file, falling back to default", customErr);
+              logError(customErr, "Quran Player: Error loading custom surahs file, falling back to default");
           }
       }
       
@@ -651,7 +651,6 @@ export function loadSurahs(extension) {
         } catch (e) {
           console.error(e,"Quran Player: Error loading surahs");
             return [
-              [
                 {"name": "Al-Fatihah", "id": 1, "audioId": "001"},
                 {"name": "Al-Baqarah", "id": 2, "audioId": "002"},
                 {"name": "Ali 'Imran", "id": 3, "audioId": "003"},
@@ -766,7 +765,6 @@ export function loadSurahs(extension) {
                 {"name": "Al-Ikhlas", "id": 112, "audioId": "112"},
                 {"name": "Al-Falaq", "id": 113, "audioId": "113"},
                 {"name": "An-Nas", "id": 114, "audioId": "114"}
-              ]
           ];
         }
     }
@@ -786,7 +784,7 @@ export function loadSurahs(extension) {
                     return JSON.parse(new TextDecoder().decode(contents));
                 }
             } catch (customErr) {
-                logError(e4, "Quran Player: Error loading custom juz file, falling back to default", customErr);
+                logError(customErr, "Quran Player: Error loading custom juz file, falling back to default");
             }
         }
         
@@ -801,7 +799,7 @@ export function loadSurahs(extension) {
             return [];
         }
     } catch (e) {
-        logError(e4, "Quran Player: Error loading juz data", e);
+        logError(e, "Quran Player: Error loading juz data");
         return [];
     }
   }
