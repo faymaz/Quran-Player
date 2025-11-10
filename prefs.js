@@ -313,7 +313,7 @@ export default class QuranPlayerPreferences extends ExtensionPreferences {
                 return DEFAULT_RECITERS;
             }
         } catch (e) {
-            logError(e4, "Quran Player: Error loading reciters", e);
+            logError(e, "Quran Player: Error loading reciters");
             return DEFAULT_RECITERS;
         }
     }

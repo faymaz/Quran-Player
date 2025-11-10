@@ -497,7 +497,7 @@ export function loadReciters(extension) {
           return DEFAULT_RECITERS;
       }
   } catch (e) {
-      logError(e4, "Quran Player: Error loading reciters", e);
+      logError(e, "Quran Player: Error loading reciters");
       return DEFAULT_RECITERS;
   }
 }
@@ -518,7 +518,7 @@ export function loadSurahs(extension) {
                   return JSON.parse(new TextDecoder().decode(contents));
               }
           } catch (customErr) {
-              logError(e4, "Quran Player: Error loading custom surahs file, falling back to default", customErr);
+              logError(customErr, "Quran Player: Error loading custom surahs file, falling back to default");
           }
       }
       
@@ -786,7 +786,7 @@ export function loadSurahs(extension) {
                     return JSON.parse(new TextDecoder().decode(contents));
                 }
             } catch (customErr) {
-                logError(e4, "Quran Player: Error loading custom juz file, falling back to default", customErr);
+                logError(customErr, "Quran Player: Error loading custom juz file, falling back to default");
             }
         }
         
@@ -801,7 +801,7 @@ export function loadSurahs(extension) {
             return [];
         }
     } catch (e) {
-        logError(e4, "Quran Player: Error loading juz data", e);
+        logError(e, "Quran Player: Error loading juz data");
         return [];
     }
   }
