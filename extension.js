@@ -1395,7 +1395,10 @@ class QuranPlayerIndicator extends PanelMenu.Button {
 
                 if (this._selectedReciter.formatMap[twoDigitId]) {
                     const specialFormat = this._selectedReciter.formatMap[twoDigitId];
-                    audioUrl = `${this._selectedReciter.baseUrl}${specialFormat}`;
+                    // Check if specialFormat is a full URL
+                    audioUrl = specialFormat.startsWith('http://') || specialFormat.startsWith('https://')
+                        ? specialFormat
+                        : `${this._selectedReciter.baseUrl}${specialFormat}`;
                     this._log(`Using special format for surah ${surah.id}: ${audioUrl}`);
                 } else {
                     audioUrl = `${this._selectedReciter.baseUrl}${this._selectedReciter.audioFormat}`
@@ -1489,7 +1492,10 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             if (this._selectedReciter.hasSpecialFormat && this._selectedReciter.formatMap) {
                 if (this._selectedReciter.formatMap[audioId]) {
                     const specialFormat = this._selectedReciter.formatMap[audioId];
-                    audioUrl = `${this._selectedReciter.baseUrl}${specialFormat}`;
+                    // Check if specialFormat is a full URL
+                    audioUrl = specialFormat.startsWith('http://') || specialFormat.startsWith('https://')
+                        ? specialFormat
+                        : `${this._selectedReciter.baseUrl}${specialFormat}`;
                     this._log(`Using special format for juz ${juz.id}: ${audioUrl}`);
                 } else {
                     audioUrl = `${this._selectedReciter.baseUrl}${this._selectedReciter.audioFormat}`
