@@ -19,6 +19,7 @@
 
 import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
+import Soup from 'gi://Soup';
 
 //console.log('Constants file loaded from:', import.meta.url);
 
@@ -466,38 +467,140 @@ export const DEFAULT_RECITERS = [
   ];
 
 
+function fetchRecitersFromGitHub() {
+  try {
+      log("Quran Player: Attempting to fetch custom-reciters.json from GitHub");
+
+      const session = new Soup.Session({ timeout: 10 });
+      const message = Soup.Message.new('GET', 'https://raw.githubusercontent.com/faymaz/Quran-Player/master/custom-reciters.json');
+
+      // Send synchronous request
+      const bytes = session.send_and_read(message, null);
+
+      if (message.get_status() === Soup.Status.OK) {
+          const contents = bytes.get_data();
+          const textDecoder = new TextDecoder('utf-8');
+          const jsonText = textDecoder.decode(contents);
+          log("Quran Player: Successfully fetched custom-reciters.json from GitHub");
+          return jsonText;
+      } else {
+          log(`Quran Player: GitHub fetch failed with status ${message.get_status()}`);
+          return null;
+      }
+  } catch (e) {
+      log(`Quran Player: Error fetching from GitHub: ${e.message}`);
+      return null;
+  }
+}
+
+function saveToCacheFile(jsonText) {
+  try {
+      const cacheDir = GLib.get_user_cache_dir();
+      const quranPlayerCacheDir = GLib.build_filenamev([cacheDir, 'quran-player']);
+
+      // Create cache directory if it doesn't exist
+      const cacheDirFile = Gio.File.new_for_path(quranPlayerCacheDir);
+      if (!cacheDirFile.query_exists(null)) {
+          cacheDirFile.make_directory_with_parents(null);
+      }
+
+      const cacheFilePath = GLib.build_filenamev([quranPlayerCacheDir, 'custom-reciters.json']);
+      const cacheFile = Gio.File.new_for_path(cacheFilePath);
+
+      // Write to cache file
+      const bytes = new TextEncoder().encode(jsonText);
+      const outputStream = cacheFile.replace(null, false, Gio.FileCreateFlags.NONE, null);
+      outputStream.write_all(bytes, null);
+      outputStream.close(null);
+
+      log(`Quran Player: Saved custom-reciters.json to cache: ${cacheFilePath}`);
+      return true;
+  } catch (e) {
+      log(`Quran Player: Error saving to cache: ${e.message}`);
+      return false;
+  }
+}
+
+function loadFromCacheFile() {
+  try {
+      const cacheDir = GLib.get_user_cache_dir();
+      const cacheFilePath = GLib.build_filenamev([cacheDir, 'quran-player', 'custom-reciters.json']);
+      const cacheFile = Gio.File.new_for_path(cacheFilePath);
+
+      if (cacheFile.query_exists(null)) {
+          const [success, contents] = cacheFile.load_contents(null);
+          if (success) {
+              const jsonText = new TextDecoder().decode(contents);
+              log("Quran Player: Loaded custom-reciters.json from cache");
+              return jsonText;
+          }
+      }
+      return null;
+  } catch (e) {
+      log(`Quran Player: Error loading from cache: ${e.message}`);
+      return null;
+  }
+}
+
+function processRecitersData(reciters) {
+  // Add type property if missing
+  return reciters.map(reciter => {
+      if (!reciter.type) {
+          if (reciter.name.toLowerCase().includes('cüz') ||
+              reciter.name.toLowerCase().includes('juz') ||
+              reciter.audioFormat.includes('cuz') ||
+              reciter.audioFormat.includes('juz')) {
+              reciter.type = 'juz';
+          } else {
+              reciter.type = 'surah';
+          }
+      }
+      return reciter;
+  });
+}
+
 export function loadReciters(extension) {
   try {
       const extensionPath = extension.path;
-      const recitersFile = Gio.File.new_for_path(GLib.build_filenamev([extensionPath, 'custom-reciters.json']));
-      const [success, contents] = recitersFile.load_contents(null);
-      
-      if (success) {
-          let reciters = JSON.parse(new TextDecoder().decode(contents));
-          
-         
-          reciters = reciters.map(reciter => {
-              if (!reciter.type) {
-                 
-                  if (reciter.name.toLowerCase().includes('cüz') || 
-                      reciter.name.toLowerCase().includes('juz') ||
-                      reciter.audioFormat.includes('cuz') ||
-                      reciter.audioFormat.includes('juz')) {
-                      reciter.type = 'juz';
-                  } else {
-                      reciter.type = 'surah';
-                  }
-              }
-              return reciter;
-          });
-          
+      let jsonText = null;
+
+      // Step 1: Try to load from cache first
+      jsonText = loadFromCacheFile();
+
+      // Step 2: If cache doesn't exist, try to fetch from GitHub
+      if (!jsonText) {
+          log("Quran Player: No cache found, fetching from GitHub");
+          jsonText = fetchRecitersFromGitHub();
+
+          // Save to cache if fetch was successful
+          if (jsonText) {
+              saveToCacheFile(jsonText);
+          }
+      }
+
+      // Step 3: If GitHub fetch failed, try local file
+      if (!jsonText) {
+          log("Quran Player: GitHub fetch failed, trying local file");
+          const recitersFile = Gio.File.new_for_path(GLib.build_filenamev([extensionPath, 'custom-reciters.json']));
+          const [success, contents] = recitersFile.load_contents(null);
+
+          if (success) {
+              jsonText = new TextDecoder().decode(contents);
+              log("Quran Player: Loaded custom-reciters.json from local file");
+          }
+      }
+
+      // Step 4: Parse and process reciters data
+      if (jsonText) {
+          let reciters = JSON.parse(jsonText);
+          reciters = processRecitersData(reciters);
           return reciters;
       } else {
-         log("Quran Player: Failed to load reciters file, using defaults");
+          log("Quran Player: All methods failed, using defaults");
           return DEFAULT_RECITERS;
       }
   } catch (e) {
-      logError(e4, "Quran Player: Error loading reciters", e);
+      logError(e, "Quran Player: Error loading reciters");
       return DEFAULT_RECITERS;
   }
 }
@@ -518,7 +621,7 @@ export function loadSurahs(extension) {
                   return JSON.parse(new TextDecoder().decode(contents));
               }
           } catch (customErr) {
-              logError(e4, "Quran Player: Error loading custom surahs file, falling back to default", customErr);
+              logError(customErr, "Quran Player: Error loading custom surahs file, falling back to default");
           }
       }
       
@@ -786,7 +889,7 @@ export function loadSurahs(extension) {
                     return JSON.parse(new TextDecoder().decode(contents));
                 }
             } catch (customErr) {
-                logError(e4, "Quran Player: Error loading custom juz file, falling back to default", customErr);
+                logError(customErr, "Quran Player: Error loading custom juz file, falling back to default");
             }
         }
         
@@ -801,7 +904,7 @@ export function loadSurahs(extension) {
             return [];
         }
     } catch (e) {
-        logError(e4, "Quran Player: Error loading juz data", e);
+        logError(e, "Quran Player: Error loading juz data");
         return [];
     }
   }
