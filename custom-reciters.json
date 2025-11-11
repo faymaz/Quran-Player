@@ -23,6 +23,7 @@
     "audioFormat": "%specialFormat%",
     "type": "surah",
     "hasSpecialFormat": true,
+    "hasIncomplete": true,
     "formatMap": {
       "01": "Abdullah-Basfar-Quran-English-001-Al-Fatihah.mp3",
       "02": "Abdullah-Basfar-Quran-English-002-Al-Baqarah.mp3",
@@ -126,6 +127,43 @@
     "baseUrl": "https://archive.org/download/Der_edle_Koran/",
     "audioFormat": "%id%.mp3",
     "type": "surah"
+  },
+  {
+    "name": "Egzon Ibrahimi",
+    "baseUrl": "https://podcasts.qurancentral.com/egzon-ibrahimi/",
+    "audioFormat": "%specialFormat%",
+    "type": "surah",
+    "hasSpecialFormat": true,
+    "hasIncomplete": true,
+    "formatMap": {
+      "01": "https://archive.org/serve/al-fatihah-beautiful-arabic-recitation-by-egzon-ibrahimi-duet-singing/AL%20Fatihah%20Beautiful%20Arabic%20Recitation%20by%20Egzon-Ibrahimi%20%23duet%20%23singing.mp3",
+      "02": "002.mp3",
+      "18": "018.mp3",
+      "25": "https://archive.org/download/egzon-ibrahimi-surah-al-furqan-mp-3-160-k/Egzon%20Ibrahimi%20-%20Surah%20Al-Furqan%28MP3_160K%29.mp3",
+      "33": "033.mp3",
+      "36": "036.mp3",
+      "46": "046.mp3",
+      "51": "051.mp3",
+      "55": "055.mp3",
+      "56": "056.mp3",
+      "61": "061.mp3",
+      "62": "062.mp3",
+      "66": "066.mp3",
+      "67": "067.mp3",
+      "75": "075.mp3",
+      "76": "076.mp3",
+      "78": "078.mp3",
+      "87": "087.mp3",
+      "89": "089.mp3",
+      "91": "091.mp3",
+      "95": "095.mp3",
+      "102": "102.mp3",
+      "104": "104.mp3",
+      "106": "106.mp3",
+      "108": "108.mp3",
+      "110": "110.mp3",
+      "112": "112.mp3"
+    }
   },
   {
     "name": "Fatih Seferagic",
@@ -394,6 +432,7 @@
     "audioFormat": "%specialFormat%",
     "type": "surah",
     "hasSpecialFormat": true,
+    "hasIncomplete": true,
     "formatMap": {
       "01": "Holy Quran in Greek_Sura (Chapter) 1_ Al-Fatiha.mp3",
       "78": "HolyQuranInGreek_surachapter78_An-naba.mp3",
@@ -717,6 +756,7 @@
     "audioFormat": "%specialFormat%",
     "type": "surah",
     "hasSpecialFormat": true,
+    "hasIncomplete": true,
     "formatMap": {
       "01": "raad-mohammad-al-kurdi-muslimcentral.com-001-al-fatiha-2017-08-31-04-36-42.mp3",
       "02": "2.mp3",

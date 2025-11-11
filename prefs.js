@@ -48,12 +48,18 @@ const QuranPlayerPrefsPage = GObject.registerClass(
            
             const reciterModel = new Gtk.StringList();
             this._reciters.forEach(reciter => {
-               
+
                 const isJuzReciter = isJuzBasedReciter(reciter);
                 let displayName = reciter.name;
                 if (isJuzReciter) {
                     displayName = `${displayName} [${_("Juz")}]`;
                 }
+
+                // Add warning icon for incomplete reciters
+                if (reciter.hasIncomplete) {
+                    displayName = `${displayName} (Incomplete)`;
+                }
+
                 reciterModel.append(displayName);
             });
 
