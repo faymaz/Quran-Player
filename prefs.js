@@ -122,10 +122,45 @@ const QuranPlayerPrefsPage = GObject.registerClass(
             repeatRow.connect('notify::active', (row) => {
                 this._settings.set_boolean('repeat-current', row.get_active());
             });
-            
+
             generalGroup.add(repeatRow);
 
-           
+
+            const seekDurationRow = new Adw.ComboRow({
+                title: _('Seek Duration'),
+                subtitle: _('Number of seconds to skip forward/backward'),
+            });
+
+
+            const seekDurationModel = Gtk.StringList.new([
+                '10 ' + _('seconds'),
+                '20 ' + _('seconds'),
+                '30 ' + _('seconds'),
+                '40 ' + _('seconds'),
+                '50 ' + _('seconds')
+            ]);
+            seekDurationRow.model = seekDurationModel;
+
+
+            const seekDurations = [10, 20, 30, 40, 50];
+            const currentSeekDuration = this._settings.get_int('seek-duration');
+            const seekIndex = seekDurations.indexOf(currentSeekDuration);
+            if (seekIndex >= 0) {
+                seekDurationRow.selected = seekIndex;
+            } else {
+                seekDurationRow.selected = 0; // Default to 10 seconds
+            }
+
+
+            seekDurationRow.connect('notify::selected', (row) => {
+                if (row.selected >= 0 && row.selected < seekDurations.length) {
+                    this._settings.set_int('seek-duration', seekDurations[row.selected]);
+                }
+            });
+
+            generalGroup.add(seekDurationRow);
+
+
             const languageGroup = new Adw.PreferencesGroup({
                 title: _('Language Settings'),
             });

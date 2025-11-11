@@ -1935,18 +1935,19 @@ class QuranPlayerIndicator extends PanelMenu.Button {
 
     _seekBackward() {
         if (!this._player || this._usingFallback) return;
-        
+
         try {
-            const seekAmount = 10 * Gst.SECOND; // 10 seconds back
+            const seekDuration = this._settings ? this._settings.get_int('seek-duration') : 10;
+            const seekAmount = seekDuration * Gst.SECOND;
             const newPosition = Math.max(0, this._currentPosition - seekAmount);
-            
+
             this._player.seek_simple(
                 Gst.Format.TIME,
                 Gst.SeekFlags.FLUSH | Gst.SeekFlags.KEY_UNIT,
                 newPosition
             );
-            
-            this._log(`Seeked backward to ${newPosition / Gst.SECOND} seconds`);
+
+            this._log(`Seeked backward ${seekDuration} seconds to ${newPosition / Gst.SECOND} seconds`);
         } catch (e) {
             this._log(`Error seeking backward: ${e.message}`);
         }
@@ -1954,18 +1955,19 @@ class QuranPlayerIndicator extends PanelMenu.Button {
 
     _seekForward() {
         if (!this._player || this._usingFallback) return;
-        
+
         try {
-            const seekAmount = 10 * Gst.SECOND; // 10 seconds forward
+            const seekDuration = this._settings ? this._settings.get_int('seek-duration') : 10;
+            const seekAmount = seekDuration * Gst.SECOND;
             const newPosition = Math.min(this._totalDuration, this._currentPosition + seekAmount);
-            
+
             this._player.seek_simple(
                 Gst.Format.TIME,
                 Gst.SeekFlags.FLUSH | Gst.SeekFlags.KEY_UNIT,
                 newPosition
             );
-            
-            this._log(`Seeked forward to ${newPosition / Gst.SECOND} seconds`);
+
+            this._log(`Seeked forward ${seekDuration} seconds to ${newPosition / Gst.SECOND} seconds`);
         } catch (e) {
             this._log(`Error seeking forward: ${e.message}`);
         }
