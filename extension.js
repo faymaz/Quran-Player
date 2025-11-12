@@ -482,13 +482,11 @@ class QuranPlayerIndicator extends PanelMenu.Button {
         this._isMuted = false;
         this._volume = 1.0;
         
-       
+
+
         this._loadSettings();
-        
-       
-        this._createPlayerUI();
-        
-       
+
+
         this._rebuildContentMenu();
        
        
@@ -538,34 +536,39 @@ class QuranPlayerIndicator extends PanelMenu.Button {
     
     _rebuildContentMenu() {
         this._log("Completely rebuilding menu");
-        
-       
+
+
+
         if (this._controlSignalHandlers) {
             this._controlSignalHandlers.forEach(handler => {
-                if (handler.obj && handler.id) {
-                    try {
+                try {
+                    if (handler && handler.obj && handler.id) {
                         handler.obj.disconnect(handler.id);
-                    } catch (e) {
-                        this._log(`Error disconnecting control signal: ${e.message}`);
                     }
+                } catch (e) {
+
                 }
             });
-            this._controlSignalHandlers = [];
         }
-        
-       
-        if (this._controlsBox) {
-            this._controlsBox.destroy();
-            this._controlsBox = null;
-        }
-        
-       
+        this._controlSignalHandlers = [];
+
+
         const items = this.menu._getMenuItems();
         for (let i = items.length - 1; i >= 0; i--) {
             items[i].destroy();
         }
-        
-       
+
+
+        this._controlsBox = null;
+        this._playerBox = null;
+        this._statusBar = null;
+        this._progressBar = null;
+        this._progressBox = null;
+        this._progressBackground = null;
+        this._progressFill = null;
+        this._nowPlayingLabel = null;
+
+
         this._createPlayerUI(true);
         
        
@@ -588,7 +591,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
     }
 
     _createPlayerUI(fullReset = false) {
-       
+
         this._playerBox = new St.BoxLayout({
             vertical: true,
             style_class: 'quran-player-box'
@@ -610,12 +613,15 @@ class QuranPlayerIndicator extends PanelMenu.Button {
         }
         
         this._playerBox.add_child(this._controlsBox);
-        
-       
+
+
         this._createStatusBar();
         this._playerBox.add_child(this._statusBar);
-        
-       
+
+
+        this._connectControlSignals();
+
+
         let playerItem = new PopupMenu.PopupBaseMenuItem({
             reactive: false,
             can_focus: false
@@ -721,26 +727,23 @@ class QuranPlayerIndicator extends PanelMenu.Button {
         this._controlsBox.add_child(this._nextButton);
         this._controlsBox.add_child(this._seekForwardButton);
         this._controlsBox.add_child(this._volumeButton);
-        
-       
-        this._connectControlSignals();
-        
+
         return this._controlsBox;
     }
 
     _createStatusBar() {
-       
+
         this._statusBar = new St.BoxLayout({
             vertical: true,
             style_class: 'quran-status-bar'
         });
-        
-       
+
+
         this._progressBox = new St.BoxLayout({
             style_class: 'quran-progress-box'
         });
-        
-       
+
+
         this._progressBar = new St.BoxLayout({
             width: 300,
             height: 16,
@@ -1007,22 +1010,13 @@ class QuranPlayerIndicator extends PanelMenu.Button {
     }
 
     _connectControlSignals() {
-       
-        if (this._controlSignalHandlers) {
-            this._controlSignalHandlers.forEach(handler => {
-                if (handler.obj && handler.id) {
-                    try {
-                        handler.obj.disconnect(handler.id);
-                    } catch (e) {
-                        this._log(`Error disconnecting control signal: ${e.message}`);
-                    }
-                }
-            });
+
+        if (!this._controlSignalHandlers) {
+            this._controlSignalHandlers = [];
         }
-        
-        this._controlSignalHandlers = [];
-        
-       
+
+
+
         const safeConnect = (obj, signal, callback) => {
             if (obj) {
                 try {
@@ -1035,52 +1029,50 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             }
             return 0;
         };
-        
-       
+
+
         safeConnect(this._playButton, 'clicked', () => {
             this._log("Play button clicked");
             this._togglePlay();
             return Clutter.EVENT_PROPAGATE;
         });
-        
+
         safeConnect(this._stopButton, 'clicked', () => {
             this._log("Stop button clicked");
             this._stopPlayback();
             return Clutter.EVENT_PROPAGATE;
         });
-        
+
         safeConnect(this._prevButton, 'clicked', () => {
             this._log("Previous button clicked");
             this._playPrevious();
             return Clutter.EVENT_PROPAGATE;
         });
-        
+
         safeConnect(this._nextButton, 'clicked', () => {
             this._log("Next button clicked");
             this._playNext();
             return Clutter.EVENT_PROPAGATE;
         });
-        
+
         safeConnect(this._seekBackButton, 'clicked', () => {
             this._log("Seek back button clicked");
             this._seekBackward();
             return Clutter.EVENT_PROPAGATE;
         });
-        
+
         safeConnect(this._seekForwardButton, 'clicked', () => {
             this._log("Seek forward button clicked");
             this._seekForward();
             return Clutter.EVENT_PROPAGATE;
         });
-        
+
         safeConnect(this._volumeButton, 'clicked', () => {
             this._log("Volume button clicked");
             this._toggleMute();
             return Clutter.EVENT_PROPAGATE;
         });
-        
-        
-      
+
         safeConnect(this._progressBar, 'button-press-event', (actor, event) => {
             this._log("Progress bar clicked");
             this._seekToPosition(event);
