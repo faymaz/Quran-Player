@@ -31,7 +31,6 @@ import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 
 import { loadSurahs, loadReciters, loadJuz, isJuzBasedReciter } from './constants.js';
 
-// Global log function for extension.js
 function logMessage(message) {
   console.log(`[Quran Player] ${message}`);
 }
@@ -423,8 +422,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
         this._extension = extension;
         this._settings = extension.getSettings();
 		
-		// In-memory storage for saved positions to avoid GSettings dynamic key issues
-		this._savedPositions = {};
+				this._savedPositions = {};
         
        
         this._surahs = loadSurahs(extension);
@@ -841,14 +839,12 @@ class QuranPlayerIndicator extends PanelMenu.Button {
           
             progressWidth = Math.max(0, Math.min(progressWidth, availableWidth));
             
-			// Only force full width when truly at the end
-			if (progress >= 0.999 || this._currentPosition >= this._totalDuration) {
+						if (progress >= 0.999 || this._currentPosition >= this._totalDuration) {
 				progressWidth = availableWidth;
 				this._log("Progress bar: Reached end, setting full width");
 			}
 			
-			// Apply width with error handling
-            this._progressFill.width = progressWidth;
+			            this._progressFill.width = progressWidth;
 			
             
           
@@ -1224,8 +1220,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
                     displayName = `${displayName} [${_("Juz")}]`;
                 }
 
-                // Add warning icon for incomplete reciters
-                if (reciter.hasIncomplete) {
+                              if (reciter.hasIncomplete) {
                     displayName = `${displayName} (!)`;
                 }
 
@@ -1342,11 +1337,9 @@ class QuranPlayerIndicator extends PanelMenu.Button {
 
             this._log(`Attempting to play surah: ${surah.name} (ID: ${surah.id})`);
 
-            // Store current item
-            this._currentItem = { ...surah, type: 'surah' };
+                      this._currentItem = { ...surah, type: 'surah' };
 
-            // Stop previous playback
-            if (this._player) {
+                      if (this._player) {
                 try {
                     this._player.set_state(Gst.State.NULL);
                     this._player = null;
@@ -1359,19 +1352,16 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             try {
                 this._showNotification(_("Error"), _("Failed to initialize surah playback"));
             } catch (e) {
-                // Fail silently if notification fails
-            }
+                          }
             return;
         }
         
 
         try {
-            // Ensure we have a reciter selected
-            if (!this._selectedReciter && this._reciters.length > 0) {
+                      if (!this._selectedReciter && this._reciters.length > 0) {
                 this._selectedReciter = this._reciters[0];
             } else if (!this._selectedReciter) {
-                // Use default reciter if none available
-                this._selectedReciter = {
+                              this._selectedReciter = {
                     "name": "Mustafa Ismail",
                     "baseUrl": "https://download.quranicaudio.com/quran/mostafa_ismaeel/",
                     "audioFormat": "%id%.mp3",
@@ -1381,18 +1371,15 @@ class QuranPlayerIndicator extends PanelMenu.Button {
 
             let audioUrl;
 
-            // Prepare audio ID
-            const paddedId = surah.id.toString().padStart(3, '0');
+                      const paddedId = surah.id.toString().padStart(3, '0');
             const audioId = surah.audioId || paddedId;
 
-            // Build audio URL
-            if (this._selectedReciter.hasSpecialFormat && this._selectedReciter.formatMap) {
+                      if (this._selectedReciter.hasSpecialFormat && this._selectedReciter.formatMap) {
                 const twoDigitId = surah.id.toString().padStart(2, '0');
 
                 if (this._selectedReciter.formatMap[twoDigitId]) {
                     const specialFormat = this._selectedReciter.formatMap[twoDigitId];
-                    // Check if specialFormat is a full URL
-                    audioUrl = specialFormat.startsWith('http://') || specialFormat.startsWith('https://')
+                                      audioUrl = specialFormat.startsWith('http://') || specialFormat.startsWith('https://')
                         ? specialFormat
                         : `${this._selectedReciter.baseUrl}${specialFormat}`;
                     this._log(`Using special format for surah ${surah.id}: ${audioUrl}`);
@@ -1413,20 +1400,17 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             this._log(`🎧 AUDIO URL (Surah): ${audioUrl}`);
             this._log(`Playing surah: ${surah.name}, URL: ${audioUrl}`);
 
-            // Get saved position
-            const savedPosition = this._getSavedPosition(surah.id, this._selectedReciter.name);
+                      const savedPosition = this._getSavedPosition(surah.id, this._selectedReciter.name);
             this._lastPosition = savedPosition || 0;
 
-            // Play the audio
-            this._playAudio(audioUrl, `Now playing: ${surah.name}`, `Reciter: ${this._selectedReciter ? this._selectedReciter.name : "Unknown"}`);
+                      this._playAudio(audioUrl, `Now playing: ${surah.name}`, `Reciter: ${this._selectedReciter ? this._selectedReciter.name : "Unknown"}`);
 
         } catch (urlError) {
             this._log(`Error creating audio URL: ${urlError.message}`);
             try {
                 this._showNotification(_("Error"), _("Failed to prepare audio for playback"));
             } catch (e) {
-                // Fail silently if notification fails
-            }
+                          }
             return;
         }
     }
@@ -1439,15 +1423,13 @@ class QuranPlayerIndicator extends PanelMenu.Button {
 
             this._log(`Attempting to play juz: ${juz.name} (ID: ${juz.id})`);
 
-            // Store current item
-            this._currentItem = {
+                      this._currentItem = {
                 ...juz,
                 type: 'juz',
                 description: juz.description || ''
             };
 
-            // Stop previous playback
-            if (this._player) {
+                      if (this._player) {
                 try {
                     this._player.set_state(Gst.State.NULL);
                     this._player = null;
@@ -1460,19 +1442,16 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             try {
                 this._showNotification(_("Error"), _("Failed to initialize juz playback"));
             } catch (e) {
-                // Fail silently if notification fails
-            }
+                          }
             return;
         }
         
 
         try {
-            // Ensure we have a reciter selected
-            if (!this._selectedReciter && this._reciters.length > 0) {
+                      if (!this._selectedReciter && this._reciters.length > 0) {
                 this._selectedReciter = this._reciters.find(r => isJuzBasedReciter(r)) || this._reciters[0];
             } else if (!this._selectedReciter) {
-                // Use default juz reciter if none available
-                this._selectedReciter = {
+                              this._selectedReciter = {
                     "name": "Hayri Küçükdeniz-Suat Yıldırım Meali",
                     "baseUrl": "https://archive.org/download/Kurani.Kerim.Meali.30.cuz.Prof.Dr.SuatYildirim/",
                     "audioFormat": "%id%Cuz.mp3",
@@ -1484,12 +1463,10 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             const paddedId = juz.id.toString().padStart(2, '0');
             const audioId = juz.audioId || paddedId;
 
-            // Build audio URL
-            if (this._selectedReciter.hasSpecialFormat && this._selectedReciter.formatMap) {
+                      if (this._selectedReciter.hasSpecialFormat && this._selectedReciter.formatMap) {
                 if (this._selectedReciter.formatMap[audioId]) {
                     const specialFormat = this._selectedReciter.formatMap[audioId];
-                    // Check if specialFormat is a full URL
-                    audioUrl = specialFormat.startsWith('http://') || specialFormat.startsWith('https://')
+                                      audioUrl = specialFormat.startsWith('http://') || specialFormat.startsWith('https://')
                         ? specialFormat
                         : `${this._selectedReciter.baseUrl}${specialFormat}`;
                     this._log(`Using special format for juz ${juz.id}: ${audioUrl}`);
@@ -1512,20 +1489,17 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             this._log(`🎧 AUDIO URL (Juz): ${audioUrl}`);
             this._log(`Playing juz: ${juz.name}, URL: ${audioUrl}`);
 
-            // Get saved position
-            const savedPosition = this._getSavedPosition(juz.id, this._selectedReciter.name);
+                      const savedPosition = this._getSavedPosition(juz.id, this._selectedReciter.name);
             this._lastPosition = savedPosition || 0;
 
-            // Play the audio
-            this._playAudio(audioUrl, `Now playing: ${juz.name}`, `Reciter: ${this._selectedReciter ? this._selectedReciter.name : "Unknown"}`);
+                      this._playAudio(audioUrl, `Now playing: ${juz.name}`, `Reciter: ${this._selectedReciter ? this._selectedReciter.name : "Unknown"}`);
 
         } catch (urlError) {
             this._log(`Error creating audio URL: ${urlError.message}`);
             try {
                 this._showNotification(_("Error"), _("Failed to prepare juz audio for playback"));
             } catch (e) {
-                // Fail silently if notification fails
-            }
+                          }
             return;
         }
     }
@@ -1605,12 +1579,10 @@ class QuranPlayerIndicator extends PanelMenu.Button {
                     let [error, debug] = msg.parse_error();
                     this._log(`GStreamer playback error: ${error.message} (${debug})`);
 
-                    // Show user-friendly error message
-                    const errorTitle = _("Playback Error");
+                                      const errorTitle = _("Playback Error");
                     let errorBody = _("Cannot play the selected audio file");
 
-                    // Check for common error types
-                    if (error.message.includes("404") || error.message.includes("Not Found")) {
+                                      if (error.message.includes("404") || error.message.includes("Not Found")) {
                         errorBody = _("Audio file not found (404)");
                     } else if (error.message.includes("403") || error.message.includes("Forbidden")) {
                         errorBody = _("Access denied to audio file (403)");
@@ -1620,8 +1592,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
                     this._stopPlayback();
                 } catch (e) {
                     this._log(`Error in error handler: ${e.message}`);
-                    // Ensure playback stops even if error handling fails
-                    try {
+                                      try {
                         this._stopPlayback();
                     } catch (stopError) {
                         this._log(`Failed to stop playback: ${stopError.message}`);
@@ -1667,13 +1638,11 @@ class QuranPlayerIndicator extends PanelMenu.Button {
         } catch (gstError) {
             this._log(`GStreamer error: ${gstError.message}`);
 
-            // Show error notification instead of trying fallbacks
-            try {
+                      try {
                 const errorTitle = _("Playback Error");
                 let errorBody = _("Cannot play the selected audio file");
 
-                // Check for common error patterns
-                if (gstError.message.includes("404") || gstError.message.includes("Not Found")) {
+                              if (gstError.message.includes("404") || gstError.message.includes("Not Found")) {
                     errorBody = _("Audio file not found (404). The file may not exist on the server.");
                 } else if (gstError.message.includes("403") || gstError.message.includes("Forbidden")) {
                     errorBody = _("Access denied to audio file (403)");
@@ -1689,8 +1658,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
                 this._log(`Failed to show error notification: ${notifyError.message}`);
             }
 
-            // Reset player state
-            this._isPlaying = false;
+                      this._isPlaying = false;
             this._player = null;
             this._updatePlayerUI();
 
@@ -1848,8 +1816,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
     }
     
 	_stopPlayback() {
-		// Save current position BEFORE stopping (if available)
-		if (this._player && this._currentItem && this._selectedReciter) {
+				if (this._player && this._currentItem && this._selectedReciter) {
 			try {
 				let format = Gst.Format.TIME;
 				let query = Gst.Query.new_position(format);
@@ -1908,8 +1875,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
         
         this._isPlaying = false;
         this._updatePlayerUI();
-        //this._log("Stopped playback");
-    }
+          }
     
     _playNext() {
         if (!this._currentItem) return;
@@ -2098,8 +2064,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
                     this._nowPlayingLabel.text = this._currentItem.name;
                 }
             }
-            //this._log("Update player UI");
-           
+                     
             const reciterName = this._selectedReciter ? this._selectedReciter.name : "";
             this._panelLabel.text = ` ${this._currentItem.name} - ${reciterName}`;
             

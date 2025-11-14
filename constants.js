@@ -21,7 +21,6 @@ import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
 import Soup from 'gi://Soup';
 
-// Global log function for constants.js
 function logMessage(message, isError = false) {
   const prefix = isError ? '[Quran Player ERROR]' : '[Quran Player]';
   console.log(`${prefix} ${message}`);
@@ -588,13 +587,11 @@ export function loadReciters(extension) {
           saveToCacheFile(githubJson);
           finalJson = githubJson;
       } else if (cacheCount > 0) {
-          // Only cache available (GitHub failed)
-          logMessage(`GitHub unavailable, using cache with ${cacheCount} reciters`);
+                  logMessage(`GitHub unavailable, using cache with ${cacheCount} reciters`);
           finalJson = cacheJson;
       }
 
-      // Step 4: If both failed, try local file
-      if (!finalJson) {
+          if (!finalJson) {
           logMessage("Both GitHub and cache failed, trying local file");
           const recitersFile = Gio.File.new_for_path(GLib.build_filenamev([extensionPath, 'custom-reciters.json']));
           const [success, contents] = recitersFile.load_contents(null);
@@ -605,8 +602,7 @@ export function loadReciters(extension) {
           }
       }
 
-      // Step 5: Parse and process reciters data
-      if (finalJson) {
+          if (finalJson) {
           let reciters = JSON.parse(finalJson);
           reciters = processRecitersData(reciters);
           logMessage(`Returning ${reciters.length} reciters`);

@@ -55,8 +55,7 @@ const QuranPlayerPrefsPage = GObject.registerClass(
                     displayName = `${displayName} [${_("Juz")}]`;
                 }
 
-                // Add warning icon for incomplete reciters
-                if (reciter.hasIncomplete) {
+                              if (reciter.hasIncomplete) {
                     displayName = `${displayName} (Incomplete)`;
                 }
 
@@ -335,8 +334,7 @@ export default class QuranPlayerPreferences extends ExtensionPreferences {
             const session = new Soup.Session({ timeout: 10 });
             const message = Soup.Message.new('GET', 'https://raw.githubusercontent.com/faymaz/Quran-Player/master/custom-reciters.json');
 
-            // Send synchronous request
-            const bytes = session.send_and_read(message, null);
+                      const bytes = session.send_and_read(message, null);
 
             if (message.get_status() === Soup.Status.OK) {
                 const contents = bytes.get_data();
@@ -359,8 +357,7 @@ export default class QuranPlayerPreferences extends ExtensionPreferences {
             const cacheDir = GLib.get_user_cache_dir();
             const quranPlayerCacheDir = GLib.build_filenamev([cacheDir, 'quran-player']);
 
-            // Create cache directory if it doesn't exist
-            const cacheDirFile = Gio.File.new_for_path(quranPlayerCacheDir);
+                      const cacheDirFile = Gio.File.new_for_path(quranPlayerCacheDir);
             if (!cacheDirFile.query_exists(null)) {
                 cacheDirFile.make_directory_with_parents(null);
             }
@@ -368,8 +365,7 @@ export default class QuranPlayerPreferences extends ExtensionPreferences {
             const cacheFilePath = GLib.build_filenamev([quranPlayerCacheDir, 'custom-reciters.json']);
             const cacheFile = Gio.File.new_for_path(cacheFilePath);
 
-            // Write to cache file
-            const bytes = new TextEncoder().encode(jsonText);
+                      const bytes = new TextEncoder().encode(jsonText);
             const outputStream = cacheFile.replace(null, false, Gio.FileCreateFlags.NONE, null);
             outputStream.write_all(bytes, null);
             outputStream.close(null);
@@ -404,8 +400,7 @@ export default class QuranPlayerPreferences extends ExtensionPreferences {
     }
 
     _processRecitersData(reciters) {
-        // Add type property if missing
-        return reciters.map(reciter => {
+              return reciters.map(reciter => {
             if (!reciter.type) {
                 if (reciter.name.toLowerCase().includes('cüz') ||
                     reciter.name.toLowerCase().includes('juz') ||
@@ -426,20 +421,16 @@ export default class QuranPlayerPreferences extends ExtensionPreferences {
             let githubJson = null;
             let finalJson = null;
 
-            // Step 1: Try to load from cache first
-            cacheJson = this._loadFromCacheFile();
+                      cacheJson = this._loadFromCacheFile();
             const cacheReciters = cacheJson ? JSON.parse(cacheJson) : null;
             const cacheCount = cacheReciters ? cacheReciters.length : 0;
 
-            // Step 2: Always try to fetch from GitHub to check for updates
-            githubJson = this._fetchRecitersFromGitHub();
+                      githubJson = this._fetchRecitersFromGitHub();
             const githubReciters = githubJson ? JSON.parse(githubJson) : null;
             const githubCount = githubReciters ? githubReciters.length : 0;
 
-            // Step 3: Compare and decide which to use
-            if (githubCount > 0 && cacheCount > 0) {
-                // Both available - compare sizes
-                if (githubCount > cacheCount) {
+                      if (githubCount > 0 && cacheCount > 0) {
+                              if (githubCount > cacheCount) {
                     this._log(`GitHub has more reciters (${githubCount}) than cache (${cacheCount}), updating cache`);
                     this._saveToCacheFile(githubJson);
                     finalJson = githubJson;
@@ -448,18 +439,15 @@ export default class QuranPlayerPreferences extends ExtensionPreferences {
                     finalJson = cacheJson;
                 }
             } else if (githubCount > 0) {
-                // Only GitHub available
-                this._log(`Using GitHub data with ${githubCount} reciters, saving to cache`);
+                              this._log(`Using GitHub data with ${githubCount} reciters, saving to cache`);
                 this._saveToCacheFile(githubJson);
                 finalJson = githubJson;
             } else if (cacheCount > 0) {
-                // Only cache available (GitHub failed)
-                this._log(`GitHub unavailable, using cache with ${cacheCount} reciters`);
+                              this._log(`GitHub unavailable, using cache with ${cacheCount} reciters`);
                 finalJson = cacheJson;
             }
 
-            // Step 4: If both failed, try local file
-            if (!finalJson) {
+                      if (!finalJson) {
                 this._log("Both GitHub and cache failed, trying local file");
                 const recitersFile = Gio.File.new_for_path(GLib.build_filenamev([this.path, 'custom-reciters.json']));
                 const [success, contents] = recitersFile.load_contents(null);
@@ -470,8 +458,7 @@ export default class QuranPlayerPreferences extends ExtensionPreferences {
                 }
             }
 
-            // Step 5: Parse and process reciters data
-            if (finalJson) {
+                      if (finalJson) {
                 let reciters = JSON.parse(finalJson);
                 reciters = this._processRecitersData(reciters);
                 this._log(`Returning ${reciters.length} reciters`);
