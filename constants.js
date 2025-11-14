@@ -21,7 +21,11 @@ import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
 import Soup from 'gi://Soup';
 
-//console.log('Constants file loaded from:', import.meta.url);
+// Global log function for constants.js
+function logMessage(message, isError = false) {
+  const prefix = isError ? '[Quran Player ERROR]' : '[Quran Player]';
+  console.log(`${prefix} ${message}`);
+}
 
 export const DEFAULT_RECITERS = [
   {
@@ -469,26 +473,25 @@ export const DEFAULT_RECITERS = [
 
 function fetchRecitersFromGitHub() {
   try {
-      log("Quran Player: Attempting to fetch custom-reciters.json from GitHub");
+      logMessage("Attempting to fetch custom-reciters.json from GitHub");
 
       const session = new Soup.Session({ timeout: 10 });
       const message = Soup.Message.new('GET', 'https://raw.githubusercontent.com/faymaz/Quran-Player/master/custom-reciters.json');
 
-      // Send synchronous request
-      const bytes = session.send_and_read(message, null);
+           const bytes = session.send_and_read(message, null);
 
       if (message.get_status() === Soup.Status.OK) {
           const contents = bytes.get_data();
           const textDecoder = new TextDecoder('utf-8');
           const jsonText = textDecoder.decode(contents);
-          log("Quran Player: Successfully fetched custom-reciters.json from GitHub");
+          logMessage("Successfully fetched custom-reciters.json from GitHub");
           return jsonText;
       } else {
-          log(`Quran Player: GitHub fetch failed with status ${message.get_status()}`);
+          logMessage(`GitHub fetch failed with status ${message.get_status()}`);
           return null;
       }
   } catch (e) {
-      log(`Quran Player: Error fetching from GitHub: ${e.message}`);
+      logMessage(`Error fetching from GitHub: ${e.message}`, true);
       return null;
   }
 }
@@ -498,8 +501,7 @@ function saveToCacheFile(jsonText) {
       const cacheDir = GLib.get_user_cache_dir();
       const quranPlayerCacheDir = GLib.build_filenamev([cacheDir, 'quran-player']);
 
-      // Create cache directory if it doesn't exist
-      const cacheDirFile = Gio.File.new_for_path(quranPlayerCacheDir);
+           const cacheDirFile = Gio.File.new_for_path(quranPlayerCacheDir);
       if (!cacheDirFile.query_exists(null)) {
           cacheDirFile.make_directory_with_parents(null);
       }
@@ -507,16 +509,15 @@ function saveToCacheFile(jsonText) {
       const cacheFilePath = GLib.build_filenamev([quranPlayerCacheDir, 'custom-reciters.json']);
       const cacheFile = Gio.File.new_for_path(cacheFilePath);
 
-      // Write to cache file
-      const bytes = new TextEncoder().encode(jsonText);
+           const bytes = new TextEncoder().encode(jsonText);
       const outputStream = cacheFile.replace(null, false, Gio.FileCreateFlags.NONE, null);
       outputStream.write_all(bytes, null);
       outputStream.close(null);
 
-      log(`Quran Player: Saved custom-reciters.json to cache: ${cacheFilePath}`);
+      logMessage(`Saved custom-reciters.json to cache: ${cacheFilePath}`);
       return true;
   } catch (e) {
-      log(`Quran Player: Error saving to cache: ${e.message}`);
+      logMessage(`Error saving to cache: ${e.message}`, true);
       return false;
   }
 }
@@ -531,19 +532,18 @@ function loadFromCacheFile() {
           const [success, contents] = cacheFile.load_contents(null);
           if (success) {
               const jsonText = new TextDecoder().decode(contents);
-              log("Quran Player: Loaded custom-reciters.json from cache");
+              logMessage("Loaded custom-reciters.json from cache");
               return jsonText;
           }
       }
       return null;
   } catch (e) {
-      log(`Quran Player: Error loading from cache: ${e.message}`);
+      logMessage(`Error loading from cache: ${e.message}`, true);
       return null;
   }
 }
 
 function processRecitersData(reciters) {
-  // Add type property if missing
   return reciters.map(reciter => {
       if (!reciter.type) {
           if (reciter.name.toLowerCase().includes('cüz') ||
@@ -562,41 +562,57 @@ function processRecitersData(reciters) {
 export function loadReciters(extension) {
   try {
       const extensionPath = extension.path;
-      let jsonText = null;
+      let cacheJson = null;
+      let githubJson = null;
+      let finalJson = null;
 
-      // Step 1: Try to load from cache first
-      jsonText = loadFromCacheFile();
+           cacheJson = loadFromCacheFile();
+      const cacheReciters = cacheJson ? JSON.parse(cacheJson) : null;
+      const cacheCount = cacheReciters ? cacheReciters.length : 0;
 
-      // Step 2: If cache doesn't exist, try to fetch from GitHub
-      if (!jsonText) {
-          log("Quran Player: No cache found, fetching from GitHub");
-          jsonText = fetchRecitersFromGitHub();
+           githubJson = fetchRecitersFromGitHub();
+      const githubReciters = githubJson ? JSON.parse(githubJson) : null;
+      const githubCount = githubReciters ? githubReciters.length : 0;
 
-          // Save to cache if fetch was successful
-          if (jsonText) {
-              saveToCacheFile(jsonText);
+           if (githubCount > 0 && cacheCount > 0) {
+                   if (githubCount > cacheCount) {
+              logMessage(`GitHub has more reciters (${githubCount}) than cache (${cacheCount}), updating cache`);
+              saveToCacheFile(githubJson);
+              finalJson = githubJson;
+          } else {
+              logMessage(`Cache is up to date (${cacheCount} reciters), GitHub has ${githubCount}`);
+              finalJson = cacheJson;
           }
+      } else if (githubCount > 0) {
+                   logMessage(`Using GitHub data with ${githubCount} reciters, saving to cache`);
+          saveToCacheFile(githubJson);
+          finalJson = githubJson;
+      } else if (cacheCount > 0) {
+          // Only cache available (GitHub failed)
+          logMessage(`GitHub unavailable, using cache with ${cacheCount} reciters`);
+          finalJson = cacheJson;
       }
 
-      // Step 3: If GitHub fetch failed, try local file
-      if (!jsonText) {
-          log("Quran Player: GitHub fetch failed, trying local file");
+      // Step 4: If both failed, try local file
+      if (!finalJson) {
+          logMessage("Both GitHub and cache failed, trying local file");
           const recitersFile = Gio.File.new_for_path(GLib.build_filenamev([extensionPath, 'custom-reciters.json']));
           const [success, contents] = recitersFile.load_contents(null);
 
           if (success) {
-              jsonText = new TextDecoder().decode(contents);
-              log("Quran Player: Loaded custom-reciters.json from local file");
+              finalJson = new TextDecoder().decode(contents);
+              logMessage("Loaded custom-reciters.json from local file");
           }
       }
 
-      // Step 4: Parse and process reciters data
-      if (jsonText) {
-          let reciters = JSON.parse(jsonText);
+      // Step 5: Parse and process reciters data
+      if (finalJson) {
+          let reciters = JSON.parse(finalJson);
           reciters = processRecitersData(reciters);
+          logMessage(`Returning ${reciters.length} reciters`);
           return reciters;
       } else {
-          log("Quran Player: All methods failed, using defaults");
+          logMessage("All methods failed, using defaults");
           return DEFAULT_RECITERS;
       }
   } catch (e) {
@@ -632,7 +648,7 @@ export function loadSurahs(extension) {
       if (success) {
           return JSON.parse(new TextDecoder().decode(contents));
       } else {
-         log("Quran Player: Failed to load surahs file, using defaults");
+          logMessage("Failed to load surahs file, using defaults");
          
           return [
                 {"name": "Al-Fatihah", "id": 1, "audioId": "001"},
@@ -900,7 +916,7 @@ export function loadSurahs(extension) {
         if (success) {
             return JSON.parse(new TextDecoder().decode(contents));
         } else {
-           log("Quran Player: Failed to load juz file");
+            logMessage("Failed to load juz file");
             return [];
         }
     } catch (e) {

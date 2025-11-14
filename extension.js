@@ -31,47 +31,51 @@ import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 
 import { loadSurahs, loadReciters, loadJuz, isJuzBasedReciter } from './constants.js';
 
+// Global log function for extension.js
+function logMessage(message) {
+  console.log(`[Quran Player] ${message}`);
+}
 
 function initializeJuzData(extension) {
     try {
         const juzFilePath = GLib.build_filenamev([extension.path, 'juz.json']);
         const juzFile = Gio.File.new_for_path(juzFilePath);
-        
+
         if (!juzFile.query_exists(null)) {
-           log('Quran Player: juz.json not found at path: ' + juzFilePath);
+            logMessage('juz.json not found at path: ' + juzFilePath);
             return [];
         }
-        
+
         const [success, contents] = juzFile.load_contents(null);
-        
+
         if (success && contents && contents.length > 0) {
             const jsonData = JSON.parse(new TextDecoder().decode(contents));
-           log('Quran Player: Successfully loaded Juz data with ' + jsonData.length + ' entries');
+            logMessage('Successfully loaded Juz data with ' + jsonData.length + ' entries');
             return jsonData;
         } else {
-           log('Quran Player: Failed to parse Juz data');
+            logMessage('Failed to parse Juz data');
             return [];
         }
     } catch (e) {
-       log('Quran Player: Error loading Juz data: ' + e.message);
+        logMessage('Error loading Juz data: ' + e.message);
         return [];
     }
 }
 
 function debugJuzLoading(extension) {
     try {
-       log('Quran Player: Extension path: ' + extension.path);
-        
+        logMessage('Extension path: ' + extension.path);
+
         const juzFilePath = GLib.build_filenamev([extension.path, 'juz.json']);
-       log('Quran Player: Checking for juz.json at: ' + juzFilePath);
-        
+        logMessage('Checking for juz.json at: ' + juzFilePath);
+
         const juzFile = Gio.File.new_for_path(juzFilePath);
         const exists = juzFile.query_exists(null);
-        
-       log('Quran Player: juz.json exists: ' + exists);
-        
+
+        logMessage('juz.json exists: ' + exists);
+
         if (!exists) {
-           log('Quran Player: File not found. Creating juz.json with default data...');
+            logMessage('File not found. Creating juz.json with default data...');
             
             const juzData = [
                 {
@@ -382,31 +386,31 @@ function debugJuzLoading(extension) {
                 const outputStream = juzFile.replace(null, false, Gio.FileCreateFlags.NONE, null);
                 outputStream.write_all(bytes, null);
                 outputStream.close(null);
-               log('Quran Player: Successfully created juz.json with default data');
+                logMessage('Successfully created juz.json with default data');
                 return juzData;
             } catch (writeError) {
-               log('Quran Player: Error writing juz.json: ' + writeError.message);
+                logMessage('Error writing juz.json: ' + writeError.message);
                 return [];
             }
         }
-        
+
         try {
             const [success, contents] = juzFile.load_contents(null);
-            
+
             if (success && contents && contents.length > 0) {
                 const jsonData = JSON.parse(new TextDecoder().decode(contents));
-               log('Quran Player: Successfully loaded Juz data with ' + jsonData.length + ' entries');
+                logMessage('Successfully loaded Juz data with ' + jsonData.length + ' entries');
                 return jsonData;
             } else {
-               log('Quran Player: Failed to read juz.json contents');
+                logMessage('Failed to read juz.json contents');
                 return [];
             }
         } catch (readError) {
-           log('Quran Player: Error reading juz.json: ' + readError.message);
+            logMessage('Error reading juz.json: ' + readError.message);
             return [];
         }
     } catch (e) {
-       log('Quran Player: Debug error: ' + e.message);
+        logMessage('Debug error: ' + e.message);
         return [];
     }
 }
@@ -1406,7 +1410,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
                     .replace(/%name%/g, surah.name);
             }
 
-            log(`🎧 AUDIO URL (Surah): ${audioUrl}`);
+            this._log(`🎧 AUDIO URL (Surah): ${audioUrl}`);
             this._log(`Playing surah: ${surah.name}, URL: ${audioUrl}`);
 
             // Get saved position
@@ -1505,7 +1509,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
                 this._log(`Using standard format for juz ${juz.id}: ${audioUrl}`);
             }
 
-            log(`🎧 AUDIO URL (Juz): ${audioUrl}`);
+            this._log(`🎧 AUDIO URL (Juz): ${audioUrl}`);
             this._log(`Playing juz: ${juz.name}, URL: ${audioUrl}`);
 
             // Get saved position
@@ -1700,7 +1704,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
     _log(message) {
       
         if (this._settings && this._settings.get_boolean('enable-debug-log')) {
-            log(`[Quran Player] ${message}`);
+           console.log(`[Quran Player] ${message}`);
         }
     }
 
@@ -1710,7 +1714,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
         if (error) {
             logError(error, `Quran Player: ${message}`);
         } else if (this._settings && this._settings.get_boolean('enable-debug-log')) {
-            log(`[Quran Player ERROR] ${message}`);
+           console.log(`[Quran Player ERROR] ${message}`);
         }
     }
 
@@ -2207,12 +2211,11 @@ class QuranPlayerIndicator extends PanelMenu.Button {
 export default class QuranPlayerExtension extends Extension {
     enable() {
         this._settings = this.getSettings();
-        
-      
+
         if (this._settings.get_boolean('enable-debug-log')) {
-            log('Quran Player: Enabling extension');
+            logMessage('Enabling extension');
         }
-        
+
         try {
             if (!Gst.init_check(null)) {
                 Gst.init(null);
@@ -2220,43 +2223,40 @@ export default class QuranPlayerExtension extends Extension {
         } catch (e) {
             logError(e, 'Quran Player: Failed to initialize GStreamer');
         }
-        
-      
+
         if (this._settings.get_boolean('enable-debug-log')) {
-            log('Quran Player: Using GNOME Shell built-in localization');
+            logMessage('Using GNOME Shell built-in localization');
         }
-        
+
         this._settingsChangedId = this._settings.connect('changed::interface-language', () => {
             if (this._settings.get_boolean('enable-debug-log')) {
-                log('Quran Player: Language setting changed');
+                logMessage('Language setting changed');
             }
             if (this._indicator && this._indicator._showNotification) {
-                this._indicator._showNotification(_("Language Changed"), 
+                this._indicator._showNotification(_("Language Changed"),
                     _("Please restart GNOME Shell for the language change to take effect"));
             }
         });
-        
+
         this._indicator = new QuranPlayerIndicator(this);
         Main.panel.addToStatusArea('quran-player', this._indicator);
-        
+
         if (this._settings.get_boolean('enable-debug-log')) {
-            log('Quran Player: Extension enabled');
+            logMessage('Extension enabled');
         }
     }
 
-    
+
     disable() {
         if (this._settings && this._settings.get_boolean('enable-debug-log')) {
-            log('Quran Player: Disabling extension');
+            logMessage('Disabling extension');
         }
-        
-       
+
         if (this._settingsChangedId) {
             this._settings.disconnect(this._settingsChangedId);
             this._settingsChangedId = 0;
         }
-       
-       
+
         if (this._indicator) {
             try {
                 if (typeof this._indicator._stopPlayback === 'function') {
@@ -2264,19 +2264,18 @@ export default class QuranPlayerExtension extends Extension {
                 }
             } catch (e) {
                 if (this._settings && this._settings.get_boolean('enable-debug-log')) {
-                    log(`Quran Player: Error stopping playback during disable: ${e.message}`);
+                    logMessage(`Error stopping playback during disable: ${e.message}`);
                 }
             }
         }
-        
-       
+
         if (this._indicator) {
             this._indicator.destroy();
             this._indicator = null;
         }
-        
+
         this._settings = null;
-        
-       log('Quran Player: Extension disabled');
+
+        logMessage('Extension disabled');
     }
 }

@@ -324,9 +324,13 @@ const QuranPlayerPrefsPage = GObject.registerClass(
     });
 
 export default class QuranPlayerPreferences extends ExtensionPreferences {
+    _log(message) {
+        console.log(`[Quran Player (Prefs)] ${message}`);
+    }
+
     _fetchRecitersFromGitHub() {
         try {
-            log("Quran Player (Prefs): Attempting to fetch custom-reciters.json from GitHub");
+            this._log("Attempting to fetch custom-reciters.json from GitHub");
 
             const session = new Soup.Session({ timeout: 10 });
             const message = Soup.Message.new('GET', 'https://raw.githubusercontent.com/faymaz/Quran-Player/master/custom-reciters.json');
@@ -338,14 +342,14 @@ export default class QuranPlayerPreferences extends ExtensionPreferences {
                 const contents = bytes.get_data();
                 const textDecoder = new TextDecoder('utf-8');
                 const jsonText = textDecoder.decode(contents);
-                log("Quran Player (Prefs): Successfully fetched custom-reciters.json from GitHub");
+                this._log("Successfully fetched custom-reciters.json from GitHub");
                 return jsonText;
             } else {
-                log(`Quran Player (Prefs): GitHub fetch failed with status ${message.get_status()}`);
+                this._log(`GitHub fetch failed with status ${message.get_status()}`);
                 return null;
             }
         } catch (e) {
-            log(`Quran Player (Prefs): Error fetching from GitHub: ${e.message}`);
+            this._log(`Error fetching from GitHub: ${e.message}`);
             return null;
         }
     }
@@ -370,10 +374,10 @@ export default class QuranPlayerPreferences extends ExtensionPreferences {
             outputStream.write_all(bytes, null);
             outputStream.close(null);
 
-            log(`Quran Player (Prefs): Saved custom-reciters.json to cache: ${cacheFilePath}`);
+            this._log(`Saved custom-reciters.json to cache: ${cacheFilePath}`);
             return true;
         } catch (e) {
-            log(`Quran Player (Prefs): Error saving to cache: ${e.message}`);
+            this._log(`Error saving to cache: ${e.message}`);
             return false;
         }
     }
@@ -388,13 +392,13 @@ export default class QuranPlayerPreferences extends ExtensionPreferences {
                 const [success, contents] = cacheFile.load_contents(null);
                 if (success) {
                     const jsonText = new TextDecoder().decode(contents);
-                    log("Quran Player (Prefs): Loaded custom-reciters.json from cache");
+                    this._log("Loaded custom-reciters.json from cache");
                     return jsonText;
                 }
             }
             return null;
         } catch (e) {
-            log(`Quran Player (Prefs): Error loading from cache: ${e.message}`);
+            this._log(`Error loading from cache: ${e.message}`);
             return null;
         }
     }
@@ -418,41 +422,62 @@ export default class QuranPlayerPreferences extends ExtensionPreferences {
 
     _loadReciters() {
         try {
-            let jsonText = null;
+            let cacheJson = null;
+            let githubJson = null;
+            let finalJson = null;
 
             // Step 1: Try to load from cache first
-            jsonText = this._loadFromCacheFile();
+            cacheJson = this._loadFromCacheFile();
+            const cacheReciters = cacheJson ? JSON.parse(cacheJson) : null;
+            const cacheCount = cacheReciters ? cacheReciters.length : 0;
 
-            // Step 2: If cache doesn't exist, try to fetch from GitHub
-            if (!jsonText) {
-                log("Quran Player (Prefs): No cache found, fetching from GitHub");
-                jsonText = this._fetchRecitersFromGitHub();
+            // Step 2: Always try to fetch from GitHub to check for updates
+            githubJson = this._fetchRecitersFromGitHub();
+            const githubReciters = githubJson ? JSON.parse(githubJson) : null;
+            const githubCount = githubReciters ? githubReciters.length : 0;
 
-                // Save to cache if fetch was successful
-                if (jsonText) {
-                    this._saveToCacheFile(jsonText);
+            // Step 3: Compare and decide which to use
+            if (githubCount > 0 && cacheCount > 0) {
+                // Both available - compare sizes
+                if (githubCount > cacheCount) {
+                    this._log(`GitHub has more reciters (${githubCount}) than cache (${cacheCount}), updating cache`);
+                    this._saveToCacheFile(githubJson);
+                    finalJson = githubJson;
+                } else {
+                    this._log(`Cache is up to date (${cacheCount} reciters), GitHub has ${githubCount}`);
+                    finalJson = cacheJson;
                 }
+            } else if (githubCount > 0) {
+                // Only GitHub available
+                this._log(`Using GitHub data with ${githubCount} reciters, saving to cache`);
+                this._saveToCacheFile(githubJson);
+                finalJson = githubJson;
+            } else if (cacheCount > 0) {
+                // Only cache available (GitHub failed)
+                this._log(`GitHub unavailable, using cache with ${cacheCount} reciters`);
+                finalJson = cacheJson;
             }
 
-            // Step 3: If GitHub fetch failed, try local file
-            if (!jsonText) {
-                log("Quran Player (Prefs): GitHub fetch failed, trying local file");
+            // Step 4: If both failed, try local file
+            if (!finalJson) {
+                this._log("Both GitHub and cache failed, trying local file");
                 const recitersFile = Gio.File.new_for_path(GLib.build_filenamev([this.path, 'custom-reciters.json']));
                 const [success, contents] = recitersFile.load_contents(null);
 
                 if (success) {
-                    jsonText = new TextDecoder().decode(contents);
-                    log("Quran Player (Prefs): Loaded custom-reciters.json from local file");
+                    finalJson = new TextDecoder().decode(contents);
+                    this._log("Loaded custom-reciters.json from local file");
                 }
             }
 
-            // Step 4: Parse and process reciters data
-            if (jsonText) {
-                let reciters = JSON.parse(jsonText);
+            // Step 5: Parse and process reciters data
+            if (finalJson) {
+                let reciters = JSON.parse(finalJson);
                 reciters = this._processRecitersData(reciters);
+                this._log(`Returning ${reciters.length} reciters`);
                 return reciters;
             } else {
-                log("Quran Player (Prefs): All methods failed, using defaults");
+                this._log("All methods failed, using defaults");
                 return DEFAULT_RECITERS;
             }
         } catch (e) {
