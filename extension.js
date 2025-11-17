@@ -1387,12 +1387,25 @@ class QuranPlayerIndicator extends PanelMenu.Button {
                         ? specialFormat
                         : `${this._selectedReciter.baseUrl}${specialFormat}`;
                     this._log(`Using special format for surah ${surah.id}: ${audioUrl}`);
+                } else if (this._selectedReciter.hasIncomplete) {
+                    // This surah is not available for this reciter
+                    this._log(`Surah ${surah.id} (${surah.name}) is not available for reciter ${this._selectedReciter.name}`);
+                    try {
+                        this._showNotification(
+                            _("Surah Not Available"),
+                            _(`${surah.name} is not available for ${this._selectedReciter.name}`)
+                        );
+                    } catch (e) {
+                        this._log(`Error showing notification: ${e.message}`);
+                    }
+                    return;
                 } else {
                     audioUrl = `${this._selectedReciter.baseUrl}${this._selectedReciter.audioFormat}`
                         .replace(/%id%/g, paddedId)
                         .replace(/%audioId%/g, audioId)
-                        .replace(/%name%/g, surah.name);
-                    this._log(`No special format found for surah ${surah.id}, using standard format: ${audioUrl}`);
+                        .replace(/%name%/g, surah.name)
+                        .replace(/%specialFormat%/g, `${paddedId}.mp3`);
+                    this._log(`No special format found for surah ${surah.id}, using fallback format: ${audioUrl}`);
                 }
             } else {
                 audioUrl = `${this._selectedReciter.baseUrl}${this._selectedReciter.audioFormat}`
@@ -1474,6 +1487,18 @@ class QuranPlayerIndicator extends PanelMenu.Button {
                         ? specialFormat
                         : `${this._selectedReciter.baseUrl}${specialFormat}`;
                     this._log(`Using special format for juz ${juz.id}: ${audioUrl}`);
+                } else if (this._selectedReciter.hasIncomplete) {
+                    // This juz is not available for this reciter
+                    this._log(`Juz ${juz.id} (${juz.name}) is not available for reciter ${this._selectedReciter.name}`);
+                    try {
+                        this._showNotification(
+                            _("Juz Not Available"),
+                            _(`${juz.name} is not available for ${this._selectedReciter.name}`)
+                        );
+                    } catch (e) {
+                        this._log(`Error showing notification: ${e.message}`);
+                    }
+                    return;
                 } else {
                     audioUrl = `${this._selectedReciter.baseUrl}${this._selectedReciter.audioFormat}`
                         .replace(/%id%/g, paddedId)
@@ -1981,26 +2006,39 @@ class QuranPlayerIndicator extends PanelMenu.Button {
 
     _seekToPosition(event) {
         if (!this._player || this._usingFallback || this._totalDuration === 0) return;
-        
+
         try {
-          
-            const [x, y] = event.get_coords();
-            const progressBarX = this._progressBar.get_allocation_box().x1;
+            // Get click position relative to the progress bar actor
+            const [clickX, clickY] = this._progressBar.transform_stage_point(...event.get_coords());
             const progressBarWidth = this._progressBar.width;
-            
-          
-            const clickX = x - progressBarX;
+
+            this._log(`Click coordinates - X: ${clickX}, Width: ${progressBarWidth}`);
+
+            // Calculate progress ensuring it's between 0 and 1
             const progress = Math.max(0, Math.min(1, clickX / progressBarWidth));
-            const newPosition = Math.floor(this._totalDuration * progress);
-            
-          
-            this._player.seek_simple(
+
+            // Calculate new position, ensuring it doesn't exceed duration
+            // Subtract 1 second from end to avoid EOS
+            const maxPosition = this._totalDuration - (1 * Gst.SECOND);
+            const newPosition = Math.floor(Math.min(this._totalDuration * progress, maxPosition));
+
+            this._log(`Seeking to ${newPosition / Gst.SECOND} seconds (${Math.round(progress * 100)}%)`);
+
+            // Perform the seek
+            const seekResult = this._player.seek_simple(
                 Gst.Format.TIME,
                 Gst.SeekFlags.FLUSH | Gst.SeekFlags.KEY_UNIT,
                 newPosition
             );
-            
-            this._log(`Seeked to ${newPosition / Gst.SECOND} seconds (${Math.round(progress * 100)}%)`);
+
+            if (seekResult) {
+                this._log(`Seek successful to ${newPosition / Gst.SECOND} seconds (${Math.round(progress * 100)}%)`);
+                // Update current position immediately for UI responsiveness
+                this._currentPosition = newPosition;
+                this._updateProgressBar();
+            } else {
+                this._log(`Seek failed`);
+            }
         } catch (e) {
             this._log(`Error seeking to position: ${e.message}`);
         }
