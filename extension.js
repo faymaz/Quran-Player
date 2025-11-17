@@ -29,19 +29,23 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 
-import { loadSurahs, loadReciters, loadJuz, isJuzBasedReciter } from './constants.js';
+import { loadSurahs, loadReciters, loadJuz, isJuzBasedReciter, cleanup } from './constants.js';
 
-function logMessage(message) {
-  console.log(`[Quran Player] ${message}`);
+function logMessage(message, settings = null) {
+  // Only log if debug logging is enabled
+  if (settings && settings.get_boolean('enable-debug-log')) {
+    console.log(`[Quran Player] ${message}`);
+  }
 }
 
 function initializeJuzData(extension) {
     try {
+        const settings = extension.getSettings ? extension.getSettings() : null;
         const juzFilePath = GLib.build_filenamev([extension.path, 'juz.json']);
         const juzFile = Gio.File.new_for_path(juzFilePath);
 
         if (!juzFile.query_exists(null)) {
-            logMessage('juz.json not found at path: ' + juzFilePath);
+            logMessage('juz.json not found at path: ' + juzFilePath, settings);
             return [];
         }
 
@@ -49,14 +53,14 @@ function initializeJuzData(extension) {
 
         if (success && contents && contents.length > 0) {
             const jsonData = JSON.parse(new TextDecoder().decode(contents));
-            logMessage('Successfully loaded Juz data with ' + jsonData.length + ' entries');
+            logMessage('Successfully loaded Juz data with ' + jsonData.length + ' entries', settings);
             return jsonData;
         } else {
-            logMessage('Failed to parse Juz data');
+            logMessage('Failed to parse Juz data', settings);
             return [];
         }
     } catch (e) {
-        logMessage('Error loading Juz data: ' + e.message);
+        logMessage('Error loading Juz data: ' + e.message, settings);
         return [];
     }
 }
@@ -1532,32 +1536,22 @@ class QuranPlayerIndicator extends PanelMenu.Button {
           
             this._player.connect('source-setup', (playbin, source) => {
                 if (source.get_factory().get_name() === 'souphttpsrc') {
-                  
+
                     const url = audioUrl.toLowerCase();
-                    
+
                     if (url.includes('podcasts.qurancentral.com/raad-mohammad-al-kurdi')) {
-                      
+                        // Set browser-like user agent for Raad Mohammad Al-Kurdi
                         source.set_property('user-agent', 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
-                        try {
-                            source.set_property('referer', 'https://podcasts.qurancentral.com/');
-                        } catch (e) {
-                            this._log(`Could not set referer: ${e.message}`);
-                        }
-                        this._log(`Configured headers for Raad Mohammad Al-Kurdi: User-Agent and Referer set`);
+                        this._log(`Configured User-Agent for Raad Mohammad Al-Kurdi`);
                     } else if (url.includes('podcasts.qurancentral.com')) {
-                      
+                        // Set browser-like user agent for QuranCentral
                         source.set_property('user-agent', 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
-                        try {
-                            source.set_property('referer', 'https://podcasts.qurancentral.com/');
-                        } catch (e) {
-                            this._log(`Could not set referer: ${e.message}`);
-                        }
-                        this._log(`Configured browser headers for QuranCentral reciter`);
+                        this._log(`Configured User-Agent for QuranCentral reciter`);
                     } else if (url.includes('download.quranicaudio.com')) {
-                      
+
                         this._log(`Using default headers for QuranicAudio.com`);
                     } else {
-                      
+
                         source.set_property('user-agent', 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
                         this._log(`Using default browser headers for unknown domain`);
                     }
@@ -2238,6 +2232,9 @@ export default class QuranPlayerExtension extends Extension {
             this._indicator.destroy();
             this._indicator = null;
         }
+
+        // Abort any active network sessions
+        cleanup();
 
         this._settings = null;
 
