@@ -125,6 +125,8 @@ The `audioFormat` field supports these placeholders:
 - `%audioId%`: The audioId from surahs.json
 - `%name%`: Surah name
 
+**Note:** If a reciter has incomplete surahs or juz (some missing), set `"hasIncomplete": true` in the reciter definition. You will see a warning indicator (!) next to these reciters in the list.
+
 **Adding New Reciters:**  
 If you would like to add a new reciter to the list, please open an issue on GitHub with the reciter's name and the internet links for all surahs or juz. I will add them to the extension.
 
@@ -259,6 +261,8 @@ Hafız eklemek veya düzenlemek için `custom-reciters.json` dosyasını düzenl
 - `%id%`: 3 basamaklı sure numarası (001, 002, vb.)
 - `%audioId%`: surahs.json'daki audioId
 - `%name%`: Sure adı
+
+**Not:** Eğer bir hafızın eksik sureleri veya cüzleri varsa (bazıları eksikse), hafız tanımında `"hasIncomplete": true` olarak ayarlayın. Listede bu hafızların yanında uyarı göstergesi (!) göreceksiniz.
 
 **Yeni Hafız Ekleme:**  
 Listeye eklemek istediğiniz Hafız varsa, GitHub'daki issue altına ismi ve tüm cüzleri veya tüm sureleri için internet bağlantıları ile bana iletin, inşallah ekliyeyim.
