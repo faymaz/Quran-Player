@@ -49,5 +49,11 @@
     <description>Language for the user interface (empty for system default)</description>
     </key>
 
+    <key name="seek-duration" type="i">
+    <default>10</default>
+    <summary>Seek duration</summary>
+    <description>Number of seconds to skip forward/backward (10, 20, 30, 40, or 50)</description>
+    </key>
+
   </schema>
 </schemalist>

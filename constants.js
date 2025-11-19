@@ -20,7 +20,12 @@
 import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
 
-//console.log('Constants file loaded from:', import.meta.url);
+function logMessage(message, isError = false, settings = null) {
+  if (isError || (settings && settings.get_boolean('enable-debug-log'))) {
+    const prefix = isError ? '[Quran Player ERROR]' : '[Quran Player]';
+    console.log(`${prefix} ${message}`);
+  }
+}
 
 export const DEFAULT_RECITERS = [
   {
@@ -465,35 +470,39 @@ export const DEFAULT_RECITERS = [
   }
   ];
 
+function processRecitersData(reciters) {
+  return reciters.map(reciter => {
+      if (!reciter.type) {
+          if (reciter.name.toLowerCase().includes('cüz') ||
+              reciter.name.toLowerCase().includes('juz') ||
+              reciter.audioFormat.includes('cuz') ||
+              reciter.audioFormat.includes('juz')) {
+              reciter.type = 'juz';
+          } else {
+              reciter.type = 'surah';
+          }
+      }
+      return reciter;
+  });
+}
 
 export function loadReciters(extension) {
   try {
       const extensionPath = extension.path;
+      const settings = extension.getSettings ? extension.getSettings() : null;
+
+      logMessage("Loading custom-reciters.json from local file", false, settings);
       const recitersFile = Gio.File.new_for_path(GLib.build_filenamev([extensionPath, 'custom-reciters.json']));
       const [success, contents] = recitersFile.load_contents(null);
-      
+
       if (success) {
-          let reciters = JSON.parse(new TextDecoder().decode(contents));
-          
-         
-          reciters = reciters.map(reciter => {
-              if (!reciter.type) {
-                 
-                  if (reciter.name.toLowerCase().includes('cüz') || 
-                      reciter.name.toLowerCase().includes('juz') ||
-                      reciter.audioFormat.includes('cuz') ||
-                      reciter.audioFormat.includes('juz')) {
-                      reciter.type = 'juz';
-                  } else {
-                      reciter.type = 'surah';
-                  }
-              }
-              return reciter;
-          });
-          
+          const jsonText = new TextDecoder().decode(contents);
+          let reciters = JSON.parse(jsonText);
+          reciters = processRecitersData(reciters);
+          logMessage(`Loaded ${reciters.length} reciters from local file`, false, settings);
           return reciters;
       } else {
-         log("Quran Player: Failed to load reciters file, using defaults");
+          logMessage("Failed to load local file, using defaults", false, settings);
           return DEFAULT_RECITERS;
       }
   } catch (e) {
@@ -507,8 +516,8 @@ export function loadReciters(extension) {
 export function loadSurahs(extension) {
   try {
       const settings = extension.getSettings();
-      
-     
+
+
       const customPath = settings.get_string('custom-surahs-list-path');
       if (customPath && customPath.trim() !== '') {
           try {
@@ -521,15 +530,15 @@ export function loadSurahs(extension) {
               logError(customErr, "Quran Player: Error loading custom surahs file, falling back to default");
           }
       }
-      
-     
+
+
       const surahsFile = Gio.File.new_for_path(GLib.build_filenamev([extension.path, 'surahs.json']));
       const [success, contents] = surahsFile.load_contents(null);
-      
+
       if (success) {
           return JSON.parse(new TextDecoder().decode(contents));
       } else {
-         log("Quran Player: Failed to load surahs file, using defaults");
+          logMessage("Failed to load surahs file, using defaults", false, settings);
          
           return [
                 {"name": "Al-Fatihah", "id": 1, "audioId": "001"},
@@ -775,8 +784,8 @@ export function loadSurahs(extension) {
   export function loadJuz(extension) {
     try {
         const settings = extension.getSettings();
-        
-       
+
+
         const customPath = settings.get_string('custom-juz-list-path');
         if (customPath && customPath.trim() !== '') {
             try {
@@ -789,15 +798,15 @@ export function loadSurahs(extension) {
                 logError(customErr, "Quran Player: Error loading custom juz file, falling back to default");
             }
         }
-        
-       
+
+
         const juzFile = Gio.File.new_for_path(GLib.build_filenamev([extension.path, 'juz.json']));
         const [success, contents] = juzFile.load_contents(null);
-        
+
         if (success) {
             return JSON.parse(new TextDecoder().decode(contents));
         } else {
-           log("Quran Player: Failed to load juz file");
+            logMessage("Failed to load juz file", false, settings);
             return [];
         }
     } catch (e) {
@@ -810,16 +819,16 @@ export function loadSurahs(extension) {
 
   export function isJuzBasedReciter(reciter) {
     if (!reciter) return false;
-    
-   
+
+
     if (reciter.type === 'juz') return true;
-    
-   
-    const nameIndicatesJuz = reciter.name.toLowerCase().includes('cüz') || 
+
+
+    const nameIndicatesJuz = reciter.name.toLowerCase().includes('cüz') ||
                             reciter.name.toLowerCase().includes('juz');
-                            
-    const formatIndicatesJuz = reciter.audioFormat.includes('cuz') || 
+
+    const formatIndicatesJuz = reciter.audioFormat.includes('cuz') ||
                              reciter.audioFormat.includes('juz');
-                             
+
     return nameIndicatesJuz || formatIndicatesJuz;
   }

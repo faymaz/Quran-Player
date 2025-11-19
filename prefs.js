@@ -47,12 +47,17 @@ const QuranPlayerPrefsPage = GObject.registerClass(
            
             const reciterModel = new Gtk.StringList();
             this._reciters.forEach(reciter => {
-               
+
                 const isJuzReciter = isJuzBasedReciter(reciter);
                 let displayName = reciter.name;
                 if (isJuzReciter) {
                     displayName = `${displayName} [${_("Juz")}]`;
                 }
+
+                              if (reciter.hasIncomplete) {
+                    displayName = `${displayName} (Incomplete)`;
+                }
+
                 reciterModel.append(displayName);
             });
 
@@ -115,10 +120,45 @@ const QuranPlayerPrefsPage = GObject.registerClass(
             repeatRow.connect('notify::active', (row) => {
                 this._settings.set_boolean('repeat-current', row.get_active());
             });
-            
+
             generalGroup.add(repeatRow);
 
-           
+
+            const seekDurationRow = new Adw.ComboRow({
+                title: _('Seek Duration'),
+                subtitle: _('Number of seconds to skip forward/backward'),
+            });
+
+
+            const seekDurationModel = Gtk.StringList.new([
+                '10 ' + _('seconds'),
+                '20 ' + _('seconds'),
+                '30 ' + _('seconds'),
+                '40 ' + _('seconds'),
+                '50 ' + _('seconds')
+            ]);
+            seekDurationRow.model = seekDurationModel;
+
+
+            const seekDurations = [10, 20, 30, 40, 50];
+            const currentSeekDuration = this._settings.get_int('seek-duration');
+            const seekIndex = seekDurations.indexOf(currentSeekDuration);
+            if (seekIndex >= 0) {
+                seekDurationRow.selected = seekIndex;
+            } else {
+                seekDurationRow.selected = 0; // Default to 10 seconds
+            }
+
+
+            seekDurationRow.connect('notify::selected', (row) => {
+                if (row.selected >= 0 && row.selected < seekDurations.length) {
+                    this._settings.set_int('seek-duration', seekDurations[row.selected]);
+                }
+            });
+
+            generalGroup.add(seekDurationRow);
+
+
             const languageGroup = new Adw.PreferencesGroup({
                 title: _('Language Settings'),
             });
@@ -282,38 +322,45 @@ const QuranPlayerPrefsPage = GObject.registerClass(
     });
 
 export default class QuranPlayerPreferences extends ExtensionPreferences {
+    _log(message) {
+        console.log(`[Quran Player (Prefs)] ${message}`);
+    }
+
+    _processRecitersData(reciters) {
+        return reciters.map(reciter => {
+            if (!reciter.type) {
+                if (reciter.name.toLowerCase().includes('cüz') ||
+                    reciter.name.toLowerCase().includes('juz') ||
+                    reciter.audioFormat.includes('cuz') ||
+                    reciter.audioFormat.includes('juz')) {
+                    reciter.type = 'juz';
+                } else {
+                    reciter.type = 'surah';
+                }
+            }
+            return reciter;
+        });
+    }
+
     _loadReciters() {
         try {
-           
+          
+            this._log("Loading custom-reciters.json from local file");
             const recitersFile = Gio.File.new_for_path(GLib.build_filenamev([this.path, 'custom-reciters.json']));
             const [success, contents] = recitersFile.load_contents(null);
-            
+
             if (success) {
-                let reciters = JSON.parse(new TextDecoder().decode(contents));
-                
-               
-                reciters = reciters.map(reciter => {
-                    if (!reciter.type) {
-                       
-                        if (reciter.name.toLowerCase().includes('cüz') || 
-                            reciter.name.toLowerCase().includes('juz') ||
-                            reciter.audioFormat.includes('cuz') ||
-                            reciter.audioFormat.includes('juz')) {
-                            reciter.type = 'juz';
-                        } else {
-                            reciter.type = 'surah';
-                        }
-                    }
-                    return reciter;
-                });
-                
+                const jsonText = new TextDecoder().decode(contents);
+                let reciters = JSON.parse(jsonText);
+                reciters = this._processRecitersData(reciters);
+                this._log(`Loaded ${reciters.length} reciters from local file`);
                 return reciters;
             } else {
-                logError(e, "Quran Player: Failed to load reciters file, using defaults");
+                this._log("Failed to load local file, using defaults");
                 return DEFAULT_RECITERS;
             }
         } catch (e) {
-            logError(e, "Quran Player: Error loading reciters");
+            logError(e, "Quran Player (Prefs): Error loading reciters");
             return DEFAULT_RECITERS;
         }
     }
