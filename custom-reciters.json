@@ -945,7 +945,6 @@
     "audioFormat": "%specialFormat%",
     "type": "surah",
     "hasSpecialFormat": true,
-    "hasIncomplete": true,
     "formatMap": {
       "01": "raad-mohammad-al-kurdi-muslimcentral.com-001-al-fatiha-2017-08-31-04-36-42.mp3",
       "02": "2.mp3",
