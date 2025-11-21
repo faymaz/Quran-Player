@@ -36,13 +36,13 @@
     "type": "surah"
   },
   {
-    "name": "Der edle Koran - Deutsche Übersetzung",
+    "name": "German - Der edle Koran",
     "baseUrl": "https://archive.org/download/Der_edle_Koran/",
     "audioFormat": "%id%.mp3",
     "type": "surah"
   },
   {
-    "name": "Quran Arabic-German (Mustafa Ismael)",
+    "name": "German - Mustafa Ismael",
     "baseUrl": "https://archive.org/download/quranarabicgermanmp3/",
     "audioFormat": "%specialFormat%",
     "type": "surah",
@@ -1093,7 +1093,7 @@
     "type": "surah"
   },
   {
-    "name": "The Noble Quran with French Translation (Le Saint Coran)",
+    "name": "Quran with French Translation (Le Saint Coran)",
     "baseUrl": "https://archive.org/download/Le-Saint-Coran-Al-Quran-with-French-Translation-Audio-MP3-CD/",
     "audioFormat": "%specialFormat%",
     "type": "surah",
