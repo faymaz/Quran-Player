@@ -1565,13 +1565,29 @@ class QuranPlayerIndicator extends PanelMenu.Button {
                     const url = audioUrl.toLowerCase();
 
                     if (url.includes('podcasts.qurancentral.com/raad-mohammad-al-kurdi')) {
-                      
+
                         source.set_property('user-agent', 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
-                        this._log(`Configured User-Agent for Raad Mohammad Al-Kurdi`);
+                        const extraHeaders = Gst.Structure.new_from_string(
+                            'extra-headers,Referer=(string)"https://qurancentral.com/",' +
+                            'Accept=(string)"audio/webm\\,audio/ogg\\,audio/wav\\,audio/*;q=0.9\\,application/ogg;q=0.7\\,video/*;q=0.6\\,*/*;q=0.5",' +
+                            'Accept-Language=(string)"en-US\\,en;q=0.9",' +
+                            'Sec-Fetch-Dest=(string)audio,' +
+                            'Sec-Fetch-Mode=(string)no-cors'
+                        );
+                        source.set_property('extra-headers', extraHeaders);
+                        this._log(`Configured headers for Raad Mohammad Al-Kurdi with Referer`);
                     } else if (url.includes('podcasts.qurancentral.com')) {
-                      
+
                         source.set_property('user-agent', 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
-                        this._log(`Configured User-Agent for QuranCentral reciter`);
+                        const extraHeaders = Gst.Structure.new_from_string(
+                            'extra-headers,Referer=(string)"https://qurancentral.com/",' +
+                            'Accept=(string)"audio/webm\\,audio/ogg\\,audio/wav\\,audio/*;q=0.9\\,application/ogg;q=0.7\\,video/*;q=0.6\\,*/*;q=0.5",' +
+                            'Accept-Language=(string)"en-US\\,en;q=0.9",' +
+                            'Sec-Fetch-Dest=(string)audio,' +
+                            'Sec-Fetch-Mode=(string)no-cors'
+                        );
+                        source.set_property('extra-headers', extraHeaders);
+                        this._log(`Configured headers for QuranCentral reciter with Referer`);
                     } else if (url.includes('download.quranicaudio.com')) {
 
                         this._log(`Using default headers for QuranicAudio.com`);
@@ -1598,13 +1614,13 @@ class QuranPlayerIndicator extends PanelMenu.Button {
                     let [error, debug] = msg.parse_error();
                     this._log(`GStreamer playback error: ${error.message} (${debug})`);
 
-                                      const errorTitle = _("Playback Error");
-                    let errorBody = _("Cannot play the selected audio file");
+                                      const errorTitle = "Playback Error";
+                    let errorBody = "Cannot play the selected audio file";
 
                                       if (error.message.includes("404") || error.message.includes("Not Found")) {
-                        errorBody = _("Audio file not found (404)");
+                        errorBody = "Audio file not found (404)";
                     } else if (error.message.includes("403") || error.message.includes("Forbidden")) {
-                        errorBody = _("Access denied to audio file (403)");
+                        errorBody = "Access denied to audio file (403)";
                     }
 
                     this._showNotification(errorTitle, errorBody);
