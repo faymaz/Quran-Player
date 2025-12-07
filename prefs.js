@@ -22,7 +22,6 @@ import Gio from 'gi://Gio';
 import Gtk from 'gi://Gtk';
 import GLib from 'gi://GLib';
 import GObject from 'gi://GObject';
-import Soup from 'gi://Soup';
 
 
 import { DEFAULT_RECITERS, isJuzBasedReciter } from './constants.js';
@@ -327,80 +326,8 @@ export default class QuranPlayerPreferences extends ExtensionPreferences {
         console.log(`[Quran Player (Prefs)] ${message}`);
     }
 
-    _fetchRecitersFromGitHub() {
-        try {
-            this._log("Attempting to fetch custom-reciters.json from GitHub");
-
-            const session = new Soup.Session({ timeout: 10 });
-            const message = Soup.Message.new('GET', 'https://raw.githubusercontent.com/faymaz/Quran-Player/master/custom-reciters.json');
-
-                      const bytes = session.send_and_read(message, null);
-
-            if (message.get_status() === Soup.Status.OK) {
-                const contents = bytes.get_data();
-                const textDecoder = new TextDecoder('utf-8');
-                const jsonText = textDecoder.decode(contents);
-                this._log("Successfully fetched custom-reciters.json from GitHub");
-                return jsonText;
-            } else {
-                this._log(`GitHub fetch failed with status ${message.get_status()}`);
-                return null;
-            }
-        } catch (e) {
-            this._log(`Error fetching from GitHub: ${e.message}`);
-            return null;
-        }
-    }
-
-    _saveToCacheFile(jsonText) {
-        try {
-            const cacheDir = GLib.get_user_cache_dir();
-            const quranPlayerCacheDir = GLib.build_filenamev([cacheDir, 'quran-player']);
-
-                      const cacheDirFile = Gio.File.new_for_path(quranPlayerCacheDir);
-            if (!cacheDirFile.query_exists(null)) {
-                cacheDirFile.make_directory_with_parents(null);
-            }
-
-            const cacheFilePath = GLib.build_filenamev([quranPlayerCacheDir, 'custom-reciters.json']);
-            const cacheFile = Gio.File.new_for_path(cacheFilePath);
-
-                      const bytes = new TextEncoder().encode(jsonText);
-            const outputStream = cacheFile.replace(null, false, Gio.FileCreateFlags.NONE, null);
-            outputStream.write_all(bytes, null);
-            outputStream.close(null);
-
-            this._log(`Saved custom-reciters.json to cache: ${cacheFilePath}`);
-            return true;
-        } catch (e) {
-            this._log(`Error saving to cache: ${e.message}`);
-            return false;
-        }
-    }
-
-    _loadFromCacheFile() {
-        try {
-            const cacheDir = GLib.get_user_cache_dir();
-            const cacheFilePath = GLib.build_filenamev([cacheDir, 'quran-player', 'custom-reciters.json']);
-            const cacheFile = Gio.File.new_for_path(cacheFilePath);
-
-            if (cacheFile.query_exists(null)) {
-                const [success, contents] = cacheFile.load_contents(null);
-                if (success) {
-                    const jsonText = new TextDecoder().decode(contents);
-                    this._log("Loaded custom-reciters.json from cache");
-                    return jsonText;
-                }
-            }
-            return null;
-        } catch (e) {
-            this._log(`Error loading from cache: ${e.message}`);
-            return null;
-        }
-    }
-
     _processRecitersData(reciters) {
-              return reciters.map(reciter => {
+        return reciters.map(reciter => {
             if (!reciter.type) {
                 if (reciter.name.toLowerCase().includes('cüz') ||
                     reciter.name.toLowerCase().includes('juz') ||
@@ -417,54 +344,19 @@ export default class QuranPlayerPreferences extends ExtensionPreferences {
 
     _loadReciters() {
         try {
-            let cacheJson = null;
-            let githubJson = null;
-            let finalJson = null;
+          
+            this._log("Loading custom-reciters.json from local file");
+            const recitersFile = Gio.File.new_for_path(GLib.build_filenamev([this.path, 'custom-reciters.json']));
+            const [success, contents] = recitersFile.load_contents(null);
 
-                      cacheJson = this._loadFromCacheFile();
-            const cacheReciters = cacheJson ? JSON.parse(cacheJson) : null;
-            const cacheCount = cacheReciters ? cacheReciters.length : 0;
-
-                      githubJson = this._fetchRecitersFromGitHub();
-            const githubReciters = githubJson ? JSON.parse(githubJson) : null;
-            const githubCount = githubReciters ? githubReciters.length : 0;
-
-                      if (githubCount > 0 && cacheCount > 0) {
-                              if (githubCount > cacheCount) {
-                    this._log(`GitHub has more reciters (${githubCount}) than cache (${cacheCount}), updating cache`);
-                    this._saveToCacheFile(githubJson);
-                    finalJson = githubJson;
-                } else {
-                    this._log(`Cache is up to date (${cacheCount} reciters), GitHub has ${githubCount}`);
-                    finalJson = cacheJson;
-                }
-            } else if (githubCount > 0) {
-                              this._log(`Using GitHub data with ${githubCount} reciters, saving to cache`);
-                this._saveToCacheFile(githubJson);
-                finalJson = githubJson;
-            } else if (cacheCount > 0) {
-                              this._log(`GitHub unavailable, using cache with ${cacheCount} reciters`);
-                finalJson = cacheJson;
-            }
-
-                      if (!finalJson) {
-                this._log("Both GitHub and cache failed, trying local file");
-                const recitersFile = Gio.File.new_for_path(GLib.build_filenamev([this.path, 'custom-reciters.json']));
-                const [success, contents] = recitersFile.load_contents(null);
-
-                if (success) {
-                    finalJson = new TextDecoder().decode(contents);
-                    this._log("Loaded custom-reciters.json from local file");
-                }
-            }
-
-                      if (finalJson) {
-                let reciters = JSON.parse(finalJson);
+            if (success) {
+                const jsonText = new TextDecoder().decode(contents);
+                let reciters = JSON.parse(jsonText);
                 reciters = this._processRecitersData(reciters);
-                this._log(`Returning ${reciters.length} reciters`);
+                this._log(`Loaded ${reciters.length} reciters from local file`);
                 return reciters;
             } else {
-                this._log("All methods failed, using defaults");
+                this._log("Failed to load local file, using defaults");
                 return DEFAULT_RECITERS;
             }
         } catch (e) {

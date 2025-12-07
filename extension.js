@@ -29,10 +29,10 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 
-import { loadSurahs, loadReciters, loadJuz, isJuzBasedReciter, cleanup } from './constants.js';
+import { loadSurahs, loadReciters, loadJuz, isJuzBasedReciter } from './constants.js';
 
 function logMessage(message, settings = null) {
-  // Only log if debug logging is enabled
+
   if (settings && settings.get_boolean('enable-debug-log')) {
     console.log(`[Quran Player] ${message}`);
   }
@@ -1388,7 +1388,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
                         : `${this._selectedReciter.baseUrl}${specialFormat}`;
                     this._log(`Using special format for surah ${surah.id}: ${audioUrl}`);
                 } else if (this._selectedReciter.hasIncomplete) {
-                    // This surah is not available for this reciter
+                  
                     this._log(`Surah ${surah.id} (${surah.name}) is not available for reciter ${this._selectedReciter.name}`);
                     try {
                         this._showNotification(
@@ -1488,7 +1488,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
                         : `${this._selectedReciter.baseUrl}${specialFormat}`;
                     this._log(`Using special format for juz ${juz.id}: ${audioUrl}`);
                 } else if (this._selectedReciter.hasIncomplete) {
-                    // This juz is not available for this reciter
+                  
                     this._log(`Juz ${juz.id} (${juz.name}) is not available for reciter ${this._selectedReciter.name}`);
                     try {
                         this._showNotification(
@@ -1565,11 +1565,11 @@ class QuranPlayerIndicator extends PanelMenu.Button {
                     const url = audioUrl.toLowerCase();
 
                     if (url.includes('podcasts.qurancentral.com/raad-mohammad-al-kurdi')) {
-                        // Set browser-like user agent for Raad Mohammad Al-Kurdi
+                      
                         source.set_property('user-agent', 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
                         this._log(`Configured User-Agent for Raad Mohammad Al-Kurdi`);
                     } else if (url.includes('podcasts.qurancentral.com')) {
-                        // Set browser-like user agent for QuranCentral
+                      
                         source.set_property('user-agent', 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
                         this._log(`Configured User-Agent for QuranCentral reciter`);
                     } else if (url.includes('download.quranicaudio.com')) {
@@ -2008,23 +2008,23 @@ class QuranPlayerIndicator extends PanelMenu.Button {
         if (!this._player || this._usingFallback || this._totalDuration === 0) return;
 
         try {
-            // Get click position relative to the progress bar actor
+          
             const [clickX, clickY] = this._progressBar.transform_stage_point(...event.get_coords());
             const progressBarWidth = this._progressBar.width;
 
             this._log(`Click coordinates - X: ${clickX}, Width: ${progressBarWidth}`);
 
-            // Calculate progress ensuring it's between 0 and 1
+          
             const progress = Math.max(0, Math.min(1, clickX / progressBarWidth));
 
-            // Calculate new position, ensuring it doesn't exceed duration
-            // Subtract 1 second from end to avoid EOS
+          
+          
             const maxPosition = this._totalDuration - (1 * Gst.SECOND);
             const newPosition = Math.floor(Math.min(this._totalDuration * progress, maxPosition));
 
             this._log(`Seeking to ${newPosition / Gst.SECOND} seconds (${Math.round(progress * 100)}%)`);
 
-            // Perform the seek
+          
             const seekResult = this._player.seek_simple(
                 Gst.Format.TIME,
                 Gst.SeekFlags.FLUSH | Gst.SeekFlags.KEY_UNIT,
@@ -2033,7 +2033,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
 
             if (seekResult) {
                 this._log(`Seek successful to ${newPosition / Gst.SECOND} seconds (${Math.round(progress * 100)}%)`);
-                // Update current position immediately for UI responsiveness
+              
                 this._currentPosition = newPosition;
                 this._updateProgressBar();
             } else {
@@ -2270,9 +2270,6 @@ export default class QuranPlayerExtension extends Extension {
             this._indicator.destroy();
             this._indicator = null;
         }
-
-        // Abort any active network sessions
-        cleanup();
 
         this._settings = null;
 
