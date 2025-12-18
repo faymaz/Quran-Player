@@ -446,9 +446,11 @@ class QuranPlayerIndicator extends PanelMenu.Button {
         
        
         this._panelBox = new St.BoxLayout({
-            style_class: 'panel-status-menu-box'
+            style_class: 'panel-status-menu-box',
+            reactive: true,
+            track_hover: true
         });
-        
+
         try {
             this._icon = new St.Icon({
                 gicon: Gio.icon_new_for_string(GLib.build_filenamev([this._extension.path, 'icons', 'icon.svg'])),
@@ -461,18 +463,21 @@ class QuranPlayerIndicator extends PanelMenu.Button {
                 style_class: 'system-status-icon'
             });
         }
-        
-       
+
+
         this._panelLabel = new St.Label({
-            text: _('Quran Player'), 
+            text: _('Quran Player'),
             y_align: Clutter.ActorAlign.CENTER,
             style_class: 'quran-panel-label'
         });
-        
+
         this._panelBox.add_child(this._icon);
         this._panelBox.add_child(this._panelLabel);
-        
+
         this.add_child(this._panelBox);
+
+
+        this._setupTooltip();
         
        
         this._player = null;
@@ -508,6 +513,73 @@ class QuranPlayerIndicator extends PanelMenu.Button {
         this.menu.addMenuItem(playerItem);
     }
 
+    _setupTooltip() {
+        this._tooltip = new St.Label({
+            style_class: 'quran-tooltip',
+            style: 'background-color: rgba(0, 0, 0, 0.8); color: white; padding: 8px 12px; border-radius: 4px; font-size: 11pt;',
+            visible: false,
+            opacity: 0
+        });
+
+        Main.layoutManager.addChrome(this._tooltip);
+
+        this._panelBox.connect('enter-event', () => {
+            this._showTooltip();
+        });
+
+        this._panelBox.connect('leave-event', () => {
+            this._hideTooltip();
+        });
+    }
+
+    _showTooltip() {
+        if (!this._currentItem || !this._isPlaying) {
+            return;
+        }
+
+        let tooltipText = '';
+
+        if (this._currentItem.type === 'surah') {
+            const juzId = this._getJuzForSurah(this._currentItem.id);
+            const juzText = juzId ? `\nJuz: ${juzId}` : '';
+            tooltipText = `${_('Reciter')}: ${this._selectedReciter ? this._selectedReciter.name : 'Unknown'}\n${_('Surah')}: ${this._currentItem.id}. ${this._currentItem.name}${juzText}`;
+        } else if (this._currentItem.type === 'juz') {
+            tooltipText = `${_('Reciter')}: ${this._selectedReciter ? this._selectedReciter.name : 'Unknown'}\n${this._currentItem.name}\n${this._currentItem.description || ''}`;
+        }
+
+        this._tooltip.text = tooltipText;
+
+        const [x, y] = this._panelBox.get_transformed_position();
+        const [width, height] = this._panelBox.get_transformed_size();
+
+        this._tooltip.set_position(
+            Math.floor(x + width / 2 - this._tooltip.width / 2),
+            Math.floor(y + height + 5)
+        );
+
+        this._tooltip.visible = true;
+        this._tooltip.ease({
+            opacity: 255,
+            duration: 200,
+            mode: Clutter.AnimationMode.EASE_OUT_QUAD
+        });
+    }
+
+    _hideTooltip() {
+        if (!this._tooltip) {
+            return;
+        }
+
+        this._tooltip.ease({
+            opacity: 0,
+            duration: 150,
+            mode: Clutter.AnimationMode.EASE_OUT_QUAD,
+            onComplete: () => {
+                this._tooltip.visible = false;
+            }
+        });
+    }
+
     _loadSettings() {
         if (this._reciters.length === 0) {
             this._reciters.push({
@@ -520,7 +592,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             this._isJuzMode = false;
             return;
         }
-        
+
         const reciterId = this._settings.get_string('selected-reciter');
         if (reciterId) {
             const foundReciter = this._reciters.find(r => r.name === reciterId);
@@ -2163,7 +2235,14 @@ class QuranPlayerIndicator extends PanelMenu.Button {
     }
     
     destroy() {
-       
+
+        if (this._tooltip) {
+            Main.layoutManager.removeChrome(this._tooltip);
+            this._tooltip.destroy();
+            this._tooltip = null;
+        }
+
+
         if (this._signalHandlers) {
             this._signalHandlers.forEach(handler => {
                 if (handler.obj && handler.id) {
@@ -2176,8 +2255,8 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             });
             this._signalHandlers = [];
         }
-        
-       
+
+
         if (this._controlSignalHandlers) {
             this._controlSignalHandlers.forEach(handler => {
                 if (handler.obj && handler.id) {
@@ -2190,16 +2269,16 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             });
             this._controlSignalHandlers = [];
         }
-        
-       
-       
+
+
+
         if (this._timeoutSources) {
             this._timeoutSources.forEach(sourceId => {
                 if (sourceId > 0) {
                     try {
                         GLib.Source.remove(sourceId);
                     } catch (e) {
-                       
+
                         this._log(`Error removing source ${sourceId}: ${e.message}`);
                     }
                 }
@@ -2209,14 +2288,14 @@ class QuranPlayerIndicator extends PanelMenu.Button {
 
 
         this._stopPlayback();
-        
-       
+
+
         if (this._controlsBox) {
             this._controlsBox.destroy();
             this._controlsBox = null;
         }
-        
-       
+
+
         super.destroy();
     }
 });

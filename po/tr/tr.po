@@ -79,9 +79,12 @@ msgid "General Settings"
 msgstr "Genel Ayarlar"
 
 #: prefs.js:297
-#, fuzzy
 msgid "Quran Reciters"
-msgstr "Hafız"
+msgstr "Kuran Hafızları"
+
+#: prefs.js:297
+msgid "Quran Reciter"
+msgstr "Kuran Hafızı"
 
 #: prefs.js:298
 msgid "Select a reciter for audio playback"
