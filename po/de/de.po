@@ -438,3 +438,42 @@ msgstr "An-Nas"
 
 msgid "Juz"
 msgstr "Juz"
+
+msgid "Language Changed"
+msgstr "Sprache geändert"
+
+msgid "Please restart GNOME Shell for the language change to take effect"
+msgstr "Bitte starten Sie GNOME Shell neu, damit die Sprachänderung wirksam wird"
+
+msgid "No reciters available"
+msgstr "Keine Rezitatoren verfügbar"
+
+msgid "Quran Player Settings"
+msgstr "Koran-Player Einstellungen"
+
+msgid "Quran Reciters"
+msgstr "Koran Rezitatoren"
+
+msgid "Quran Reciter"
+msgstr "Koran Rezitator"
+
+msgid "Select a reciter for audio playback"
+msgstr "Wählen Sie einen Rezitator für die Audio-Wiedergabe"
+
+msgid "Select Juz File"
+msgstr "Juz-Datei auswählen"
+
+msgid "Select custom juz list JSON file"
+msgstr "Benutzerdefinierte Juz-Listen-JSON-Datei auswählen"
+
+msgid "Cancel"
+msgstr "Abbrechen"
+
+msgid "Select"
+msgstr "Auswählen"
+
+msgid "Select Surah File"
+msgstr "Sure-Datei auswählen"
+
+msgid "Select custom surah list JSON file"
+msgstr "Benutzerdefinierte Sure-Listen-JSON-Datei auswählen"

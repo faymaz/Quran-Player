@@ -438,3 +438,42 @@ msgstr "الناس"
 
 msgid "Juz"
 msgstr "جزء"
+
+msgid "Language Changed"
+msgstr "تم تغيير اللغة"
+
+msgid "Please restart GNOME Shell for the language change to take effect"
+msgstr "يرجى إعادة تشغيل GNOME Shell لتفعيل تغيير اللغة"
+
+msgid "No reciters available"
+msgstr "لا يوجد قراء متاحون"
+
+msgid "Quran Player Settings"
+msgstr "إعدادات مشغل القرآن"
+
+msgid "Quran Reciters"
+msgstr "قراء القرآن"
+
+msgid "Quran Reciter"
+msgstr "قارئ القرآن"
+
+msgid "Select a reciter for audio playback"
+msgstr "اختر قارئًا لتشغيل الصوت"
+
+msgid "Select Juz File"
+msgstr "اختر ملف الجزء"
+
+msgid "Select custom juz list JSON file"
+msgstr "اختر ملف JSON لقائمة الأجزاء المخصصة"
+
+msgid "Cancel"
+msgstr "إلغاء"
+
+msgid "Select"
+msgstr "اختر"
+
+msgid "Select Surah File"
+msgstr "اختر ملف السورة"
+
+msgid "Select custom surah list JSON file"
+msgstr "اختر ملف JSON لقائمة السور المخصصة"
