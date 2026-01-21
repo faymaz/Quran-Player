@@ -146,7 +146,7 @@ const QuranPlayerPrefsPage = GObject.registerClass(
             if (seekIndex >= 0) {
                 seekDurationRow.selected = seekIndex;
             } else {
-                seekDurationRow.selected = 0; // Default to 10 seconds
+                seekDurationRow.selected = 0;
             }
 
 

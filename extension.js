@@ -1638,28 +1638,46 @@ class QuranPlayerIndicator extends PanelMenu.Button {
 
                     if (url.includes('podcasts.qurancentral.com/raad-mohammad-al-kurdi')) {
 
-                        source.set_property('user-agent', 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
+                        source.set_property('user-agent', 'Mozilla/5.0 (X11; Linux x86_64; rv:128.0) Gecko/20100101 Firefox/128.0');
+                        source.set_property('automatic-redirect', true);
+                        source.set_property('timeout', 15); // 15 seconds timeout to avoid hanging
+                        source.set_property('retries', 2);
                         const extraHeaders = Gst.Structure.new_from_string(
-                            'extra-headers,Referer=(string)"https://qurancentral.com/",' +
-                            'Accept=(string)"audio/webm\\,audio/ogg\\,audio/wav\\,audio/*;q=0.9\\,application/ogg;q=0.7\\,video/*;q=0.6\\,*/*;q=0.5",' +
-                            'Accept-Language=(string)"en-US\\,en;q=0.9",' +
-                            'Sec-Fetch-Dest=(string)audio,' +
-                            'Sec-Fetch-Mode=(string)no-cors'
+                            'extra-headers,' +
+                            'Referer=(string)"https://qurancentral.com/",' +
+                            'Origin=(string)"https://qurancentral.com",' +
+                            'Accept=(string)"audio/mpeg\\,audio/*;q=0.9\\,*/*;q=0.8",' +
+                            'Accept-Language=(string)"en-US\\,en;q=0.9\\,ar;q=0.8",' +
+                            'Accept-Encoding=(string)"identity",' +
+                            'Connection=(string)"keep-alive",' +
+                            'DNT=(string)"1",' +
+                            'Sec-Fetch-Dest=(string)"audio",' +
+                            'Sec-Fetch-Mode=(string)"no-cors",' +
+                            'Sec-Fetch-Site=(string)"same-site"'
                         );
                         source.set_property('extra-headers', extraHeaders);
-                        this._log(`Configured headers for Raad Mohammad Al-Kurdi with Referer`);
+                        this._log(`Configured headers for Raad Mohammad Al-Kurdi with Referer and timeout`);
                     } else if (url.includes('podcasts.qurancentral.com')) {
 
-                        source.set_property('user-agent', 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
+                        source.set_property('user-agent', 'Mozilla/5.0 (X11; Linux x86_64; rv:128.0) Gecko/20100101 Firefox/128.0');
+                        source.set_property('automatic-redirect', true);
+                        source.set_property('timeout', 15); // 15 seconds timeout to avoid hanging
+                        source.set_property('retries', 2);
                         const extraHeaders = Gst.Structure.new_from_string(
-                            'extra-headers,Referer=(string)"https://qurancentral.com/",' +
-                            'Accept=(string)"audio/webm\\,audio/ogg\\,audio/wav\\,audio/*;q=0.9\\,application/ogg;q=0.7\\,video/*;q=0.6\\,*/*;q=0.5",' +
-                            'Accept-Language=(string)"en-US\\,en;q=0.9",' +
-                            'Sec-Fetch-Dest=(string)audio,' +
-                            'Sec-Fetch-Mode=(string)no-cors'
+                            'extra-headers,' +
+                            'Referer=(string)"https://qurancentral.com/",' +
+                            'Origin=(string)"https://qurancentral.com",' +
+                            'Accept=(string)"audio/mpeg\\,audio/*;q=0.9\\,*/*;q=0.8",' +
+                            'Accept-Language=(string)"en-US\\,en;q=0.9\\,ar;q=0.8",' +
+                            'Accept-Encoding=(string)"identity",' +
+                            'Connection=(string)"keep-alive",' +
+                            'DNT=(string)"1",' +
+                            'Sec-Fetch-Dest=(string)"audio",' +
+                            'Sec-Fetch-Mode=(string)"no-cors",' +
+                            'Sec-Fetch-Site=(string)"same-site"'
                         );
                         source.set_property('extra-headers', extraHeaders);
-                        this._log(`Configured headers for QuranCentral reciter with Referer`);
+                        this._log(`Configured headers for QuranCentral reciter with Referer and timeout`);
                     } else if (url.includes('download.quranicaudio.com')) {
 
                         this._log(`Using default headers for QuranicAudio.com`);
