@@ -1451,14 +1451,19 @@ class QuranPlayerIndicator extends PanelMenu.Button {
             const audioId = surah.audioId || paddedId;
 
                       if (this._selectedReciter.hasSpecialFormat && this._selectedReciter.formatMap) {
+                const threeDigitId = surah.id.toString().padStart(3, '0');
                 const twoDigitId = surah.id.toString().padStart(2, '0');
 
-                if (this._selectedReciter.formatMap[twoDigitId]) {
-                    const specialFormat = this._selectedReciter.formatMap[twoDigitId];
+                // Try 3-digit key first (e.g., "061"), then 2-digit (e.g., "61")
+                const formatKey = this._selectedReciter.formatMap[threeDigitId] ? threeDigitId :
+                                  (this._selectedReciter.formatMap[twoDigitId] ? twoDigitId : null);
+
+                if (formatKey) {
+                    const specialFormat = this._selectedReciter.formatMap[formatKey];
                                       audioUrl = specialFormat.startsWith('http://') || specialFormat.startsWith('https://')
                         ? specialFormat
                         : `${this._selectedReciter.baseUrl}${specialFormat}`;
-                    this._log(`Using special format for surah ${surah.id}: ${audioUrl}`);
+                    this._log(`Using special format for surah ${surah.id} (key: "${formatKey}"): ${audioUrl}`);
                 } else if (this._selectedReciter.hasIncomplete) {
                   
                     this._log(`Surah ${surah.id} (${surah.name}) is not available for reciter ${this._selectedReciter.name}`);
@@ -1477,7 +1482,7 @@ class QuranPlayerIndicator extends PanelMenu.Button {
                         .replace(/%audioId%/g, audioId)
                         .replace(/%name%/g, surah.name)
                         .replace(/%specialFormat%/g, `${paddedId}.mp3`);
-                    this._log(`No special format found for surah ${surah.id}, using fallback format: ${audioUrl}`);
+                    this._log(`No special format found for surah ${surah.id} (tried keys: "${threeDigitId}", "${twoDigitId}"), using fallback format: ${audioUrl}`);
                 }
             } else {
                 audioUrl = `${this._selectedReciter.baseUrl}${this._selectedReciter.audioFormat}`
