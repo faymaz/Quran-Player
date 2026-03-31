@@ -1,4 +1,4 @@
-![Visitor Count](https://visitor-badge.laobi.icu/badge?page_id=faymaz.quran-player) | [![Archive.org Status](https://img.shields.io/website?down_color=red&down_message=offline&label=Archive.org&up_color=green&up_message=online&url=https%3A%2F%2Farchive.org)](https://archive.org)
+![Visitor Count](https://visitor-badge.laobi.icu/badge?page_id=faymaz.quran-player) [![Archive.org Status](https://img.shields.io/website?down_color=red&down_message=offline&label=Archive.org&up_color=green&up_message=online&url=https%3A%2F%2Farchive.org)](https://archive.org)
 # Quran Player GNOME Shell Extension
 
 **Author:** [faymaz](https://github.com/faymaz)
